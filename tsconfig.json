@@ -10,7 +10,6 @@
         "strict": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,
-        "noUnusedParameters": true,
         "noUnusedLocals": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitOverride": true,
