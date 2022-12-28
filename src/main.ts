@@ -1,16 +1,8 @@
-import { Application } from 'pixi.js'
-import { Scene } from './scene'; // This is the import statement
+import { Manager } from './manager';
+import { LoaderScene } from './scenes/loader';
 
-const app = new Application({
-    view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
-    resolution: window.devicePixelRatio || 1,
-    autoDensity: true,
-    backgroundColor: 0x6495ed,
-    width: 640,
-    height: 480
-});
+Manager.initialize(640, 480, 0x6495ed);
 
-// pass in the screen size to avoid "asking up"
-const scene = new Scene(app.screen.width, app.screen.height);
-
-app.stage.addChild(scene);
+// We no longer need to tell the scene the size because we can ask Manager!
+const loady: LoaderScene = new LoaderScene();
+Manager.changeScene(loady);
