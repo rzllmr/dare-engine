@@ -1,0 +1,26 @@
+[
+    {
+        "name": "grass",
+        "image": "tile_1.1"
+    },
+    {
+        "name": "forest",
+        "image": "tile_1.2"
+    },
+    {
+        "name": "rock",
+        "image": "tile_1.3"
+    },
+    {
+        "name": "lake",
+        "image": "tile_1.4"
+    },
+    {
+        "name": "sand",
+        "image": "tile_2.2"
+    },
+    {
+        "name": "sea",
+        "image": "tile_2.3"
+    }
+]

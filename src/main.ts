@@ -1,5 +1,5 @@
 import { Manager } from './manager';
-import { LoaderScene } from './scenes/loader';
+import { LoaderScene } from './game/scenes/loader';
 
 Manager.initialize(640, 480, 0x6495ed);
 
