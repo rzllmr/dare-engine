@@ -3,10 +3,11 @@ import type { ResolverManifest } from "pixi.js";
 export const manifest:ResolverManifest = {
     bundles: [
         {
-            name : "game",
+            name : "main",
             assets:
             {
-                "tiles" : "./fantasyhextiles_v3.json"
+                "tiles" : "./drjamgo_hex_16x16.json",
+                "map": "./maps/test.txt"
             }
         }
     ]
