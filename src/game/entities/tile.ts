@@ -7,19 +7,19 @@ type TileData = {
 };
 
 export class Tile {
-    private data: TileData | null = null;
-    public sprite: Sprite | null = null;
+    private data: TileData|null = null;
+    public sprite: Sprite|null = null;
 
     constructor(name: string = "") {
         if (name.length == 0) return;
-        for (var tile of (tilesData as TileData[])) {
+        for (const tile of (tilesData as TileData[])) {
             if (tile.name == name) {
                 this.data = tile;
             }
         }
     }
 
-    public get image() {
+    public get image(): string|undefined {
         return this.data?.image;
     }
 }

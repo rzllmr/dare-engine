@@ -1,7 +1,7 @@
 import { Application, DisplayObject } from "pixi.js";
 
 export class Manager {
-    private constructor() { /*this class is purely static. No constructor to see here*/ }
+    private constructor() { /* this class is purely static. No constructor to see here */ }
 
     // Safely store variables for our game
     private static app: Application;
@@ -11,11 +11,11 @@ export class Manager {
     private static _width: number;
     private static _height: number;
 
-
     // With getters but not setters, these variables become read-only
     public static get width(): number {
         return Manager._width;
     }
+
     public static get height(): number {
         return Manager._height;
     }

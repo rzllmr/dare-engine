@@ -3,7 +3,7 @@ import { IScene } from "../../manager";
 import { TileMap } from "../entities/map";
 
 export class GameScene extends Container implements IScene {
-    private tileMap: TileMap | null = null;
+    private tileMap: TileMap|null = null;
     
     constructor() {
         super();

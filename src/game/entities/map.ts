@@ -24,11 +24,11 @@ export class TileMap extends Container {
     public load(): TileMap {
         if (this.data.length == 0) return this;
 
-        for (var char of this.data) {
+        for (const char of this.data) {
             let tile: Tile = new EmptyTile();
             if (char == "\n") tile = new LastTile();
             else {
-                var tileName = this.tileName.get(char);
+                const tileName = this.tileName.get(char);
                 if (tileName != undefined) tile = new Tile(tileName);
             }
             this.tiles.push(tile);
@@ -41,8 +41,8 @@ export class TileMap extends Container {
         let offsetX = 0;
         let offsetY = 0;
         let spacingX = 16;
-        for (var idx = 0; idx < this.tiles.length; idx++) {
-            let tile = this.tiles[idx];
+        for (let idx = 0; idx < this.tiles.length; idx++) {
+            const tile = this.tiles[idx];
             if (tile instanceof EmptyTile) offsetX += spacingX;
             else if (tile instanceof LastTile) {
                 offsetY += 24;
