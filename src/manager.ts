@@ -30,7 +30,7 @@ export class Manager {
         // Create our pixi app
         Manager.app = new Application({
             view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
-            resolution: window.devicePixelRatio || 1,
+            resolution: window.devicePixelRatio,
             autoDensity: true,
             backgroundColor: background,
             width: width,
