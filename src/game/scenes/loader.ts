@@ -33,7 +33,7 @@ export class LoaderScene extends Container implements IScene {
 
         this.initializeLoader().then(() => {
             this.gameLoaded();
-        })
+        }, () => {})
     }
 
     private async initializeLoader(): Promise<void>
