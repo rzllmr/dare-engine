@@ -1,7 +1,7 @@
 import { Sprite } from 'pixi.js';
 import tilesData from './tiles.json';
 
-type TileData = {
+interface TileData {
     name: string;
     image: string;
 };
