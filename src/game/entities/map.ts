@@ -22,14 +22,14 @@ export class TileMap extends Container {
     }
 
     public load(): TileMap {
-        if (this.data.length == 0) return this;
+        if (this.data.length === 0) return this;
 
         for (const char of this.data) {
             let tile: Tile = new EmptyTile();
-            if (char == "\n") tile = new LastTile();
+            if (char === "\n") tile = new LastTile();
             else {
                 const tileName = TileMap.tileName.get(char);
-                if (tileName != undefined) tile = new Tile(tileName);
+                if (tileName !== undefined) tile = new Tile(tileName);
             }
             this.tiles.push(tile);
         }
@@ -52,7 +52,7 @@ export class TileMap extends Container {
                 spacingX = 32;
             }
 
-            if (tile.image == undefined) continue;
+            if (tile.image === undefined) continue;
 
             tile.sprite = Sprite.from(tile.image);
 

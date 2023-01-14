@@ -44,7 +44,7 @@ export class Manager {
     // Call this function when you want to go to a new scene
     public static changeScene(newScene: IScene): void {
         // Remove and destroy old scene... if we had one..
-        if (Manager.currentScene != undefined) {
+        if (Manager.currentScene !== undefined) {
             Manager.app.stage.removeChild(Manager.currentScene);
             Manager.currentScene.destroy();
         }
@@ -58,7 +58,7 @@ export class Manager {
     private static update(framesPassed: number): void {
         // Let the current scene know that we updated it...
         // Just for funzies, sanity check that it exists first.
-        if (Manager.currentScene != undefined) {
+        if (Manager.currentScene !== undefined) {
             Manager.currentScene.update(framesPassed);
         }
 

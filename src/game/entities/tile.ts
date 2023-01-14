@@ -11,9 +11,9 @@ export class Tile {
     public sprite: Sprite|null = null;
 
     constructor(name: string = "") {
-        if (name.length == 0) return;
+        if (name.length === 0) return;
         for (const tile of (tilesData as TileData[])) {
-            if (tile.name == name) {
+            if (tile.name === name) {
                 this.data = tile;
             }
         }
