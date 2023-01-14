@@ -7,7 +7,7 @@ export const manifest:ResolverManifest = {
             assets:
             {
                 "tiles" : "./drjamgo_hex_16x16.json",
-                "map": "./maps/test.txt"
+                "map.test": "./maps/test.txt"
             }
         }
     ]

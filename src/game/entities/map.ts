@@ -18,7 +18,7 @@ export class TileMap extends Container {
     constructor(name: string) {
         super();
 
-        this.data = Assets.get('map') as string;
+        this.data = Assets.get(name) as string;
     }
 
     public load(): TileMap {
@@ -28,7 +28,7 @@ export class TileMap extends Container {
             let tile: Tile = new EmptyTile();
             if (char == "\n") tile = new LastTile();
             else {
-                const tileName = this.tileName.get(char);
+                const tileName = TileMap.tileName.get(char);
                 if (tileName != undefined) tile = new Tile(tileName);
             }
             this.tiles.push(tile);
