@@ -3,9 +3,9 @@ import { Manager } from '../../manager';
 import { Tile, EmptyTile, LastTile } from './tile'
 
 export class TileMap extends Container {
-    private data: string = "";
-    private tiles = new Array<Tile>();
-    private tileName: Map<string, string> = new Map([
+    private readonly data: string = "";
+    private readonly tiles = new Array<Tile>();
+    private static readonly tileName: Map<string, string> = new Map([
         ["≈", "sea"],
         ["\"", "grass"],
         ["♣", "forest"]

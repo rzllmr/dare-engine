@@ -7,7 +7,7 @@ type TileData = {
 };
 
 export class Tile {
-    private data: TileData|null = null;
+    private readonly data: TileData|null = null;
     public sprite: Sprite|null = null;
 
     constructor(name: string = "") {

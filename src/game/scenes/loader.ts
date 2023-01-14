@@ -6,9 +6,9 @@ import { GameScene } from "./game";
 export class LoaderScene extends Container implements IScene {
 
     // for making our loader graphics...
-    private loaderBar: Container;
-    private loaderBarBoder: Graphics;
-    private loaderBarFill: Graphics;
+    private readonly loaderBar: Container;
+    private readonly loaderBarBoder: Graphics;
+    private readonly loaderBarFill: Graphics;
     constructor() {
         super();
 
