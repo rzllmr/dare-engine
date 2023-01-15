@@ -1,5 +1,5 @@
 import { Container, Sprite, Assets } from 'pixi.js';
-import { Manager } from '../../manager';
+import { manager } from '../../manager';
 import { Tile, EmptyTile, LastTile } from './tile'
 
 export class TileMap extends Container {
@@ -58,8 +58,8 @@ export class TileMap extends Container {
 
             tile.sprite.scale.set(2, 2);
             tile.sprite.anchor.set(0.5);
-            tile.sprite.x = Manager.width / 2 + offsetX;
-            tile.sprite.y = Manager.height / 2 + offsetY;
+            tile.sprite.x = manager.width / 2 + offsetX;
+            tile.sprite.y = manager.height / 2 + offsetY;
             this.addChild(tile.sprite);
         }
         return this;
