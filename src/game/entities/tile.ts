@@ -31,6 +31,16 @@ export class Tile {
         return this.data?.action;
     }
 
+    public show(): void {
+        if (this.sprite === undefined) return;
+        this.sprite.alpha = 1.0;
+    }
+
+    public hide(): void {
+        if (this.sprite === undefined) return;
+        this.sprite.alpha = 0.5;
+    }
+
     private static _charMap: Map<string, string>|undefined;
     public static get charMap(): Map<string, string> {
         if (Tile._charMap === undefined) {

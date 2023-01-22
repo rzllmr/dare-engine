@@ -25,6 +25,11 @@ export class Movement {
 export abstract class Movable extends Tile {
     public posX = 0;
     public posY = 0;
+
+    public override hide(): void {
+        if (this.sprite === undefined) return;
+        this.sprite.alpha = 0.0;
+    }
 }
 
 export class Player extends Movable {
