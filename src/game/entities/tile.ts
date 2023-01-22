@@ -27,6 +27,10 @@ export class Tile {
         return this.data?.image;
     }
 
+    public get action(): string|undefined {
+        return this.data?.action;
+    }
+
     private static _charMap: Map<string, string>|undefined;
     public static get charMap(): Map<string, string> {
         if (Tile._charMap === undefined) {

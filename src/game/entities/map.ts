@@ -1,11 +1,11 @@
 import { Container, Sprite, Texture, Assets, Point } from 'pixi.js';
-import { Creature, Player } from './player';
+import { Movable, Player, Movement } from './movable';
 import { Tile } from './tile'
 
 export class TileMap extends Container {
     private readonly data: string = "";
     private readonly tiles = new Array<Tile>();
-    private readonly objects = new Map<string, Creature>();
+    private readonly movables = new Map<string, Movable>();
     private readonly layers = new Array<Container>(2).fill(new Container());
     private dimX: number = 0;
     private dimY: number = 0;
@@ -24,10 +24,6 @@ export class TileMap extends Container {
         this.name = name;
         this.data = Assets.get(name) as string;
         this.layers.forEach(layer => this.addChild(layer));
-    }
-
-    private tile(x: number, y: number): Tile | undefined {
-        return this.tiles.at(x + y * (this.dimX + 1));
     }
 
     public load(): TileMap {
@@ -60,7 +56,7 @@ export class TileMap extends Container {
                 if (tileName === "player") {
                     if (this.player === undefined) {
                         const player = new Player(currentX, currentY);
-                        this.objects.set(tileName, player);
+                        this.movables.set(tileName, player);
                         this.player = player;
                     } else {
                         console.warn(`Player '@' already defined in ${this.name}:${this.player.posY + 1}:${this.player.posX + 1}`);
@@ -108,7 +104,7 @@ export class TileMap extends Container {
             offsetX += this.tileDim;
         }
 
-        for (const object of this.objects.values()) {
+        for (const object of this.movables.values()) {
             if (object.image === undefined) continue;
 
             let texture = TileMap.textures.get(object.image);
@@ -128,27 +124,27 @@ export class TileMap extends Container {
         return this;
     }
 
-    public moveObject(name: string, direction: string): void {
-        const object = this.objects.get(name);
+    public move(name: string, movement: Movement): void {
+        const direction = movement.direction;
+        if (direction === undefined) return;
+
+        const object = this.movables.get(name);
         if (object?.sprite === undefined) return;
 
-        const movement = new Point(0, 0);
-        switch(direction) {
-            case "Up":
-                movement.y = -this.tileDim;
-                break;
-            case "Down":
-                movement.y = this.tileDim;
-                break;
-            case "Left":
-                movement.x = -this.tileDim;
-                break;
-            case "Right":
-                movement.x = this.tileDim;
-                break;
-        }
-        
-        object.sprite.x += movement.x;
-        object.sprite.y += movement.y;  
+        const target = this.tile(
+            object.posX + direction.x,
+            object.posY + direction.y - 1
+        );
+
+        if (target?.action === "block") return;
+
+        object.posX += direction.x;
+        object.posY += direction.y;
+        object.sprite.x += direction.x * this.tileDim;
+        object.sprite.y += direction.y * this.tileDim;
+    }
+
+    private tile(x: number, y: number): Tile | undefined {
+        return this.tiles.at(x + y * this.dimX);
     }
 }

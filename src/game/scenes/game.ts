@@ -1,6 +1,7 @@
 import { Container } from "pixi.js";
 import { IScene } from "../../manager";
 import { TileMap } from "../entities/map";
+import { Movement } from "../entities/movable";
 
 export class GameScene extends Container implements IScene {
     private readonly tileMap: TileMap;
@@ -16,7 +17,8 @@ export class GameScene extends Container implements IScene {
 
     public input(key: string): void {
         if (key.startsWith("Arrow")) {
-            this.tileMap.moveObject("player", key.replace("Arrow", ""));
+            const movement = new Movement(key.replace("Arrow", ""));
+            this.tileMap.move("player", movement);
         }
     }
 
