@@ -9,7 +9,10 @@ export class TileMap extends Container {
     private readonly layers = new Array<Container>(2).fill(new Container());
     private dimX: number = 0;
     private dimY: number = 0;
-    private tileDim: number = 0;
+
+    private static readonly scale: number = 0.1;
+    private static readonly tileDim: number = TileMap.scale * 128;
+
     public player: Player|undefined;
 
     private static readonly textures = new Map<string, Texture>();
@@ -73,55 +76,48 @@ export class TileMap extends Container {
     }
 
     public draw(): TileMap {
-        const scale = 0.1;
         let offsetX = 0;
         let offsetY = 0;
-        this.tileDim = 128 * scale;
         for (let idx = 0; idx < this.tiles.length; idx++) {
             if (idx % this.dimX === 0) {
-                offsetY += this.tileDim;
+                offsetY++;
                 offsetX = 0;
             }
 
-            const tile = this.tiles[idx];
-            
-            if (tile.image === undefined) continue;
+            const tile = this.tiles[idx];            
+            TileMap.initSprite(tile, offsetX, offsetY);
+            if (tile.sprite !== undefined) this.layers[0].addChild(tile.sprite);
 
-            let texture = TileMap.textures.get(tile.image);
-            if (texture === undefined) {
-                texture = Texture.from(tile.image);
-                TileMap.textures.set(tile.image, texture);
-            }
-
-            tile.sprite = Sprite.from(texture);
-
-            tile.sprite.scale.set(scale, scale);
-            tile.sprite.anchor.set(0.0);
-            tile.sprite.x = offsetX;
-            tile.sprite.y = offsetY;
-            this.layers[0].addChild(tile.sprite);
-
-            offsetX += this.tileDim;
+            offsetX++;
         }
 
-        for (const object of this.movables.values()) {
-            if (object.image === undefined) continue;
-
-            let texture = TileMap.textures.get(object.image);
-            if (texture === undefined) {
-                texture = Texture.from(object.image);
-                TileMap.textures.set(object.image, texture);
-            }
-            object.sprite = Sprite.from(texture);
-
-            object.sprite.scale.set(scale);
-            object.sprite.anchor.set(0.0);
-            object.sprite.x = object.posX * this.tileDim;
-            object.sprite.y = object.posY * this.tileDim;
-            this.layers[1].addChild(object.sprite);
+        for (const movable of this.movables.values()) {
+            TileMap.initSprite(movable, movable.posX, movable.posY);
+            if (movable.sprite !== undefined) this.layers[1].addChild(movable.sprite);
         }
 
         return this;
+    }
+
+    private static initSprite(tile: Tile, posX: number, posY: number): void {
+        if (tile.image === undefined) return;
+
+        const texture = TileMap.texture(tile.image);
+        tile.sprite = Sprite.from(texture);
+
+        tile.sprite.scale.set(TileMap.scale);
+        tile.sprite.anchor.set(0.0);
+        tile.sprite.x = posX * TileMap.tileDim;
+        tile.sprite.y = posY * TileMap.tileDim;
+    }
+
+    private static texture(image: string): Texture {
+        let texture = TileMap.textures.get(image);
+        if (texture === undefined) {
+            texture = Texture.from(image);
+            TileMap.textures.set(image, texture);
+        }
+        return texture;
     }
 
     public move(name: string, movement: Movement): void {
@@ -140,8 +136,8 @@ export class TileMap extends Container {
 
         object.posX += direction.x;
         object.posY += direction.y;
-        object.sprite.x += direction.x * this.tileDim;
-        object.sprite.y += direction.y * this.tileDim;
+        object.sprite.x += direction.x * TileMap.tileDim;
+        object.sprite.y += direction.y * TileMap.tileDim;
     }
 
     private tile(x: number, y: number): Tile | undefined {
