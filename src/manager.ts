@@ -29,11 +29,14 @@ class Manager {
             view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
             resolution: window.devicePixelRatio,
             autoDensity: true,
-            backgroundColor: 0x6495ed,
+            backgroundColor: 0xffffff,
             width: this._width,
             height: this._height
         });
-        this.app.ticker.add(this.update)
+        this.app.ticker.add(this.update);
+        document.body.addEventListener('keydown', (event: KeyboardEvent) => {
+            if (this.currentScene !== undefined) this.currentScene.input(event.key);
+        })
     }
 
     public changeScene(newScene: IScene): void {
@@ -54,5 +57,6 @@ class Manager {
 export const manager = Manager.instance()
 
 export interface IScene extends DisplayObject {
+    input: (key: string) => void;
     update: (framesPassed: number) => void;
 }

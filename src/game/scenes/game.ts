@@ -3,7 +3,7 @@ import { IScene } from "../../manager";
 import { TileMap } from "../entities/map";
 
 export class GameScene extends Container implements IScene {
-    private readonly tileMap: TileMap|null = null;
+    private readonly tileMap: TileMap;
     
     constructor() {
         super();
@@ -12,6 +12,12 @@ export class GameScene extends Container implements IScene {
         this.addChild(this.tileMap);
         this.tileMap.load();
         this.tileMap.draw();
+    }
+
+    public input(key: string): void {
+        if (key.startsWith("Arrow")) {
+            this.tileMap.moveObject("player", key.replace("Arrow", ""));
+        }
     }
 
     public update(framesPassed: number): void {

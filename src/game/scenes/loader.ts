@@ -54,7 +54,11 @@ export class LoaderScene extends Container implements IScene {
         manager.changeScene(new GameScene());
     }
 
+    public input(key: string): void {
+        
+    }
+
     public update(framesPassed: number): void {
-        // To be a scene we must have the update method even if we don't use it.
+
     }
 }
