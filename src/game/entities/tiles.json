@@ -28,5 +28,17 @@
         "image": "tile_1.4",
         "symbol": "@",
         "action": "none"
+    },
+    {
+        "name": "rat",
+        "image": "tile_1.5",
+        "symbol": "r",
+        "action": "fight"
+    },
+    {
+        "name": "door",
+        "image": "tile_1.6",
+        "symbol": "+",
+        "action": "open"
     }
 ]
