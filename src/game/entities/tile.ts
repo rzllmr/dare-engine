@@ -38,15 +38,15 @@ export class Tile {
 
     public hide(): void {
         if (this.sprite === undefined) return;
-        this.sprite.alpha = 0.5;
+        this.sprite.alpha = 0.3;
     }
 
-    private static _charMap: Map<string, string>|undefined;
-    public static get charMap(): Map<string, string> {
+    private static _charMap: Map<string, TileData>|undefined;
+    public static get charMap(): Map<string, TileData> {
         if (Tile._charMap === undefined) {
-            Tile._charMap = new Map<string, string>();
+            Tile._charMap = new Map<string, TileData>();
             for (const tile of (tilesData as TileData[])) {
-                Tile._charMap.set(tile.symbol, tile.name);
+                Tile._charMap.set(tile.symbol, tile);
             }
         }
         return Tile._charMap;

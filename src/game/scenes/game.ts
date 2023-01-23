@@ -9,7 +9,7 @@ export class GameScene extends Container implements IScene {
     constructor() {
         super();
 
-        this.tileMap = new TileMap("map.test");
+        this.tileMap = new TileMap("map.fov");
         this.addChild(this.tileMap);
         this.tileMap.load();
         this.tileMap.draw();
