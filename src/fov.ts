@@ -78,7 +78,7 @@ class Quadrant {
             return new Point(this.origin.x + tile.x, this.origin.y + tile.y)
         else if (this.cardinal === this.direction.west)
             return new Point(this.origin.x - tile.x, this.origin.y + tile.y)
-        else throw new Error("not a cardinal direction")
+        else throw new Error(`not a cardinal direction: ${this.cardinal}`);
     }
 }
 
@@ -94,8 +94,8 @@ class Row {
     }
 
     public* tiles(): Generator<Point> {
-        const minCol = roundTiesUp(this.depth * this.startSlope.decim);
-        const maxCol = roundTiesDown(this.depth * this.endSlope.decim);
+        const minCol = roundTiesUp(this.startSlope.multiply(this.depth));
+        const maxCol = roundTiesDown(this.endSlope.multiply(this.depth));
         for (let col = minCol; col <= maxCol; col++) {
             yield new Point(this.depth, col);
         }
@@ -111,8 +111,8 @@ function slope(tile: Point): Fraction {
 }
 
 function isSymmetric(row: Row, tile: Point): boolean {
-    return (tile.y >= row.depth * row.startSlope.decim
-         && tile.y <= row.depth * row.endSlope.decim)
+    return (tile.y >= row.startSlope.multiply(row.depth)
+         && tile.y <= row.endSlope.multiply(row.depth))
 }
 
 function roundTiesUp(n: number): number {
@@ -134,5 +134,10 @@ class Fraction {
 
     public get decim(): number {
         return this.numerator / this.denominator;
+    }
+
+    // avoids floating point inaccuracies 
+    public multiply(multiplier: number): number {
+        return multiplier * this.numerator / this.denominator;
     }
 }
