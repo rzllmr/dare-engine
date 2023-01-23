@@ -13,25 +13,21 @@ class Manager {
     private readonly app: Application;
     private currentScene: IScene|undefined;
 
-    private readonly _width: number = 640;
-    private readonly _height: number = 480;
-
     public get width(): number {
-        return this._width;
+        return Math.max(document.documentElement.clientWidth, window.innerWidth);
     }
 
     public get height(): number {
-        return this._height;
+        return Math.max(document.documentElement.clientHeight, window.innerHeight);
     }
 
     private constructor() {
         this.app = new Application({
             view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
             resolution: window.devicePixelRatio,
+            resizeTo: window,
             autoDensity: true,
-            backgroundColor: 0xffffff,
-            width: this._width,
-            height: this._height
+            backgroundColor: 0xffffff
         });
         this.app.ticker.add(this.update);
         document.body.addEventListener('keydown', (event: KeyboardEvent) => {
