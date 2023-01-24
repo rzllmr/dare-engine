@@ -13,24 +13,20 @@ export default function computeFov(origin: Point, isBlocking: (tile: Point) => b
 
     markVisible(origin)
 
-    for (let i = 0; i < 4; i++) {
-        const quadrant = new Quadrant(i, origin)
-
+    for (const transform of quadrantTransforms(origin)) {
+    
         function reveal(tile: Point): void {
-            const transform = quadrant.transform(tile)
-            markVisible(transform)
+            markVisible(transform(tile))
         }
 
         function isWall(tile: Point|null): boolean {
             if (tile === null) return false;
-            const transform = quadrant.transform(tile)
-            return isBlocking(transform)
+            return isBlocking(transform(tile))
         }
 
         function isFloor(tile: Point|null): boolean {
             if (tile === null) return false;
-            const transform = quadrant.transform(tile)
-            return !isBlocking(transform)
+            return !isBlocking(transform(tile))
         }
 
         function scan(row: Row): void {
@@ -59,26 +55,16 @@ export default function computeFov(origin: Point, isBlocking: (tile: Point) => b
     }
 }
 
-class Quadrant {
-    private readonly direction = {north: 0, east: 1, south: 2, west: 3};
-    private readonly cardinal: number;
-    private readonly origin: Point;
-
-    constructor(cardinal: number, origin: Point) {
-        this.cardinal = cardinal
-        this.origin = origin
-    }
-
-    public transform(tile: Point): Point {
-        if (this.cardinal === this.direction.north)
-            return new Point(this.origin.x + tile.y, this.origin.y - tile.x)
-        else if (this.cardinal === this.direction.south)
-            return new Point(this.origin.x + tile.y, this.origin.y + tile.x)
-        else if (this.cardinal === this.direction.east)
-            return new Point(this.origin.x + tile.x, this.origin.y + tile.y)
-        else if (this.cardinal === this.direction.west)
-            return new Point(this.origin.x - tile.x, this.origin.y + tile.y)
-        else throw new Error(`not a cardinal direction: ${this.cardinal}`);
+function* quadrantTransforms(origin: Point): Generator<(tile: Point) => Point> {
+    for (const quadrant of ["north", "east", "south", "west"]) {
+        if (quadrant === "north")
+            yield (tile: Point): Point => { return new Point(origin.x + tile.y, origin.y - tile.x) }
+        else if (quadrant === "south")
+            yield (tile: Point): Point => { return new Point(origin.x + tile.y, origin.y + tile.x) }
+        else if (quadrant === "east")
+            yield (tile: Point): Point => { return new Point(origin.x + tile.x, origin.y + tile.y) }
+        else // quadrant === "west"
+            yield (tile: Point): Point => { return new Point(origin.x - tile.x, origin.y + tile.y) }
     }
 }
 
