@@ -9,14 +9,16 @@
 
 import { Point } from "pixi.js";
 
-export default function computeFov(origin: Point, isBlocking: (tile: Point) => boolean, markVisible: (tile: Point) => void): void {
+export default function computeFov(origin: Point, isBlocking: (tile: Point) => boolean, markVisible: (tile: Point) => void, maxDistance: number = Infinity): void {
 
     markVisible(origin)
 
     for (const transform of quadrantTransforms(origin)) {
     
         function reveal(tile: Point): void {
-            markVisible(transform(tile))
+            const transformed = transform(tile)
+            if (insideCircle(transformed, origin, maxDistance))
+                markVisible(transformed)
         }
 
         function isWall(tile: Point|null): boolean {
@@ -30,6 +32,8 @@ export default function computeFov(origin: Point, isBlocking: (tile: Point) => b
         }
 
         function scan(row: Row): void {
+            if (row.depth > maxDistance) return;
+
             let prevTile = null;
             for (const tile of row.tiles()) {
                 if (isWall(tile) || isSymmetric(row, tile)) {
@@ -107,6 +111,10 @@ function roundTiesUp(n: number): number {
 
 function roundTiesDown(n: number): number {
     return Math.ceil(n - 0.5);
+}
+
+function insideCircle(tile: Point, origin: Point, radius: number): boolean {
+    return Math.pow(tile.x - origin.x, 2) + Math.pow(tile.y - origin.y, 2) <= Math.pow(radius + 0.5, 2);
 }
 
 class Fraction {
