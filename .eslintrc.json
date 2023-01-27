@@ -16,6 +16,8 @@
     },
     "rules": {
         "object-shorthand": ["warn", "never"],
-        "@typescript-eslint/consistent-type-definitions": "off"
+        "@typescript-eslint/consistent-type-definitions": "off",
+        "semi": ["warn", "always"],
+        "quotes": ["warn", "double"]
     }
 }

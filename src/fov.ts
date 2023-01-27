@@ -11,24 +11,24 @@ import { Point } from "pixi.js";
 
 export default function computeFov(origin: Point, isBlocking: (tile: Point) => boolean, markVisible: (tile: Point) => void, maxDistance: number = Infinity): void {
 
-    markVisible(origin)
+    markVisible(origin);
 
     for (const transform of quadrantTransforms(origin)) {
     
         function reveal(tile: Point): void {
-            const transformed = transform(tile)
+            const transformed = transform(tile);
             if (insideCircle(transformed, origin, maxDistance))
-                markVisible(transformed)
+                markVisible(transformed);
         }
 
         function isWall(tile: Point|null): boolean {
             if (tile === null) return false;
-            return isBlocking(transform(tile))
+            return isBlocking(transform(tile));
         }
 
         function isFloor(tile: Point|null): boolean {
             if (tile === null) return false;
-            return !isBlocking(transform(tile))
+            return !isBlocking(transform(tile));
         }
 
         function scan(row: Row): void {
@@ -50,25 +50,25 @@ export default function computeFov(origin: Point, isBlocking: (tile: Point) => b
                 prevTile = tile;
             }
             if (isFloor(prevTile)) {
-                scan(row.next())
+                scan(row.next());
             }
         }
 
-        const firstRow = new Row(1, new Fraction(-1), new Fraction(1))
-        scan(firstRow)
+        const firstRow = new Row(1, new Fraction(-1), new Fraction(1));
+        scan(firstRow);
     }
 }
 
 function* quadrantTransforms(origin: Point): Generator<(tile: Point) => Point> {
     for (const quadrant of ["north", "east", "south", "west"]) {
         if (quadrant === "north")
-            yield (tile: Point): Point => { return new Point(origin.x + tile.y, origin.y - tile.x) }
+            yield (tile: Point): Point => { return new Point(origin.x + tile.y, origin.y - tile.x); };
         else if (quadrant === "south")
-            yield (tile: Point): Point => { return new Point(origin.x + tile.y, origin.y + tile.x) }
+            yield (tile: Point): Point => { return new Point(origin.x + tile.y, origin.y + tile.x); };
         else if (quadrant === "east")
-            yield (tile: Point): Point => { return new Point(origin.x + tile.x, origin.y + tile.y) }
+            yield (tile: Point): Point => { return new Point(origin.x + tile.x, origin.y + tile.y); };
         else // quadrant === "west"
-            yield (tile: Point): Point => { return new Point(origin.x - tile.x, origin.y + tile.y) }
+            yield (tile: Point): Point => { return new Point(origin.x - tile.x, origin.y + tile.y); };
     }
 }
 
@@ -102,7 +102,7 @@ function slope(tile: Point): Fraction {
 
 function isSymmetric(row: Row, tile: Point): boolean {
     return (tile.y >= row.startSlope.multiply(row.depth)
-         && tile.y <= row.endSlope.multiply(row.depth))
+         && tile.y <= row.endSlope.multiply(row.depth));
 }
 
 function roundTiesUp(n: number): number {

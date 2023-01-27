@@ -6,7 +6,6 @@ class Manager {
         if (Manager._instance === undefined) {
             Manager._instance = new Manager();
         }
-
         return Manager._instance;
     }
 
