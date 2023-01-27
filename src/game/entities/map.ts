@@ -2,6 +2,10 @@ import { Container, Sprite, Texture, Assets, Point } from 'pixi.js';
 import { Movable, Player, Movement, Enemy } from './movable';
 import { Tile } from './tile';
 import computeFov from '../../fov';
+import { properties } from '../../properties';
+
+export type PropertyNames = "vision-distance"
+properties.register("vision-distance", Infinity, "radius around player where tiles are revealed");
 
 export class TileMap extends Container {
     private readonly data: string = "";
@@ -26,7 +30,7 @@ export class TileMap extends Container {
         super();
 
         this.name = name;
-        this.data = Assets.get(name) as string;
+        this.data = Assets.get(name);
         this.layers.forEach(layer => this.addChild(layer));
     }
 
@@ -194,7 +198,8 @@ export class TileMap extends Container {
             computeFov(
                 new Point(this.player.posX, this.player.posY - 1),
                 this.isBlocking.bind(this),
-                this.markVisible.bind(this)
+                this.markVisible.bind(this),
+                properties.getNumber("vision-distance")
             );
         }
 
