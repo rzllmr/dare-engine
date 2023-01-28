@@ -2,20 +2,20 @@ import { Point } from 'pixi.js';
 import { Tile } from './tile';
 
 export class Movement {
-    public readonly direction: Point|undefined;
+    public readonly direction: Point | undefined;
 
     constructor(direction: string) {
-        switch(direction.toLowerCase()) {
-            case "up":
+        switch (direction.toLowerCase()) {
+            case 'up':
                 this.direction = new Point(0, -1);
                 break;
-            case "down":
+            case 'down':
                 this.direction = new Point(0, 1);
                 break;
-            case "left":
+            case 'left':
                 this.direction = new Point(-1, 0);
                 break;
-            case "right":
+            case 'right':
                 this.direction = new Point(1, 0);
                 break;
         }
@@ -41,10 +41,8 @@ export abstract class Movable extends Tile {
 
 export class Player extends Movable {
     constructor(posX: number, posY: number) {
-        super("player", posX, posY);
+        super('player', posX, posY);
     }
 }
 
-export class Enemy extends Movable {
-
-}
+export class Enemy extends Movable {}

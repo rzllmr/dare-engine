@@ -1,4 +1,4 @@
-import { Application, DisplayObject } from "pixi.js";
+import { Application, DisplayObject } from 'pixi.js';
 
 class Manager {
     private static _instance: Manager;
@@ -10,7 +10,7 @@ class Manager {
     }
 
     private readonly app: Application;
-    private currentScene: IScene|undefined;
+    private currentScene: IScene | undefined;
 
     public get width(): number {
         return Math.max(document.documentElement.clientWidth, window.innerWidth);
@@ -22,7 +22,7 @@ class Manager {
 
     private constructor() {
         this.app = new Application({
-            view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
+            view: document.getElementById('pixi-canvas') as HTMLCanvasElement,
             resolution: window.devicePixelRatio,
             resizeTo: window,
             autoDensity: true,
@@ -31,7 +31,7 @@ class Manager {
         this.app.ticker.add(this.update);
         document.body.addEventListener('keydown', (event: KeyboardEvent) => {
             if (this.currentScene !== undefined) this.currentScene.input(event.key);
-        })
+        });
     }
 
     public changeScene(newScene: IScene): void {
@@ -49,7 +49,7 @@ class Manager {
         }
     }
 }
-export const manager = Manager.instance()
+export const manager = Manager.instance();
 
 export interface IScene extends DisplayObject {
     input: (key: string) => void;

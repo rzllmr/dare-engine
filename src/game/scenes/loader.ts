@@ -1,10 +1,9 @@
-import { Container, Graphics, Assets } from "pixi.js";
-import { manifest } from "../assets";
-import { IScene, manager } from "../../manager";
-import { GameScene } from "./game";
+import { Container, Graphics, Assets } from 'pixi.js';
+import { manifest } from '../assets';
+import { IScene, manager } from '../../manager';
+import { GameScene } from './game';
 
 export class LoaderScene extends Container implements IScene {
-
     // for making our loader graphics...
     private readonly loaderBar: Container;
     private readonly loaderBarBoder: Graphics;
@@ -15,7 +14,7 @@ export class LoaderScene extends Container implements IScene {
         const loaderBarWidth = manager.width * 0.8;
 
         this.loaderBarFill = new Graphics();
-        this.loaderBarFill.beginFill(0x008800, 1)
+        this.loaderBarFill.beginFill(0x008800, 1);
         this.loaderBarFill.drawRect(0, 0, loaderBarWidth, 50);
         this.loaderBarFill.endFill();
         this.loaderBarFill.scale.x = 0;
@@ -31,16 +30,18 @@ export class LoaderScene extends Container implements IScene {
         this.loaderBar.position.y = (manager.height - this.loaderBar.height) / 2;
         this.addChild(this.loaderBar);
 
-        this.initializeLoader().then(() => {
-            this.gameLoaded();
-        }, () => {})
+        this.initializeLoader().then(
+            () => {
+                this.gameLoaded();
+            },
+            () => {}
+        );
     }
 
-    private async initializeLoader(): Promise<void>
-    {
+    private async initializeLoader(): Promise<void> {
         await Assets.init({ manifest: manifest });
 
-        const bundleIds =  manifest.bundles.map(bundle => bundle.name);
+        const bundleIds = manifest.bundles.map((bundle) => bundle.name);
 
         await Assets.loadBundle(bundleIds, this.downloadProgress.bind(this));
     }
@@ -54,11 +55,7 @@ export class LoaderScene extends Container implements IScene {
         manager.changeScene(new GameScene());
     }
 
-    public input(key: string): void {
-        
-    }
+    public input(key: string): void {}
 
-    public update(framesPassed: number): void {
-
-    }
+    public update(framesPassed: number): void {}
 }

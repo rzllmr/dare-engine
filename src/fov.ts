@@ -7,26 +7,28 @@
 // defined by Adam Milazzo at http://www.adammil.net/blog/v125_Roguelike_Vision_Algorithms.html:
 // symmetry, expansive walls, expanding pillar shadows, no blind corners, no artifacts, efficiency
 
-import { Point } from "pixi.js";
+import { Point } from 'pixi.js';
 
-export default function computeFov(origin: Point, isBlocking: (tile: Point) => boolean, markVisible: (tile: Point) => void, maxDistance: number = Infinity): void {
-
+export default function computeFov(
+    origin: Point,
+    isBlocking: (tile: Point) => boolean,
+    markVisible: (tile: Point) => void,
+    maxDistance: number = Infinity
+): void {
     markVisible(origin);
 
     for (const transform of quadrantTransforms(origin)) {
-    
         function reveal(tile: Point): void {
             const transformed = transform(tile);
-            if (insideCircle(transformed, origin, maxDistance))
-                markVisible(transformed);
+            if (insideCircle(transformed, origin, maxDistance)) markVisible(transformed);
         }
 
-        function isWall(tile: Point|null): boolean {
+        function isWall(tile: Point | null): boolean {
             if (tile === null) return false;
             return isBlocking(transform(tile));
         }
 
-        function isFloor(tile: Point|null): boolean {
+        function isFloor(tile: Point | null): boolean {
             if (tile === null) return false;
             return !isBlocking(transform(tile));
         }
@@ -60,15 +62,24 @@ export default function computeFov(origin: Point, isBlocking: (tile: Point) => b
 }
 
 function* quadrantTransforms(origin: Point): Generator<(tile: Point) => Point> {
-    for (const quadrant of ["north", "east", "south", "west"]) {
-        if (quadrant === "north")
-            yield (tile: Point): Point => { return new Point(origin.x + tile.y, origin.y - tile.x); };
-        else if (quadrant === "south")
-            yield (tile: Point): Point => { return new Point(origin.x + tile.y, origin.y + tile.x); };
-        else if (quadrant === "east")
-            yield (tile: Point): Point => { return new Point(origin.x + tile.x, origin.y + tile.y); };
-        else // quadrant === "west"
-            yield (tile: Point): Point => { return new Point(origin.x - tile.x, origin.y + tile.y); };
+    for (const quadrant of ['north', 'east', 'south', 'west']) {
+        if (quadrant === 'north')
+            yield (tile: Point): Point => {
+                return new Point(origin.x + tile.y, origin.y - tile.x);
+            };
+        else if (quadrant === 'south')
+            yield (tile: Point): Point => {
+                return new Point(origin.x + tile.y, origin.y + tile.x);
+            };
+        else if (quadrant === 'east')
+            yield (tile: Point): Point => {
+                return new Point(origin.x + tile.x, origin.y + tile.y);
+            };
+        // quadrant === "west"
+        else
+            yield (tile: Point): Point => {
+                return new Point(origin.x - tile.x, origin.y + tile.y);
+            };
     }
 }
 
@@ -83,7 +94,7 @@ class Row {
         this.endSlope = endSlope;
     }
 
-    public* tiles(): Generator<Point> {
+    public *tiles(): Generator<Point> {
         const minCol = roundTiesUp(this.startSlope.multiply(this.depth));
         const maxCol = roundTiesDown(this.endSlope.multiply(this.depth));
         for (let col = minCol; col <= maxCol; col++) {
@@ -101,8 +112,7 @@ function slope(tile: Point): Fraction {
 }
 
 function isSymmetric(row: Row, tile: Point): boolean {
-    return (tile.y >= row.startSlope.multiply(row.depth)
-         && tile.y <= row.endSlope.multiply(row.depth));
+    return tile.y >= row.startSlope.multiply(row.depth) && tile.y <= row.endSlope.multiply(row.depth);
 }
 
 function roundTiesUp(n: number): number {
@@ -130,8 +140,8 @@ class Fraction {
         return this.numerator / this.denominator;
     }
 
-    // avoids floating point inaccuracies 
+    // avoids floating point inaccuracies
     public multiply(multiplier: number): number {
-        return multiplier * this.numerator / this.denominator;
+        return (multiplier * this.numerator) / this.denominator;
     }
 }
