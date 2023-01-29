@@ -2,6 +2,7 @@ import { Tile } from './tile';
 import { Point } from 'pixi.js';
 import { IComponent } from '../../component';
 import { Entity } from '../../entity';
+import { Inventory } from './components';
 
 export abstract class Action implements IComponent {
     public Entity: Entity | null = null;
@@ -28,5 +29,19 @@ export class Move extends Action {
             default:
                 throw new Error(`not a valid direction: ${direction}`);
         }
+    }
+}
+
+export class Pick extends Action {
+    readonly itemName: string;
+
+    constructor(itemName: string) {
+        super();
+        this.itemName = itemName;
+    }
+
+    public override act(subject: Tile): void {
+        const inventory = subject.getComponent(Inventory);
+        inventory.addItem(this.itemName);
     }
 }
