@@ -1,7 +1,7 @@
 import { Container, Assets, Point } from 'pixi.js';
 import { Tile } from './tile';
 import computeFov from '../../fov';
-import { properties } from '../../properties';
+import properties from '../../properties';
 
 export type PropertyNames = 'vision-distance';
 properties.register('vision-distance', Infinity, 'radius around player where tiles are revealed');

@@ -93,4 +93,5 @@ class Properties {
         property.callbacks.push(callback);
     }
 }
-export const properties = Properties.instance();
+const properties = Properties.instance();
+export default properties;
