@@ -1,6 +1,7 @@
 import { PropertyNames as mapProperties } from './game/entities/map';
+import { PropertyNames as tileProperties } from './game/entities/tile';
 
-export type PropertyName = mapProperties;
+type PropertyName = mapProperties | tileProperties;
 
 class Property<T> {
     public readonly name: PropertyName;
@@ -8,7 +9,7 @@ class Property<T> {
     public readonly immutable: boolean;
     public value: T;
 
-    public readonly callbacks = new Array<(value: T) => void>();
+    public readonly callbacks = new Array<() => void>();
     public readonly references = new Set<string>();
 
     constructor(name: PropertyName, value: T, comment: string, immutable: boolean) {
@@ -61,6 +62,9 @@ class Properties {
         if (typeof property.value !== typeof value) throw new Error(`property "${name}" not of type: ${typeof value}`);
         property.value = value;
         console.debug(`property set: ${name} = ${value.toString()}`);
+        property.callbacks.forEach((callback) => {
+            callback();
+        });
     }
 
     public getString(name: PropertyName): string {
@@ -81,6 +85,12 @@ class Properties {
         // eslint-disable-next-line valid-typeof
         if (typeof property.value !== type) throw new Error(`property "${name}" not of type: ${type}`);
         return property.value;
+    }
+
+    public onChange(name: PropertyName, callback: () => void): void {
+        const property = this.registered.get(name);
+        if (property === undefined) throw new Error(`property not registered: ${name}`);
+        property.callbacks.push(callback);
     }
 }
 export const properties = Properties.instance();
