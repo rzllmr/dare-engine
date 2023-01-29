@@ -6,8 +6,14 @@ import properties from '../../properties';
 export type PropertyNames = 'vision-distance';
 properties.register('vision-distance', Infinity, 'radius around player where tiles are revealed');
 
+interface TileInfo {
+    position: Point;
+    name: string;
+}
+
 export class TileMap extends Container {
-    private readonly data: string = '';
+    private readonly data: string;
+    private readonly info: TileInfo[];
     private readonly tiles = new Array<Tile>();
     private readonly movables = new Array<Tile>();
     private readonly layers = new Array<Container>(2);
@@ -23,6 +29,8 @@ export class TileMap extends Container {
 
         this.name = name;
         this.data = Assets.get(name);
+        this.info = Assets.get(`${name}.info`);
+        if (this.info === undefined) this.info = new Array<TileInfo>();
 
         this.layers[0] = this.addChild(new Container()); // for tiles
         this.layers[1] = this.addChild(new Container()); // for movables
@@ -66,7 +74,13 @@ export class TileMap extends Container {
                 } else {
                     tileName = tileType.name;
                     if (['player', 'enemy', 'item'].includes(tileType.kind)) {
-                        const tile = new Tile(tileName, currentPosition);
+                        const specific = this.info.find((tileInfo) => {
+                            return (
+                                tileInfo.position.x === currentPosition.x && tileInfo.position.y === currentPosition.y
+                            );
+                        })?.name;
+
+                        const tile = new Tile(tileName, currentPosition, specific);
                         if (tileType.kind === 'player') {
                             this.player = tile;
                         } else {
@@ -112,19 +126,6 @@ export class TileMap extends Container {
         return undefined;
     }
 
-    private isBlocking(coord: Point): boolean {
-        const tile = this.tile(coord);
-        if (tile === undefined) return false;
-
-        return tile.blocksView;
-    }
-
-    private readonly visibles = new Array<Point>();
-
-    private markVisible(coord: Point): void {
-        this.visibles.push(coord);
-    }
-
     private updateVision(): void {
         this.visibles.forEach((coord) => {
             this.movable(coord)?.hide();
@@ -145,5 +146,18 @@ export class TileMap extends Container {
             this.movable(coord)?.show();
             this.tile(coord)?.show();
         });
+    }
+
+    private readonly visibles = new Array<Point>();
+
+    private markVisible(coord: Point): void {
+        this.visibles.push(coord);
+    }
+
+    private isBlocking(coord: Point): boolean {
+        const tile = this.tile(coord);
+        if (tile === undefined) return false;
+
+        return tile.blocksView;
     }
 }

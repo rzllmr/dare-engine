@@ -1,22 +1,33 @@
 import { Point, Sprite, Texture } from 'pixi.js';
 import { Entity } from '../../entity';
-import { Action, Move } from './actions';
+import { Action, Move, Pick } from './actions';
 import { TileMap } from './map';
 import tilesData from './tiles.json';
+import properties from '../../properties';
+import { Inventory } from './components';
+
+export type PropertyNames = 'map-tiles' | 'reveal-tiles';
+properties.register('map-tiles', false, 'revealed tiles stay visible on map');
+properties.register('reveal-tiles', false, 'all tiles are revealed on map');
 
 interface TileData {
     name: string;
     image: string;
     symbol: string;
     kind: string;
+    specific: string;
 }
 
 export class Tile extends Entity {
     private readonly data!: TileData;
     public readonly sprite!: Sprite;
-    protected alpha = { start: 0.0, show: 1.0, hide: 0.3 };
+    private alpha = {
+        start: properties.getBool('reveal-tiles') ? 0.3 : 0.0,
+        show: 1.0,
+        hide: properties.getBool('map-tiles') ? 0.3 : 0.0
+    };
 
-    constructor(name: string, position: Point) {
+    constructor(name: string, position: Point, specific: string = '') {
         super();
 
         const tileData = (tilesData as TileData[]).find((tile) => {
@@ -25,21 +36,32 @@ export class Tile extends Entity {
         if (tileData === undefined) throw new Error(`tile name unknown: ${name}`);
 
         this.data = tileData;
-        this.initKind(this.kind);
+        this.initKind(this.kind, specific);
         this.sprite = this.loadSprite(this.data.image);
         this.position = position;
+
+        this.registerChanges();
     }
 
-    private initKind(kind: string): void {
+    private registerChanges(): void {
+        properties.onChange('map-tiles', () => {
+            this.alpha.hide = properties.getBool('map-tiles') ? 0.3 : 0.0;
+        });
+    }
+
+    private initKind(kind: string, specific: string): void {
         switch (kind) {
             case 'player':
                 this.alpha = { start: 1.0, show: 1.0, hide: 0.3 };
+                this.addComponent(new Inventory());
                 break;
             case 'enemy':
                 this.alpha = { start: 0.0, show: 1.0, hide: 0.0 };
                 break;
             case 'item':
                 this.alpha = { start: 0.0, show: 1.0, hide: 0.0 };
+                this.addComponent(new Pick(specific));
+                this.addComponent(new Move());
                 break;
             case 'pass':
                 this.addComponent(new Move());
@@ -62,7 +84,9 @@ export class Tile extends Entity {
 
     public act(subject: Tile): void {
         for (const component of this.components) {
-            (component as Action).act(subject);
+            if (component instanceof Action) {
+                component.act(subject);
+            }
         }
     }
 
