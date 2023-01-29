@@ -29,6 +29,11 @@
 			"frame": { "x": 640, "y": 0, "w": 128, "h": 128 },
 			"sourceSize": { "w": 128, "h": 128 },
 			"spriteSourceSize": { "x": 0, "y": 0, "w": 128, "h": 128 }
+		},
+		"tile_1.7": {
+			"frame": { "x": 768, "y": 0, "w": 128, "h": 128 },
+			"sourceSize": { "w": 128, "h": 128 },
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 128, "h": 128 }
 		}
 	},
 	"meta": {
