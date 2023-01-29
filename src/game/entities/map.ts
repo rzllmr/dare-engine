@@ -1,5 +1,4 @@
-import { Container, Sprite, Texture, Assets, Point } from 'pixi.js';
-import { Movable, Player, Movement, Enemy } from './movable';
+import { Container, Assets, Point } from 'pixi.js';
 import { Tile } from './tile';
 import computeFov from '../../fov';
 import { properties } from '../../properties';
@@ -10,175 +9,114 @@ properties.register('vision-distance', Infinity, 'radius around player where til
 export class TileMap extends Container {
     private readonly data: string = '';
     private readonly tiles = new Array<Tile>();
-    private readonly movables = new Array<Movable>();
-    private readonly layers = new Array<Container>(2).fill(new Container());
-    private dimX: number = 0;
-    private dimY: number = 0;
+    private readonly movables = new Array<Tile>();
+    private readonly layers = new Array<Container>(2);
+    private readonly dimensions = new Point(0, 0);
 
-    private static readonly scale: number = 0.1;
-    private static readonly tileDim: number = TileMap.scale * 128;
+    public static readonly scale: number = 0.1;
+    public static readonly tileDim: number = TileMap.scale * 128;
 
-    public player: Player | undefined;
-
-    private static readonly textures = new Map<string, Texture>();
-
-    public static availableMaps(): string[] {
-        return ['test'];
-    }
+    public player: Tile | undefined;
 
     constructor(name: string) {
         super();
 
         this.name = name;
         this.data = Assets.get(name);
-        this.layers.forEach((layer) => this.addChild(layer));
+
+        this.layers[0] = this.addChild(new Container()); // for tiles
+        this.layers[1] = this.addChild(new Container()); // for movables
     }
 
-    public load(): TileMap {
-        if (this.data.length === 0) return this;
-
-        const mapData: string = this.data.replace(/(.) /gm, '$1');
-
+    private checkMapDimensions(mapData: string): void {
         let width = 0;
         for (const char of mapData) {
             if (char === '\n') {
-                if (width > this.dimX) this.dimX = width;
-                this.dimY++;
+                if (width > this.dimensions.x) this.dimensions.x = width;
+                this.dimensions.y++;
                 width = 0;
             } else {
                 width++;
             }
         }
+    }
 
-        let currentX = 0;
-        let currentY = 0;
+    public load(): void {
+        const mapData: string = this.data.replace(/(.) /gm, '$1');
+
+        this.checkMapDimensions(mapData);
+
+        const currentPosition = new Point(0, 0);
         for (const char of mapData) {
             if (char === '\n') {
-                const fillUp = Array(this.dimX - currentX).fill(new Tile('chasm'), 0);
-                this.tiles.concat(fillUp);
-                currentX = 0;
-                currentY++;
+                while (currentPosition.x < this.dimensions.x) {
+                    const tile = new Tile('chasm', currentPosition);
+                    this.tiles.push(tile);
+                    this.layers[0].addChild(tile.sprite);
+                    currentPosition.x++;
+                }
+                currentPosition.x = 0;
+                currentPosition.y++;
             } else {
-                let tileName = 'chasm';
+                let tileName: string;
                 const tileType = Tile.charMap.get(char);
-                if (tileType !== undefined) {
-                    if (tileType.name === 'player') {
-                        if (this.player === undefined) {
-                            const player = new Player(currentX, currentY);
-                            this.player = player;
+                if (tileType === undefined) {
+                    console.error(`map symbol unknown: ${char}`);
+                    tileName = 'chasm';
+                } else {
+                    tileName = tileType.name;
+                    if (['player', 'enemy', 'item'].includes(tileType.kind)) {
+                        const tile = new Tile(tileName, currentPosition);
+                        if (tileType.kind === 'player') {
+                            this.player = tile;
                         } else {
-                            console.warn(
-                                `Player '@' already defined in ${this.name}:${this.player.posY + 1}:${
-                                    this.player.posX + 1
-                                }`
-                            );
+                            this.movables.push(tile);
                         }
+                        this.layers[1].addChild(tile.sprite);
                         tileName = 'ground';
-                    } else if (tileType.action === 'fight') {
-                        this.movables.push(new Enemy(tileType.name, currentX, currentY));
-                        tileName = 'ground';
-                    } else {
-                        tileName = tileType.name;
                     }
                 }
-                const tile = new Tile(tileName);
+
+                const tile = new Tile(tileName, currentPosition);
                 this.tiles.push(tile);
-                currentX++;
-            }
-        }
-
-        return this;
-    }
-
-    public draw(): TileMap {
-        let offsetX = 0;
-        let offsetY = 0;
-        for (let idx = 0; idx < this.tiles.length; idx++) {
-            if (idx % this.dimX === 0) {
-                offsetY++;
-                offsetX = 0;
-            }
-
-            const tile = this.tiles[idx];
-            TileMap.initSprite(tile, offsetX, offsetY);
-            if (tile.sprite !== undefined) this.layers[0].addChild(tile.sprite);
-
-            offsetX++;
-        }
-
-        for (const movable of this.movables.values()) {
-            TileMap.initSprite(movable, movable.posX, movable.posY);
-            if (movable.sprite !== undefined) this.layers[1].addChild(movable.sprite);
-        }
-
-        if (this.player !== undefined) {
-            TileMap.initSprite(this.player, this.player.posX, this.player.posY);
-            if (this.player.sprite !== undefined) {
-                this.player.sprite.alpha = 1.0;
-                this.layers[1].addChild(this.player.sprite);
+                this.layers[0].addChild(tile.sprite);
+                currentPosition.x++;
             }
         }
 
         this.updateVision();
-
-        return this;
     }
 
-    private static initSprite(tile: Tile, posX: number, posY: number): void {
-        if (tile.image === undefined) return;
-
-        const texture = TileMap.texture(tile.image);
-        tile.sprite = Sprite.from(texture);
-
-        tile.sprite.scale.set(TileMap.scale);
-        tile.sprite.anchor.set(0.0);
-        tile.sprite.x = posX * TileMap.tileDim;
-        tile.sprite.y = posY * TileMap.tileDim;
-        tile.sprite.alpha = 0.0;
-    }
-
-    private static texture(image: string): Texture {
-        let texture = TileMap.textures.get(image);
-        if (texture === undefined) {
-            texture = Texture.from(image);
-            TileMap.textures.set(image, texture);
-        }
-        return texture;
-    }
-
-    public move(name: string, movement: Movement): void {
-        const direction = movement.direction;
-        if (direction === undefined) return;
-
+    public move(name: string, direction: Point): void {
         const movable = name === 'player' ? this.player : this.movables.find((movable) => movable.name === name);
-        if (movable?.sprite === undefined) return;
+        if (movable === undefined) return;
 
-        const target = this.tile(movable.posX + direction.x, movable.posY + direction.y - 1);
+        const targetCoord = new Point(movable.position.x + direction.x, movable.position.y + direction.y);
+        let target = this.movable(targetCoord);
+        if (target === undefined) target = this.tile(targetCoord);
+        if (target === undefined) return;
 
-        if (target?.action === 'block') return;
-
-        movable.posX += direction.x;
-        movable.posY += direction.y;
-        movable.sprite.x += direction.x * TileMap.tileDim;
-        movable.sprite.y += direction.y * TileMap.tileDim;
+        target.act(movable);
 
         this.updateVision();
     }
 
-    private tile(x: number, y: number): Tile | undefined {
-        return this.tiles.at(x + y * this.dimX);
+    private tile(coord: Point): Tile | undefined {
+        return this.tiles.at(coord.x + coord.y * this.dimensions.x);
     }
 
-    private movable(x: number, y: number): Movable | undefined {
+    private movable(coord: Point): Tile | undefined {
         for (const movable of this.movables.values()) {
-            if (movable.posX === x && movable.posY === y) return movable;
+            if (movable.position.x === coord.x && movable.position.y === coord.y) return movable;
         }
         return undefined;
     }
 
     private isBlocking(coord: Point): boolean {
-        const tile = this.tile(coord.x, coord.y);
-        return tile?.action !== 'pass';
+        const tile = this.tile(coord);
+        if (tile === undefined) return false;
+
+        return tile.blocksView;
     }
 
     private readonly visibles = new Array<Point>();
@@ -189,14 +127,14 @@ export class TileMap extends Container {
 
     private updateVision(): void {
         this.visibles.forEach((coord) => {
-            this.movable(coord.x, coord.y)?.hide();
-            this.tile(coord.x, coord.y)?.hide();
+            this.movable(coord)?.hide();
+            this.tile(coord)?.hide();
         });
         this.visibles.length = 0;
 
         if (this.player !== undefined) {
             computeFov(
-                new Point(this.player.posX, this.player.posY - 1),
+                this.player.position,
                 this.isBlocking.bind(this),
                 this.markVisible.bind(this),
                 properties.getNumber('vision-distance')
@@ -204,8 +142,8 @@ export class TileMap extends Container {
         }
 
         this.visibles.forEach((coord) => {
-            this.movable(coord.x, coord.y)?.show();
-            this.tile(coord.x, coord.y)?.show();
+            this.movable(coord)?.show();
+            this.tile(coord)?.show();
         });
     }
 }

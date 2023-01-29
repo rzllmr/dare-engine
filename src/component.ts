@@ -1,5 +1,5 @@
-import { Entity } from './entity'
+import { Entity } from './entity';
 
 export interface IComponent {
-    Entity: Entity | null
+    Entity: Entity | null;
 }

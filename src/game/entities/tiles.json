@@ -1,44 +1,44 @@
 [
     {
-        "name": "uncharted",
-        "image": "tile_1.1",
-        "symbol": "none",
-        "action": "none"
-    },
-    {
         "name": "chasm",
         "image": "tile_1.1",
         "symbol": " ",
-        "action": "fall"
+        "kind": "chasm"
     },
     {
         "name": "ground",
         "image": "tile_1.2",
         "symbol": ".",
-        "action": "pass"
+        "kind": "pass"
     },
     {
         "name": "wall",
         "image": "tile_1.3",
         "symbol": "#",
-        "action": "block"
+        "kind": "block"
     },
     {
         "name": "player",
         "image": "tile_1.4",
         "symbol": "@",
-        "action": "none"
+        "kind": "player"
     },
     {
         "name": "rat",
         "image": "tile_1.5",
         "symbol": "r",
-        "action": "fight"
+        "kind": "enemy"
     },
     {
         "name": "door",
         "image": "tile_1.6",
         "symbol": "+",
-        "action": "open"
+        "kind": "door"
+    },
+    {
+        "name": "item",
+        "image": "tile_1.7",
+        "symbol": "!",
+        "kind": "item"
     }
 ]
