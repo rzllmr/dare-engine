@@ -3,6 +3,7 @@ import { Point } from 'pixi.js';
 import { IComponent } from '../../component';
 import { Entity } from '../../entity';
 import { Inventory } from './components';
+import { Graphic } from './graphic';
 
 export abstract class Action implements IComponent {
     public entity: Entity | null = null;
@@ -12,8 +13,8 @@ export abstract class Action implements IComponent {
 
 export class Move extends Action {
     public override act(subject: Tile): void {
-        const object = this.Entity as Tile;
-        subject.position = object.position;
+        const object = this.entity as Tile;
+        subject.getComponent(Graphic).position = object.getComponent(Graphic).position;
     }
 
     public static direction(direction: string): Point {

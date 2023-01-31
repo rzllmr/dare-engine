@@ -60,7 +60,7 @@ export class TileMap extends Container {
                 while (currentPosition.x < this.dimensions.x) {
                     const tile = new Tile('chasm', currentPosition);
                     this.tiles.push(tile);
-                    this.layers[0].addChild(tile.sprite);
+                    this.layers[0].addChild(tile.graphic.sprite);
                     currentPosition.x++;
                 }
                 currentPosition.x = 0;
@@ -86,14 +86,14 @@ export class TileMap extends Container {
                         } else {
                             this.movables.push(tile);
                         }
-                        this.layers[1].addChild(tile.sprite);
+                        this.layers[1].addChild(tile.graphic.sprite);
                         tileName = 'ground';
                     }
                 }
 
                 const tile = new Tile(tileName, currentPosition);
                 this.tiles.push(tile);
-                this.layers[0].addChild(tile.sprite);
+                this.layers[0].addChild(tile.graphic.sprite);
                 currentPosition.x++;
             }
         }
@@ -105,7 +105,10 @@ export class TileMap extends Container {
         const movable = name === 'player' ? this.player : this.movables.find((movable) => movable.name === name);
         if (movable === undefined) return;
 
-        const targetCoord = new Point(movable.position.x + direction.x, movable.position.y + direction.y);
+        const targetCoord = new Point(
+            movable.graphic.position.x + direction.x,
+            movable.graphic.position.y + direction.y
+        );
         let target = this.movable(targetCoord);
         if (target === undefined) target = this.tile(targetCoord);
         if (target === undefined) return;
@@ -121,21 +124,21 @@ export class TileMap extends Container {
 
     private movable(coord: Point): Tile | undefined {
         for (const movable of this.movables.values()) {
-            if (movable.position.x === coord.x && movable.position.y === coord.y) return movable;
+            if (movable.graphic.position.x === coord.x && movable.graphic.position.y === coord.y) return movable;
         }
         return undefined;
     }
 
     private updateVision(): void {
         this.visibles.forEach((coord) => {
-            this.movable(coord)?.hide();
-            this.tile(coord)?.hide();
+            this.movable(coord)?.graphic.hide();
+            this.tile(coord)?.graphic.hide();
         });
         this.visibles.length = 0;
 
         if (this.player !== undefined) {
             computeFov(
-                this.player.position,
+                this.player.graphic.position,
                 this.isBlocking.bind(this),
                 this.markVisible.bind(this),
                 properties.getNumber('vision-distance')
@@ -143,8 +146,8 @@ export class TileMap extends Container {
         }
 
         this.visibles.forEach((coord) => {
-            this.movable(coord)?.show();
-            this.tile(coord)?.show();
+            this.movable(coord)?.graphic.show();
+            this.tile(coord)?.graphic.show();
         });
     }
 

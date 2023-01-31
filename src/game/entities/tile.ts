@@ -1,14 +1,9 @@
-import { Point, Sprite, Texture } from 'pixi.js';
+import { Point } from 'pixi.js';
 import { Entity } from '../../entity';
 import { Action, Move, Pick } from './actions';
-import { TileMap } from './map';
 import tilesData from './tiles.json';
-import properties from '../../properties';
 import { Inventory } from './components';
-
-export type PropertyNames = 'map-tiles' | 'reveal-tiles';
-properties.register('map-tiles', false, 'revealed tiles stay visible on map');
-properties.register('reveal-tiles', false, 'all tiles are revealed on map');
+import { Graphic } from './graphic';
 
 interface TileData {
     name: string;
@@ -20,12 +15,6 @@ interface TileData {
 
 export class Tile extends Entity {
     private readonly data!: TileData;
-    public readonly sprite!: Sprite;
-    private alpha = {
-        start: properties.getBool('reveal-tiles') ? 0.3 : 0.0,
-        show: 1.0,
-        hide: properties.getBool('map-tiles') ? 0.3 : 0.0
-    };
 
     constructor(name: string, position: Point, specific: string = '') {
         super();
@@ -36,31 +25,23 @@ export class Tile extends Entity {
         if (tileData === undefined) throw new Error(`tile name unknown: ${name}`);
 
         this.data = tileData;
+        this.addComponent(new Graphic(this.image, position));
         this.initKind(this.kind, specific);
-        this.sprite = this.loadSprite(this.data.image);
-        this.position = position;
-
-        this.registerChanges();
-    }
-
-    private registerChanges(): void {
-        properties.onChange('map-tiles', () => {
-            this.alpha.hide = properties.getBool('map-tiles') ? 0.3 : 0.0;
-        });
     }
 
     private initKind(kind: string, specific: string): void {
         switch (kind) {
             case 'player':
-                this.alpha = { start: 1.0, show: 1.0, hide: 0.3 };
+                this.getComponent(Graphic).alpha = { start: 1.0, show: 1.0, hide: 0.3 };
                 this.addComponent(new Inventory());
                 break;
             case 'enemy':
-                this.alpha = { start: 0.0, show: 1.0, hide: 0.0 };
+                this.getComponent(Graphic).alpha = { start: 0.0, show: 1.0, hide: 0.0 };
                 break;
             case 'item':
-                this.alpha = { start: 0.0, show: 1.0, hide: 0.0 };
+                this.getComponent(Graphic).alpha = { start: 0.0, show: 1.0, hide: 0.0 };
                 this.addComponent(new Pick(specific));
+                this.getComponent(Pick);
                 this.addComponent(new Move());
                 break;
             case 'pass':
@@ -78,16 +59,20 @@ export class Tile extends Entity {
         }
     }
 
-    public get blocksView(): boolean {
-        return ['block', 'door'].includes(this.kind);
-    }
-
     public act(subject: Tile): void {
         for (const component of this.components) {
             if (component instanceof Action) {
                 component.act(subject);
             }
         }
+    }
+
+    public get graphic(): Graphic {
+        return this.getComponent(Graphic);
+    }
+
+    public get blocksView(): boolean {
+        return ['block', 'door'].includes(this.kind);
     }
 
     public get name(): string {
@@ -104,41 +89,6 @@ export class Tile extends Entity {
 
     public get kind(): string {
         return this.data.kind;
-    }
-
-    public show(): void {
-        this.sprite.alpha = this.alpha.show;
-    }
-
-    public hide(): void {
-        this.sprite.alpha = this.alpha.hide;
-    }
-
-    public get position(): Point {
-        return new Point(Math.round(this.sprite.x / TileMap.tileDim), Math.round(this.sprite.y / TileMap.tileDim));
-    }
-
-    public set position(value: Point) {
-        this.sprite.x = value.x * TileMap.tileDim;
-        this.sprite.y = value.y * TileMap.tileDim;
-    }
-
-    private loadSprite(image: string): Sprite {
-        const sprite = Sprite.from(Tile.loadTexture(image));
-        sprite.scale.set(TileMap.scale);
-        sprite.anchor.set(0.0);
-        sprite.alpha = this.alpha.start;
-        return sprite;
-    }
-
-    private static readonly textures = new Map<string, Texture>();
-    private static loadTexture(image: string): Texture {
-        let texture = Tile.textures.get(image);
-        if (texture === undefined) {
-            texture = Texture.from(image);
-            Tile.textures.set(image, texture);
-        }
-        return texture;
     }
 
     private static _charMap: Map<string, TileData> | undefined;
