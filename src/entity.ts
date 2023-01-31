@@ -1,6 +1,7 @@
 import { IComponent } from './component';
 
-type constr<T> = { new (...args: unknown[]): T };
+// eslint-disable-next-line @typescript-eslint/prefer-function-type
+type constr<T> = { new (...args: any[]): T };
 
 export abstract class Entity {
     protected _components: IComponent[] = [];
@@ -17,6 +18,7 @@ export abstract class Entity {
     public getComponent<C extends IComponent>(constr: constr<C>): C {
         for (const component of this._components) {
             if (component instanceof constr) {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
                 return component as C;
             }
         }
