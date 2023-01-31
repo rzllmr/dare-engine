@@ -3,7 +3,7 @@ import { Entity } from '../../entity';
 import properties from '../../properties';
 
 export class Inventory implements IComponent {
-    public Entity: Entity | null = null;
+    public entity: Entity | null = null;
     private readonly items = new Map<string, Item>();
 
     public addItem(name: string): void {

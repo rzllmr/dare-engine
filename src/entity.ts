@@ -12,7 +12,7 @@ export abstract class Entity {
 
     public addComponent(component: IComponent): void {
         this._components.push(component);
-        component.Entity = this;
+        component.entity = this;
     }
 
     public getComponent<C extends IComponent>(constr: constr<C>): C {
@@ -39,7 +39,7 @@ export abstract class Entity {
         }
 
         if (toRemove !== undefined && index !== undefined) {
-            toRemove.Entity = null;
+            toRemove.entity = null;
             this._components.splice(index, 1);
         }
     }

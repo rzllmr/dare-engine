@@ -5,7 +5,7 @@ import { Entity } from '../../entity';
 import { Inventory } from './components';
 
 export abstract class Action implements IComponent {
-    public Entity: Entity | null = null;
+    public entity: Entity | null = null;
 
     public act(subject: Tile): void {}
 }
