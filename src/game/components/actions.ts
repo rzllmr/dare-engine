@@ -1,8 +1,8 @@
-import { Tile } from './tile';
+import { Tile } from '../entities/tile';
 import { Point } from 'pixi.js';
 import { IComponent } from '../../component';
 import { Entity } from '../../entity';
-import { Inventory } from './components';
+import { Inventory } from './inventory';
 import { Graphic } from './graphic';
 
 export abstract class Action implements IComponent {

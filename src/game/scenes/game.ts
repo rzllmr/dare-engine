@@ -1,7 +1,7 @@
 import { Container } from 'pixi.js';
 import { IScene } from '../../manager';
 import { TileMap } from '../entities/map';
-import { Move } from '../entities/actions';
+import { Move } from '../components/actions';
 
 export class GameScene extends Container implements IScene {
     private readonly tileMap: TileMap;

@@ -1,7 +1,7 @@
 import { IComponent } from '../../component';
 import { Entity } from '../../entity';
 import { Point, Sprite, Texture } from 'pixi.js';
-import { TileMap } from './map';
+import { TileMap } from '../entities/map';
 import properties from '../../properties';
 
 export type PropertyNames = 'map-tiles' | 'reveal-tiles';

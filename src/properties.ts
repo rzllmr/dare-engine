@@ -1,5 +1,5 @@
 import { PropertyNames as mapProperties } from './game/entities/map';
-import { PropertyNames as graphicProperties } from './game/entities/graphic';
+import { PropertyNames as graphicProperties } from './game/components/graphic';
 
 type PropertyName = mapProperties | graphicProperties;
 

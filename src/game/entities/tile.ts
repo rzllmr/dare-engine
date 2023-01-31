@@ -1,9 +1,9 @@
 import { Point } from 'pixi.js';
 import { Entity } from '../../entity';
-import { Action, Move, Pick } from './actions';
+import { Action, Move, Pick } from '../components/actions';
 import tilesData from './tiles.json';
-import { Inventory } from './components';
-import { Graphic } from './graphic';
+import { Inventory } from '../components/inventory';
+import { Graphic } from '../components/graphic';
 
 interface TileData {
     name: string;
