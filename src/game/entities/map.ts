@@ -4,7 +4,7 @@ import computeFov from '../../fov';
 import properties from '../../properties';
 
 export type PropertyNames = 'vision-distance';
-properties.register('vision-distance', Infinity, 'radius around player where tiles are revealed');
+properties.register('vision-distance', 1000, 'radius around player where tiles are revealed'); // only high number to prevent infinite recursion
 
 interface TileInfo {
     position: Point;
