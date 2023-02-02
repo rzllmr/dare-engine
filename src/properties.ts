@@ -8,6 +8,7 @@ class Property<T> {
     public readonly comment: string;
     public readonly immutable: boolean;
     public value: T;
+    public default: T;
 
     public readonly callbacks = new Array<() => void>();
     public readonly references = new Set<string>();
@@ -17,6 +18,7 @@ class Property<T> {
         this.comment = comment;
         this.immutable = immutable;
         this.value = value;
+        this.default = value;
     }
 }
 
@@ -61,7 +63,17 @@ class Properties {
         if (property === undefined) throw new Error(`property not registered: ${name}`);
         if (typeof property.value !== typeof value) throw new Error(`property "${name}" not of type: ${typeof value}`);
         property.value = value;
-        console.debug(`property set: ${name} = ${value.toString()}`);
+        console.debug(`property set: ${name} = ${property.value.toString()}`);
+        property.callbacks.forEach((callback) => {
+            callback();
+        });
+    }
+
+    public reset(name: PropertyName): void {
+        const property = this.registered.get(name);
+        if (property === undefined) throw new Error(`property not registered: ${name}`);
+        property.value = property.default;
+        console.debug(`property set: ${name} = ${property.value.toString()}`);
         property.callbacks.forEach((callback) => {
             callback();
         });
@@ -85,6 +97,26 @@ class Properties {
         // eslint-disable-next-line valid-typeof
         if (typeof property.value !== type) throw new Error(`property "${name}" not of type: ${type}`);
         return property.value;
+    }
+
+    public getDefaultString(name: PropertyName): string {
+        return this.getDefaultOfType(name, 'string') as string;
+    }
+
+    public getDefaultNumber(name: PropertyName): number {
+        return this.getDefaultOfType(name, 'number') as number;
+    }
+
+    public getDefaultBool(name: PropertyName): boolean {
+        return this.getDefaultOfType(name, 'boolean') as boolean;
+    }
+
+    private getDefaultOfType(name: PropertyName, type: TypeName): string | number | boolean {
+        const property = this.registered.get(name);
+        if (property === undefined) throw new Error(`property not registered: ${name}`);
+        // eslint-disable-next-line valid-typeof
+        if (typeof property.default !== type) throw new Error(`property "${name}" not of type: ${type}`);
+        return property.default;
     }
 
     public onChange(name: PropertyName, callback: () => void): void {
