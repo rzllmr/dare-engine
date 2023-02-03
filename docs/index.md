@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: merlot_custom
 ---
 
 Text can be **bold**, _italic_, or ~~strikethrough~~.

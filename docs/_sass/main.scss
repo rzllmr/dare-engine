@@ -1,0 +1,44 @@
+
+nav {
+	width: 300px;
+	position: fixed;
+	top: 192px;
+	left: 50%;
+	margin-left: -595px;
+	text-align: right;
+	z-index: 3;
+
+	ul {
+		list-style: none;
+		list-style-image:none;
+
+		li {
+			padding: 5px 0px;
+			background: none;
+
+			&.tag-h1 {
+				a {
+					text-decoration: underline double;
+				}
+			}
+
+			&.tag-h2 {
+				a {
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+}
+
+@media print, screen and (max-width: 1060px) {
+  nav {
+    display: none;
+  }
+}
+
+@media print, screen and (max-height: 480px) {
+  nav {
+    display: none;
+  }
+}
