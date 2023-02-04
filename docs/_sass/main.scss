@@ -1,8 +1,10 @@
+@import url("mobile.css") handheld;
+@import url("mobile.css") only screen and (max-device-width:640px);
 
 nav {
 	width: 300px;
 	position: fixed;
-	top: 192px;
+	top: 193px;
 	left: 50%;
 	margin-left: -595px;
 	text-align: right;
@@ -29,16 +31,4 @@ nav {
 			}
 		}
 	}
-}
-
-@media print, screen and (max-width: 1060px) {
-  nav {
-    display: none;
-  }
-}
-
-@media print, screen and (max-height: 480px) {
-  nav {
-    display: none;
-  }
 }

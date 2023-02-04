@@ -2,7 +2,7 @@
 layout: merlot_custom
 ---
 
-This text can be **bold**, _italic_, or ~~strikethrough~~.
+Text can be **bold**, _italic_, or ~~strikethrough~~.
 
 [Link to another page](./another-page.html).
 
