@@ -26,9 +26,11 @@ class Manager {
             resolution: window.devicePixelRatio,
             resizeTo: window,
             autoDensity: true,
-            backgroundColor: 0xffffff
+            backgroundAlpha: 0,
+            hello: true
         });
-        this.app.ticker.add(this.update);
+        this.app.ticker.maxFPS = 30;
+        // this.app.ticker.add(this.update);
         document.body.addEventListener('keydown', (event: KeyboardEvent) => {
             if (this.currentScene !== undefined) this.currentScene.input(event.key);
         });

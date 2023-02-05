@@ -19,7 +19,7 @@ export class TileMap extends Container {
     private readonly layers = new Array<Container>(2);
     private readonly dimensions = new Point(0, 0);
 
-    public static readonly scale: number = 0.1;
+    public static readonly scale: number = 0.14;
     public static readonly tileDim: number = TileMap.scale * 128;
 
     public player: Tile | undefined;

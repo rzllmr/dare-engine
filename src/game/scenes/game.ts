@@ -1,4 +1,4 @@
-import { Container } from 'pixi.js';
+import { Container, Point } from 'pixi.js';
 import { IScene } from '../../manager';
 import { TileMap } from '../entities/map';
 import { Move } from '../components/actions';
@@ -10,6 +10,7 @@ export class GameScene extends Container implements IScene {
         super();
 
         this.tileMap = new TileMap('map.fov');
+        this.tileMap.position = new Point(40, 40);
         this.addChild(this.tileMap);
         this.tileMap.load();
     }
