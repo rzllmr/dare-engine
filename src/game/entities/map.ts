@@ -131,8 +131,9 @@ export class TileMap extends Container {
 
     private updateVision(): void {
         this.visibles.forEach((coord) => {
-            this.movable(coord)?.graphic.hide();
-            this.tile(coord)?.graphic.hide();
+            const movable = this.movable(coord);
+            if (movable !== undefined) movable.graphic.hide();
+            else this.tile(coord)?.graphic.hide();
         });
         this.visibles.length = 0;
 
@@ -146,8 +147,9 @@ export class TileMap extends Container {
         }
 
         this.visibles.forEach((coord) => {
-            this.movable(coord)?.graphic.show();
-            this.tile(coord)?.graphic.show();
+            const movable = this.movable(coord);
+            if (movable !== undefined) movable.graphic.show();
+            else this.tile(coord)?.graphic.show();
         });
     }
 

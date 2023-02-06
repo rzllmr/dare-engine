@@ -15,7 +15,7 @@ export default function computeFov(
     markVisible: (tile: Point) => void,
     maxDistance: number = Infinity
 ): void {
-    markVisible(origin);
+    // markVisible(origin);
 
     for (const transform of quadrantTransforms(origin)) {
         function reveal(tile: Point): void {
