@@ -1,6 +1,12 @@
 [
     {
         "position": { "x": 4, "y": 10 },
-        "name": "map"
+        "name": "parchment",
+        "description": "some parchment for mapping"
+    },
+    {
+        "position": { "x": 15, "y": 15 },
+        "name": "map",
+        "description": "a map of this level"
     }
 ]

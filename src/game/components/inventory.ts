@@ -23,6 +23,8 @@ export class Inventory implements IComponent {
 abstract class Item {
     public static create(name: string): Item {
         switch (name) {
+            case 'parchment':
+                return new ParchmentItem();
             case 'map':
                 return new MapItem();
             default:
@@ -34,12 +36,22 @@ abstract class Item {
     public abstract onRemove(): void;
 }
 
-class MapItem extends Item {
+class ParchmentItem extends Item {
     public override onAdd(): void {
         properties.set('map-tiles', true);
     }
 
     public override onRemove(): void {
         properties.set('map-tiles', false);
+    }
+}
+
+class MapItem extends Item {
+    public override onAdd(): void {
+        properties.set('reveal-tiles', true);
+    }
+
+    public override onRemove(): void {
+        properties.set('reveal-tiles', false);
     }
 }
