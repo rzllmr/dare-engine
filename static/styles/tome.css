@@ -1,0 +1,23 @@
+
+@font-face {
+    font-family: 'EagleLake';
+    src: url("../placeholder/Eagle_Lake/EagleLake-Regular.ttf") format('truetype');
+}
+
+#tome {
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-image: url("../placeholder/book_cover_by_yd.png");
+    width: 718px;
+    height: 100%;
+    background-size: cover;
+    padding: 120px 50px 120px 90px;
+    box-sizing: border-box;
+    font-family: 'EagleLake';
+}
+
+#tome span {
+    width: 100%;
+    display: inline-block;
+}
