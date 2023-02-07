@@ -4,10 +4,6 @@ import { Point, Sprite, Texture } from 'pixi.js';
 import { TileMap } from '../entities/map';
 import properties from '../../properties';
 
-export type PropertyNames = 'map-tiles' | 'reveal-tiles';
-properties.register('map-tiles', false, 'revealed tiles stay visible on map');
-properties.register('reveal-tiles', false, 'all tiles are revealed on map');
-
 interface Alpha {
     start: number;
     show: number;
@@ -37,15 +33,7 @@ export class Graphic implements IComponent {
         this.sprite = this.loadSprite(image);
         this.position = position;
 
-        this.registerChanges();
-
         return this;
-    }
-
-    private registerChanges(): void {
-        properties.onChange('map-tiles', () => {
-            this.alpha.hide = properties.getBool('map-tiles') ? 0.3 : 0.0;
-        });
     }
 
     public show(): void {

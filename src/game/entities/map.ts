@@ -3,8 +3,10 @@ import { Tile } from './tile';
 import computeFov from '../../fov';
 import properties from '../../properties';
 
-export type PropertyNames = 'vision-distance';
+export type PropertyNames = 'vision-distance' | 'map-tiles' | 'reveal-tiles';
 properties.register('vision-distance', 1000, 'radius around player where tiles are revealed'); // only high number to prevent infinite recursion
+properties.register('map-tiles', false, 'revealed tiles stay visible on map');
+properties.register('reveal-tiles', false, 'all tiles are revealed on map');
 
 export interface TileInfo {
     position: Point;
@@ -35,6 +37,24 @@ export class TileMap extends Container {
 
         this.layers[0] = this.addChild(new Container()); // for tiles
         this.layers[1] = this.addChild(new Container()); // for movables
+
+        this.registerChanges();
+    }
+
+    private registerChanges(): void {
+        properties.onChange('map-tiles', () => {
+            const mapTiles = properties.getBool('map-tiles');
+            this.tiles.forEach((tile) => {
+                tile.graphic.alpha.hide = mapTiles ? 0.3 : 0.0;
+            });
+        });
+        properties.onChange('reveal-tiles', () => {
+            const revealTiles = properties.getBool('reveal-tiles');
+            this.tiles.forEach((tile) => {
+                tile.graphic.sprite.alpha = revealTiles ? 0.3 : 0.0;
+                tile.graphic.alpha.hide = revealTiles ? 0.3 : 0.0;
+            });
+        });
     }
 
     private checkMapDimensions(mapData: string): void {

@@ -1,7 +1,6 @@
 import { PropertyNames as mapProperties } from './game/entities/map';
-import { PropertyNames as graphicProperties } from './game/components/graphic';
 
-type PropertyName = mapProperties | graphicProperties;
+type PropertyName = mapProperties;
 
 class Property<T> {
     public readonly name: PropertyName;
