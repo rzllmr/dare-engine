@@ -4,6 +4,7 @@ import { IComponent } from '../../component';
 import { Entity } from '../../entity';
 import { Inventory } from './inventory';
 import { Graphic } from './graphic';
+import log from '../../log';
 import { TileInfo } from '../entities/map';
 
 export abstract class Action implements IComponent {
@@ -44,6 +45,7 @@ export class Pick extends Action {
 
     public override act(subject: Tile): void {
         const inventory = subject.getComponent(Inventory);
+        log.log(`You found ${this.itemInfo.description}`);
         inventory.addItem(this.itemInfo.name);
     }
 }
