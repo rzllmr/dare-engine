@@ -6,9 +6,10 @@ import properties from '../../properties';
 export type PropertyNames = 'vision-distance';
 properties.register('vision-distance', 1000, 'radius around player where tiles are revealed'); // only high number to prevent infinite recursion
 
-interface TileInfo {
+export interface TileInfo {
     position: Point;
     name: string;
+    description: string;
 }
 
 export class TileMap extends Container {
@@ -78,7 +79,7 @@ export class TileMap extends Container {
                             return (
                                 tileInfo.position.x === currentPosition.x && tileInfo.position.y === currentPosition.y
                             );
-                        })?.name;
+                        });
 
                         const tile = new Tile(tileName, currentPosition, specific);
                         if (tileType.kind === 'player') {

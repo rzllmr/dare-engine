@@ -4,6 +4,7 @@ import { Action, Move, Pick } from '../components/actions';
 import tilesData from './tiles.json';
 import { Inventory } from '../components/inventory';
 import { Graphic } from '../components/graphic';
+import { TileInfo } from './map';
 
 interface TileData {
     name: string;
@@ -16,7 +17,7 @@ interface TileData {
 export class Tile extends Entity {
     private readonly data!: TileData;
 
-    constructor(name: string, position: Point, specific: string = '') {
+    constructor(name: string, position: Point, specific?: TileInfo) {
         super();
 
         const tileData = (tilesData as TileData[]).find((tile) => {
@@ -29,7 +30,7 @@ export class Tile extends Entity {
         this.initKind(this.kind, specific);
     }
 
-    private initKind(kind: string, specific: string): void {
+    private initKind(kind: string, specific?: TileInfo): void {
         switch (kind) {
             case 'player':
                 this.getComponent(Graphic).alpha = { start: 1.0, show: 1.0, hide: 0.3 };
@@ -39,6 +40,7 @@ export class Tile extends Entity {
                 this.getComponent(Graphic).alpha = { start: 0.0, show: 1.0, hide: 0.0 };
                 break;
             case 'item':
+                if (specific === undefined) break;
                 this.getComponent(Graphic).alpha = { start: 0.0, show: 1.0, hide: 0.0 };
                 this.addComponent(new Pick(specific));
                 this.getComponent(Pick);

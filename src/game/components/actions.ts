@@ -4,6 +4,7 @@ import { IComponent } from '../../component';
 import { Entity } from '../../entity';
 import { Inventory } from './inventory';
 import { Graphic } from './graphic';
+import { TileInfo } from '../entities/map';
 
 export abstract class Action implements IComponent {
     public entity: Entity | null = null;
@@ -34,15 +35,15 @@ export class Move extends Action {
 }
 
 export class Pick extends Action {
-    readonly itemName: string;
+    readonly itemInfo: TileInfo;
 
-    constructor(itemName: string) {
+    constructor(itemInfo: TileInfo) {
         super();
-        this.itemName = itemName;
+        this.itemInfo = itemInfo;
     }
 
     public override act(subject: Tile): void {
         const inventory = subject.getComponent(Inventory);
-        inventory.addItem(this.itemName);
+        inventory.addItem(this.itemInfo.name);
     }
 }
