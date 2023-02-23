@@ -15,9 +15,14 @@ export class GameScene extends Container implements IScene {
         this.tileMap.load();
     }
 
-    public input(key: string): void {
-        if (key.startsWith('Arrow')) {
-            const direction = key.replace('Arrow', '');
+    public input(position: Point, button?: string): void {
+        if (button === undefined) {
+            this.tileMap.highlight(position);
+            return;
+        }
+
+        if (button.startsWith('Arrow')) {
+            const direction = button.replace('Arrow', '');
             this.tileMap.move('player', Move.direction(direction));
         }
     }

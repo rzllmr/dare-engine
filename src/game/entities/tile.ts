@@ -56,6 +56,9 @@ export class Tile extends Entity {
                 break;
             case 'block':
                 break;
+            case 'meta':
+                this.getComponent(Graphic).alpha = { start: 0.0, show: 1.0, hide: 0.0 };
+                break;
             default:
                 console.error(`unknown kind: ${kind}`);
         }

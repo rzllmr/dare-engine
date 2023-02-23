@@ -34,11 +34,16 @@
 			"frame": { "x": 768, "y": 0, "w": 128, "h": 128 },
 			"sourceSize": { "w": 128, "h": 128 },
 			"spriteSourceSize": { "x": 0, "y": 0, "w": 128, "h": 128 }
+		},
+		"tile_1.8": {
+			"frame": { "x": 896, "y": 0, "w": 128, "h": 128 },
+			"sourceSize": { "w": 128, "h": 128 },
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 128, "h": 128 }
 		}
 	},
 	"meta": {
 		"image": "tileset.png",
-		"format": "RGB888",
+		"format": "RGBA8888",
 		"size": { "w": 1024, "h": 1024 },
 		"scale": 1
 	}

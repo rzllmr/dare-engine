@@ -44,6 +44,10 @@ export class Graphic implements IComponent {
         this.sprite.alpha = this.alpha.hide;
     }
 
+    public get visible(): boolean {
+        return this.sprite.alpha === this.alpha.show;
+    }
+
     public get position(): Point {
         return new Point(Math.round(this.sprite.x / TileMap.tileDim), Math.round(this.sprite.y / TileMap.tileDim));
     }

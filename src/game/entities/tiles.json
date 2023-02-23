@@ -40,5 +40,11 @@
         "image": "tile_1.7",
         "symbol": "!",
         "kind": "item"
+    },
+    {
+        "name": "frame",
+        "image": "tile_1.8",
+        "symbol": "",
+        "kind": "meta"
     }
 ]

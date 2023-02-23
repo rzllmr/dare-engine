@@ -26,6 +26,7 @@ export class TileMap extends Container {
     public static readonly tileDim: number = TileMap.scale * 128;
 
     public player: Tile | undefined;
+    private _highlight: Tile | undefined;
 
     constructor(name: string) {
         super();
@@ -119,7 +120,35 @@ export class TileMap extends Container {
             }
         }
 
+        this._highlight = new Tile('frame', currentPosition);
+        this.layers[1].addChild(this._highlight.graphic.sprite);
+
         this.updateVision();
+    }
+
+    private posToCoord(position: Point): Point {
+        position = new Point(
+            position.x - this.position.x - TileMap.tileDim / 2,
+            position.y - this.position.y - TileMap.tileDim / 2
+        );
+        return new Point(Math.round(position.x / TileMap.tileDim), Math.round(position.y / TileMap.tileDim));
+    }
+
+    public highlight(position: Point): void {
+        if (this._highlight === undefined) return;
+
+        const coord = this.posToCoord(position);
+        if (this._highlight.graphic.position.equals(coord)) return;
+
+        let tile = this.movable(coord);
+        if (tile === undefined) tile = this.tile(coord);
+        if (tile === undefined || !tile.graphic.visible) {
+            if (this._highlight.graphic.visible) this._highlight.graphic.hide();
+            return;
+        }
+
+        this._highlight.graphic.position = coord;
+        if (!this._highlight.graphic.visible) this._highlight.graphic.show();
     }
 
     public move(name: string, direction: Point): void {

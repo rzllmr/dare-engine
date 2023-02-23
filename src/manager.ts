@@ -1,4 +1,4 @@
-import { Application, DisplayObject } from 'pixi.js';
+import { Application, DisplayObject, Point } from 'pixi.js';
 
 class Manager {
     private static _instance: Manager;
@@ -11,6 +11,7 @@ class Manager {
 
     private readonly app: Application;
     private currentScene: IScene | undefined;
+    private mousePos = new Point(0, 0);
 
     public get width(): number {
         return Math.max(document.documentElement.clientWidth, window.innerWidth);
@@ -31,8 +32,18 @@ class Manager {
         });
         this.app.ticker.maxFPS = 30;
         // this.app.ticker.add(this.update);
+
+        const pixiDiv = document.querySelector('#pixi-content') as HTMLDivElement;
         document.body.addEventListener('keydown', (event: KeyboardEvent) => {
-            if (this.currentScene !== undefined) this.currentScene.input(event.key);
+            this.currentScene?.input(this.mousePos, event.key);
+        });
+        pixiDiv.addEventListener('mousemove', (event: MouseEvent) => {
+            this.mousePos = new Point(event.pageX, event.pageY);
+            this.currentScene?.input(this.mousePos);
+        });
+        const mouseButton = ['LeftClick', 'MiddleClick', 'RightClick'];
+        pixiDiv.addEventListener('mousedown', (event: MouseEvent) => {
+            this.currentScene?.input(this.mousePos, mouseButton[event.button]);
         });
     }
 
@@ -54,6 +65,6 @@ class Manager {
 export const manager = Manager.instance();
 
 export interface IScene extends DisplayObject {
-    input: (key: string) => void;
+    input: (position: Point, button?: string) => void;
     update: (framesPassed: number) => void;
 }

@@ -1,4 +1,4 @@
-import { Container, Graphics, Assets } from 'pixi.js';
+import { Container, Graphics, Assets, Point } from 'pixi.js';
 import { manifest } from '../assets';
 import { IScene, manager } from '../../manager';
 import { GameScene } from './game';
@@ -55,7 +55,7 @@ export class LoaderScene extends Container implements IScene {
         manager.changeScene(new GameScene());
     }
 
-    public input(key: string): void {}
+    public input(position: Point, button?: string): void {}
 
     public update(framesPassed: number): void {}
 }
