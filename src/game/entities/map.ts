@@ -4,7 +4,7 @@ import computeFov from '../../fov';
 import properties from '../../properties';
 
 export type PropertyNames = 'vision-distance' | 'map-tiles' | 'reveal-tiles';
-properties.register('vision-distance', 1000, 'radius around player where tiles are revealed'); // only high number to prevent infinite recursion
+properties.register('vision-distance', 1, 'radius around player where tiles are revealed'); // only high number to prevent infinite recursion
 properties.register('map-tiles', false, 'revealed tiles stay visible on map');
 properties.register('reveal-tiles', false, 'all tiles are revealed on map');
 

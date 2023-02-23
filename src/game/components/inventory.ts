@@ -20,16 +20,20 @@ export class Inventory implements IComponent {
     }
 }
 
+// eslint-disable-next-line @typescript-eslint/prefer-function-type
+type constr<T> = { new (...args: any[]): T };
+
 abstract class Item {
     public static create(name: string): Item {
-        switch (name) {
-            case 'parchment':
-                return new ParchmentItem();
-            case 'map':
-                return new MapItem();
-            default:
-                throw new Error(`unknown item: ${name}`);
-        }
+        const type = new Map<string, constr<Item>>([
+            ['parchment', ParchmentItem],
+            ['map', MapItem],
+            ['torch', TorchItem]
+        ]);
+
+        if (!type.has(name)) throw new Error(`unknown item: ${name}`);
+
+        return new (type.get(name) as constr<Item>)();
     }
 
     public abstract onAdd(): void;
@@ -53,5 +57,15 @@ class MapItem extends Item {
 
     public override onRemove(): void {
         properties.set('reveal-tiles', false);
+    }
+}
+
+class TorchItem extends Item {
+    public override onAdd(): void {
+        properties.set('vision-distance', 6);
+    }
+
+    public override onRemove(): void {
+        properties.reset('vision-distance');
     }
 }

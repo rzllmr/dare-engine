@@ -1,5 +1,10 @@
 [
     {
+        "position": { "x": 3, "y": 5 },
+        "name": "torch",
+        "description": "a torch lighting your surroundings"
+    },
+    {
         "position": { "x": 4, "y": 10 },
         "name": "parchment",
         "description": "some parchment for mapping"
