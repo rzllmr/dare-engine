@@ -3,48 +3,56 @@
         "name": "chasm",
         "image": "tile_1.1",
         "symbol": " ",
-        "kind": "chasm"
+        "kind": "chasm",
+        "info": "Missing info."
     },
     {
         "name": "ground",
         "image": "tile_1.2",
         "symbol": ".",
-        "kind": "pass"
+        "kind": "pass",
+        "info": "Missing info."
     },
     {
         "name": "wall",
         "image": "tile_1.3",
         "symbol": "#",
-        "kind": "block"
+        "kind": "block",
+        "info": "A <u>wall</u> most solid."
     },
     {
         "name": "player",
         "image": "tile_1.4",
         "symbol": "@",
-        "kind": "player"
+        "kind": "player",
+        "info": "Yourself in only the most basic attire."
     },
     {
         "name": "rat",
         "image": "tile_1.5",
         "symbol": "r",
-        "kind": "enemy"
+        "kind": "enemy",
+        "info": "Missing info."
     },
     {
         "name": "door",
         "image": "tile_1.6",
         "symbol": "+",
-        "kind": "door"
+        "kind": "door",
+        "info": "Missing info."
     },
     {
         "name": "item",
         "image": "tile_1.7",
         "symbol": "!",
-        "kind": "item"
+        "kind": "item",
+        "info": "Missing info."
     },
     {
         "name": "frame",
         "image": "tile_1.8",
         "symbol": "",
-        "kind": "meta"
+        "kind": "meta",
+        "info": "Missing info."
     }
 ]

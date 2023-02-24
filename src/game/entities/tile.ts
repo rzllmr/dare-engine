@@ -12,6 +12,7 @@ interface TileData {
     symbol: string;
     kind: string;
     specific: string;
+    info: string;
 }
 
 export class Tile extends Entity {
@@ -94,6 +95,10 @@ export class Tile extends Entity {
 
     public get kind(): string {
         return this.data.kind;
+    }
+
+    public get info(): string {
+        return this.data.info;
     }
 
     private static _charMap: Map<string, TileData> | undefined;

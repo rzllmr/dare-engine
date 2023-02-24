@@ -12,7 +12,7 @@ class Log {
         this.logDiv = document.querySelector('#log') as HTMLDivElement;
     }
 
-    public log(line: string): void {
+    public tell(line: string): void {
         const newParagraph: HTMLSpanElement = document.createElement('span');
         newParagraph.textContent = line;
         this.logDiv.appendChild(newParagraph);

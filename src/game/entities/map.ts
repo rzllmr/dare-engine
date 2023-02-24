@@ -2,6 +2,7 @@ import { Container, Assets, Point } from 'pixi.js';
 import { Tile } from './tile';
 import computeFov from '../../fov';
 import properties from '../../properties';
+import info from '../../info';
 
 export type PropertyNames = 'vision-distance' | 'map-tiles' | 'reveal-tiles';
 properties.register('vision-distance', 1, 'radius around player where tiles are revealed'); // only high number to prevent infinite recursion
@@ -139,16 +140,19 @@ export class TileMap extends Container {
 
         const coord = this.posToCoord(position);
         if (this._highlight.graphic.position.equals(coord)) return;
+        this._highlight.graphic.position = coord;
 
-        let tile = this.movable(coord);
-        if (tile === undefined) tile = this.tile(coord);
+        const tile = this.entity(coord);
         if (tile === undefined || !tile.graphic.visible) {
-            if (this._highlight.graphic.visible) this._highlight.graphic.hide();
+            if (this._highlight.graphic.visible) {
+                this._highlight.graphic.hide();
+                info.tell('Nothing specific.');
+            }
             return;
         }
 
-        this._highlight.graphic.position = coord;
         if (!this._highlight.graphic.visible) this._highlight.graphic.show();
+        info.tell(tile.info);
     }
 
     public move(name: string, direction: Point): void {
@@ -177,6 +181,14 @@ export class TileMap extends Container {
             if (movable.graphic.position.x === coord.x && movable.graphic.position.y === coord.y) return movable;
         }
         return undefined;
+    }
+
+    private entity(coord: Point): Tile | undefined {
+        let tile = this.movable(coord);
+        if (tile === undefined && this.player !== undefined && this.player.graphic.position.equals(coord))
+            tile = this.player;
+        if (tile === undefined) tile = this.tile(coord);
+        return tile;
     }
 
     private updateVision(): void {

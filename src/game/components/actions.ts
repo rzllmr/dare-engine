@@ -45,7 +45,7 @@ export class Pick extends Action {
 
     public override act(subject: Tile): void {
         const inventory = subject.getComponent(Inventory);
-        log.log(`You found ${this.itemInfo.description}`);
+        log.tell(`You found ${this.itemInfo.description}`);
         inventory.addItem(this.itemInfo.name);
     }
 }
