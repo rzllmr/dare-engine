@@ -5,6 +5,7 @@ export const manifest: ResolverManifest = {
         {
             name: 'main',
             assets: {
+                version: './version.txt',
                 tiles: './tileset.json',
                 'map.test': './maps/test.txt',
                 'map.fov': './maps/fov.txt',

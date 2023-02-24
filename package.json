@@ -1,12 +1,13 @@
 {
   "name": "pixi-engine",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Simple game engine in TypeScript using pixi.js",
   "author": "rzllmr",
   "license": "MIT",
   "scripts": {
+    "version": "shx echo $npm_package_version.$(git rev-list --count main) > static/version.txt",
     "start": "webpack serve --mode=development",
-    "build": "run-s clean build-only",
+    "build": "run-s version clean build-only",
     "build-only": "webpack --mode=production",
     "clean": "rimraf dist",
     "test": "jest",
@@ -32,6 +33,7 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.3",
     "rimraf": "^4.1.1",
+    "shx": "^0.3.4",
     "terser-webpack-plugin": "^5.3.6",
     "ts-jest": "^29.0.5",
     "ts-loader": "^9.4.2",

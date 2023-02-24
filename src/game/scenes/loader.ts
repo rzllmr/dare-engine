@@ -4,7 +4,6 @@ import { IScene, manager } from '../../manager';
 import { GameScene } from './game';
 
 export class LoaderScene extends Container implements IScene {
-    // for making our loader graphics...
     private readonly loaderBar: Container;
     private readonly loaderBarBoder: Graphics;
     private readonly loaderBarFill: Graphics;
@@ -51,7 +50,9 @@ export class LoaderScene extends Container implements IScene {
     }
 
     private gameLoaded(): void {
-        // Change scene to the game scene!
+        const versionDiv = document.querySelector('#version') as HTMLDivElement;
+        versionDiv.textContent = Assets.get('version');
+
         manager.changeScene(new GameScene());
     }
 
