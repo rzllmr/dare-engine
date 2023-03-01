@@ -14,7 +14,8 @@
     "format": "prettier --config .prettierrc.json 'src/**/*.ts' --write"
   },
   "dependencies": {
-    "pixi.js": "^7.1.1"
+    "pixi.js": "^7.1.1",
+    "yaml": "^2.2.1"
   },
   "devDependencies": {
     "@types/jest": "^29.2.6",

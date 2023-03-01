@@ -3,21 +3,14 @@ import { Tile } from './tile';
 import computeFov from '../../fov';
 import properties from '../../properties';
 import info from '../../info';
+import { readMap } from '../../schemes';
 
 export type PropertyNames = 'vision-distance' | 'map-tiles' | 'reveal-tiles';
 properties.register('vision-distance', 1, 'radius around player where tiles are revealed'); // only high number to prevent infinite recursion
 properties.register('map-tiles', false, 'revealed tiles stay visible on map');
 properties.register('reveal-tiles', false, 'all tiles are revealed on map');
 
-export interface TileInfo {
-    position: Point;
-    name: string;
-    description: string;
-}
-
 export class TileMap extends Container {
-    private readonly data: string;
-    private readonly info: TileInfo[];
     private readonly tiles = new Array<Tile>();
     private readonly movables = new Array<Tile>();
     private readonly layers = new Array<Container>(2);
@@ -33,9 +26,6 @@ export class TileMap extends Container {
         super();
 
         this.name = name;
-        this.data = Assets.get(name);
-        this.info = Assets.get(`${name}.info`);
-        if (this.info === undefined) this.info = new Array<TileInfo>();
 
         this.layers[0] = this.addChild(new Container()); // for tiles
         this.layers[1] = this.addChild(new Container()); // for movables
@@ -73,12 +63,13 @@ export class TileMap extends Container {
     }
 
     public load(): void {
-        const mapData: string = this.data.replace(/(.) /gm, '$1');
+        const data = readMap(Assets.get(this.name));
+        const layout = data.layout.replace(/(.) /gm, '$1');
 
-        this.checkMapDimensions(mapData);
+        this.checkMapDimensions(layout);
 
         const currentPosition = new Point(0, 0);
-        for (const char of mapData) {
+        for (const char of layout) {
             if (char === '\n') {
                 while (currentPosition.x < this.dimensions.x) {
                     const tile = new Tile('chasm', currentPosition);
@@ -89,32 +80,25 @@ export class TileMap extends Container {
                 currentPosition.x = 0;
                 currentPosition.y++;
             } else {
-                let tileName: string;
-                const tileType = Tile.charMap.get(char);
-                if (tileType === undefined) {
+                let tileName = data.key.get(char);
+                if (tileName === undefined) {
                     console.error(`map symbol unknown: ${char}`);
                     tileName = 'chasm';
-                } else {
-                    tileName = tileType.name;
-                    if (['player', 'enemy', 'item'].includes(tileType.kind)) {
-                        const specific = this.info.find((tileInfo) => {
-                            return (
-                                tileInfo.position.x === currentPosition.x && tileInfo.position.y === currentPosition.y
-                            );
-                        });
-
-                        const tile = new Tile(tileName, currentPosition, specific);
-                        if (tileType.kind === 'player') {
-                            this.player = tile;
-                        } else {
-                            this.movables.push(tile);
-                        }
-                        this.layers[1].addChild(tile.graphic.sprite);
-                        tileName = 'ground';
-                    }
                 }
 
-                const tile = new Tile(tileName, currentPosition);
+                let tile = new Tile(tileName, currentPosition);
+
+                if (['player', 'enemy', 'item'].includes(tile.kind)) {
+                    if (tile.kind === 'player') {
+                        this.player = tile;
+                    } else {
+                        this.movables.push(tile);
+                    }
+                    this.layers[1].addChild(tile.graphic.sprite);
+                    tileName = 'ground';
+                    tile = new Tile(tileName, currentPosition);
+                }
+
                 this.tiles.push(tile);
                 this.layers[0].addChild(tile.graphic.sprite);
                 currentPosition.x++;

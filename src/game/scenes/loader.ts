@@ -2,10 +2,11 @@ import { Container, Graphics, Assets, Point } from 'pixi.js';
 import { manifest } from '../assets';
 import { IScene, manager } from '../../manager';
 import { GameScene } from './game';
+import { loadYaml } from '../../loadyaml';
 
 export class LoaderScene extends Container implements IScene {
     private readonly loaderBar: Container;
-    private readonly loaderBarBoder: Graphics;
+    private readonly loaderBarBorder: Graphics;
     private readonly loaderBarFill: Graphics;
     constructor() {
         super();
@@ -18,13 +19,13 @@ export class LoaderScene extends Container implements IScene {
         this.loaderBarFill.endFill();
         this.loaderBarFill.scale.x = 0;
 
-        this.loaderBarBoder = new Graphics();
-        this.loaderBarBoder.lineStyle(10, 0x0, 1);
-        this.loaderBarBoder.drawRect(0, 0, loaderBarWidth, 50);
+        this.loaderBarBorder = new Graphics();
+        this.loaderBarBorder.lineStyle(10, 0x0, 1);
+        this.loaderBarBorder.drawRect(0, 0, loaderBarWidth, 50);
 
         this.loaderBar = new Container();
         this.loaderBar.addChild(this.loaderBarFill);
-        this.loaderBar.addChild(this.loaderBarBoder);
+        this.loaderBar.addChild(this.loaderBarBorder);
         this.loaderBar.position.x = (manager.width - this.loaderBar.width) / 2;
         this.loaderBar.position.y = (manager.height - this.loaderBar.height) / 2;
         this.addChild(this.loaderBar);
@@ -38,6 +39,8 @@ export class LoaderScene extends Container implements IScene {
     }
 
     private async initializeLoader(): Promise<void> {
+        Assets.loader.parsers.push(loadYaml);
+
         await Assets.init({ manifest: manifest });
 
         const bundleIds = manifest.bundles.map((bundle) => bundle.name);

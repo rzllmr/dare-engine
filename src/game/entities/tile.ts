@@ -1,37 +1,44 @@
-import { Point } from 'pixi.js';
+import { Point, Assets } from 'pixi.js';
 import { Entity } from '../../entity';
 import { Action, Move, Pick } from '../components/actions';
-import tilesData from './tiles.json';
 import { Inventory } from '../components/inventory';
 import { Graphic } from '../components/graphic';
-import { TileInfo } from './map';
-
-interface TileData {
-    name: string;
-    image: string;
-    symbol: string;
-    kind: string;
-    specific: string;
-    info: string;
-}
+import { EntityData, readEntity } from '../../schemes';
 
 export class Tile extends Entity {
-    private readonly data!: TileData;
+    private static _data?: Map<string, EntityData>;
+    private static get data(): Map<string, EntityData> {
+        if (this._data === undefined) {
+            const creatures = Assets.get('entities.creatures');
+            const items = Assets.get('entities.items');
+            const meta = Assets.get('entities.meta');
+            const surroundings = Assets.get('entities.surroundings');
+            const aggregate = new Map<string, Map<string, string>>([...creatures, ...items, ...meta, ...surroundings]);
 
-    constructor(name: string, position: Point, specific?: TileInfo) {
-        super();
-
-        const tileData = (tilesData as TileData[]).find((tile) => {
-            return tile.name === name;
-        });
-        if (tileData === undefined) throw new Error(`tile name unknown: ${name}`);
-
-        this.data = tileData;
-        this.addComponent(new Graphic(this.image, position));
-        this.initKind(this.kind, specific);
+            this._data = new Map();
+            aggregate.forEach((value, key) => {
+                this._data?.set(key, readEntity(value));
+            });
+        }
+        return this._data;
     }
 
-    private initKind(kind: string, specific?: TileInfo): void {
+    private readonly _name: string;
+    private readonly data: EntityData;
+
+    constructor(name: string, position: Point) {
+        super();
+
+        const tileData = Tile.data.get(name);
+        if (tileData === undefined) throw new Error(`tile name unknown: ${name}`);
+
+        this._name = name;
+        this.data = tileData;
+        this.addComponent(new Graphic(this.image, position));
+        this.initKind(this.kind);
+    }
+
+    private initKind(kind: string): void {
         switch (kind) {
             case 'player':
                 this.getComponent(Graphic).alpha = { start: 1.0, show: 1.0, hide: 0.3 };
@@ -41,9 +48,8 @@ export class Tile extends Entity {
                 this.getComponent(Graphic).alpha = { start: 0.0, show: 1.0, hide: 0.0 };
                 break;
             case 'item':
-                if (specific === undefined) break;
                 this.getComponent(Graphic).alpha = { start: 0.0, show: 1.0, hide: 0.0 };
-                this.addComponent(new Pick(specific));
+                this.addComponent(new Pick(this.name, this.data.info));
                 this.getComponent(Pick);
                 this.addComponent(new Move());
                 break;
@@ -82,11 +88,7 @@ export class Tile extends Entity {
     }
 
     public get name(): string {
-        return this.data.name;
-    }
-
-    public get symbol(): string {
-        return this.data.symbol;
+        return this._name;
     }
 
     public get image(): string {
@@ -99,16 +101,5 @@ export class Tile extends Entity {
 
     public get info(): string {
         return this.data.info;
-    }
-
-    private static _charMap: Map<string, TileData> | undefined;
-    public static get charMap(): Map<string, TileData> {
-        if (Tile._charMap === undefined) {
-            Tile._charMap = new Map<string, TileData>();
-            for (const tile of tilesData as TileData[]) {
-                Tile._charMap.set(tile.symbol, tile);
-            }
-        }
-        return Tile._charMap;
     }
 }

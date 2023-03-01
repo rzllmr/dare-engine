@@ -7,9 +7,11 @@ export const manifest: ResolverManifest = {
             assets: {
                 version: './version.txt',
                 tiles: './tileset.json',
-                'map.test': './maps/test.txt',
-                'map.fov': './maps/fov.txt',
-                'map.fov.info': './maps/fov.json'
+                'map.test': './maps/test.yml',
+                'entities.creatures': './entities/creatures.yml',
+                'entities.items': './entities/items.yml',
+                'entities.meta': './entities/meta.yml',
+                'entities.surroundings': './entities/surroundings.yml'
             }
         }
     ]

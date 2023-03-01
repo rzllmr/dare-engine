@@ -5,7 +5,6 @@ import { Entity } from '../../entity';
 import { Inventory } from './inventory';
 import { Graphic } from './graphic';
 import log from '../../log';
-import { TileInfo } from '../entities/map';
 
 export abstract class Action implements IComponent {
     public entity: Entity | null = null;
@@ -36,16 +35,18 @@ export class Move extends Action {
 }
 
 export class Pick extends Action {
-    readonly itemInfo: TileInfo;
+    readonly itemName: string;
+    readonly itemInfo: string;
 
-    constructor(itemInfo: TileInfo) {
+    constructor(name: string, info: string) {
         super();
-        this.itemInfo = itemInfo;
+        this.itemName = name;
+        this.itemInfo = info;
     }
 
     public override act(subject: Tile): void {
         const inventory = subject.getComponent(Inventory);
-        log.tell(`You found ${this.itemInfo.description}`);
-        inventory.addItem(this.itemInfo.name);
+        log.tell(`You found ${this.itemInfo}`);
+        inventory.addItem(this.itemName);
     }
 }
