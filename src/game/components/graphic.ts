@@ -11,7 +11,7 @@ interface Alpha {
 }
 
 export class Graphic implements IComponent {
-    public entity!: Entity;
+    public entity: Entity | null = null;
 
     public readonly sprite!: Sprite;
     private _alpha: Alpha = {

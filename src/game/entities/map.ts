@@ -67,6 +67,7 @@ export class TileMap extends Container {
         const layout = data.layout.replace(/(.) /gm, '$1');
 
         this.checkMapDimensions(layout);
+        Tile.removeFromMap = this.remove.bind(this);
 
         const currentPosition = new Point(0, 0);
         for (const char of layout) {
@@ -154,6 +155,12 @@ export class TileMap extends Container {
         target.act(movable);
 
         this.updateVision();
+    }
+
+    public remove(tile: Tile): void {
+        this.layers[1].removeChild(tile.graphic.sprite);
+        const idx = this.movables.indexOf(tile);
+        if (idx > -1) this.movables.splice(idx, 1);
     }
 
     private tile(coord: Point): Tile | undefined {

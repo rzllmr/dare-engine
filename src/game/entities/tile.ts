@@ -23,6 +23,8 @@ export class Tile extends Entity {
         return this._data;
     }
 
+    public static removeFromMap: (tile: Tile) => void;
+
     private readonly _name: string;
     private readonly data: EntityData;
 
@@ -30,7 +32,7 @@ export class Tile extends Entity {
         super();
 
         const tileData = Tile.data.get(name);
-        if (tileData === undefined) throw new Error(`tile name unknown: ${name}`);
+        if (tileData === undefined) throw new Error(`entity unknown: ${name}`);
 
         this._name = name;
         this.data = tileData;
@@ -50,7 +52,6 @@ export class Tile extends Entity {
             case 'item':
                 this.getComponent(Graphic).alpha = { start: 0.0, show: 1.0, hide: 0.0 };
                 this.addComponent(new Pick(this.name, this.data.info));
-                this.getComponent(Pick);
                 this.addComponent(new Move());
                 break;
             case 'pass':
@@ -71,12 +72,23 @@ export class Tile extends Entity {
         }
     }
 
+    private destroy(): void {
+        Tile.removeFromMap(this);
+        this.components.length = 0;
+    }
+
+    private toBeDestroyed = false;
+    public markForDestruction(): void {
+        this.toBeDestroyed = true;
+    }
+
     public act(subject: Tile): void {
         for (const component of this.components) {
             if (component instanceof Action) {
                 component.act(subject);
             }
         }
+        if (this.toBeDestroyed) this.destroy();
     }
 
     public get graphic(): Graphic {

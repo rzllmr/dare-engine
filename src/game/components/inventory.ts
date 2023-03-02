@@ -4,19 +4,23 @@ import properties from '../../properties';
 
 export class Inventory implements IComponent {
     public entity: Entity | null = null;
+
     private readonly items = new Map<string, Item>();
 
-    public addItem(name: string): void {
+    public addItem(name: string): boolean {
         const item = Item.create(name);
         this.items.set(name, item);
         item.onAdd();
+        return true;
     }
 
-    public removeItem(name: string): void {
+    public removeItem(name: string): boolean {
         const item = this.items.get(name);
-        if (item === undefined) return;
+        if (item === undefined) return true;
+
         item.onRemove();
         this.items.delete(name);
+        return true;
     }
 }
 
