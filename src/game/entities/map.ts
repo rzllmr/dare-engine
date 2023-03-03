@@ -113,10 +113,7 @@ export class TileMap extends Container {
     }
 
     private posToCoord(position: Point): Point {
-        position = new Point(
-            position.x - this.position.x - TileMap.tileDim / 2,
-            position.y - this.position.y - TileMap.tileDim / 2
-        );
+        position = new Point(position.x - TileMap.tileDim / 2, position.y - TileMap.tileDim / 2);
         return new Point(Math.round(position.x / TileMap.tileDim), Math.round(position.y / TileMap.tileDim));
     }
 

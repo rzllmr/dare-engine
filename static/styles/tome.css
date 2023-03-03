@@ -9,10 +9,10 @@
     top: 0;
     right: 0;
     background-image: url("../placeholder/book_cover_by_yd.png");
-    width: 718px;
+    width: 798px;
     height: 100%;
     background-size: cover;
-    padding: 120px 50px 120px 90px;
+    padding: 76px 0px 68px 52px;
     box-sizing: border-box;
     font-family: 'EagleLake';
 }
@@ -20,4 +20,39 @@
 #tome span {
     width: 100%;
     display: inline-block;
+}
+
+.tab {
+    overflow: hidden;
+}
+
+.tab button {
+    float: left;
+    border: none;
+    outline: none;
+    cursor: alias;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font: inherit;
+    border-radius: 10px;
+    background-color: #d6be90;
+}
+
+.tab button:hover {
+    background-color: #e0d2aa;
+}
+
+.tab button.active {
+    background-color: #efe4ce;
+}
+
+.tab-content {
+    display: none;
+    padding: 40px 60px;
+    animation: fadeEffect 1s;
+}
+  
+@keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
 }

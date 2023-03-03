@@ -14,13 +14,14 @@
 			padding: 0;
 			height: 100%;
 			overflow: hidden;
+			background-image: url("placeholder/brown_ice_by_darkwood67.jpg");
+			background-size: cover;
 		}
 
 		#pixi-content {
-			background-image: url("placeholder/brown_ice_by_darkwood67.jpg");
-			background-size: cover;
-			width: 100%;
+			width: calc(100% - 950px);
 			height: 100%;
+			padding: 5%;
 		}
 
 		#version {
@@ -40,18 +41,44 @@
 	<div id="version">0.0.0</div>
 	<div id="pixi-content"><canvas id="pixi-canvas" /></div>
 	<div id="tome">
-		<p>This <u>Tome</u> is everlasting. A source of knowledge for all to venture forth. Take your part to aid the next...</p>
-
-		<p>You're currently looking at:</p>
-		<div id="info">
-			<span>Nothing specific.</span>
+		<div class="tab">
+			<button class="tab-link" onclick="changeTab(event, 'diary')" id="default-tab">Diary</button>
+			<button class="tab-link" onclick="changeTab(event, 'inventory')">Inventory</button>
+			<button class="tab-link" onclick="changeTab(event, 'adversary')">Adversary</button>
 		</div>
+		<div id="diary" class="tab-content">
+			<p>This <u>Tome</u> is everlasting. A source of knowledge for all to venture forth. Take your part to aid the next...</p>
 
-		<p>This is what happened so far:</p>
-		<div id="log">
-			<span>Your adventure began.</span>
+			<p>You're currently looking at:</p>
+			<div id="info">
+				<span>Nothing specific.</span>
+			</div>
+
+			<p>This is what happened so far:</p>
+			<div id="log">
+				<span>Your adventure began.</span>
+			</div>
+		</div>
+		<div id="inventory" class="tab-content">
+			<p>This is the inventory.</p>
+		</div>
+		<div id="adversary" class="tab-content">
+			<p>This is your current adversary.</p>
 		</div>
 	</div>
+
+	<script>
+		function changeTab(event, tabName) {
+			var i, tabContent, tabLinks;
+			tabContent = document.getElementsByClassName('tab-content');
+			for (const content of tabContent) content.style.display = 'none';
+			tabLinks = document.getElementsByClassName('tab-link');
+			for (const link of tabLinks) link.className = link.className.replace(' active', '');
+			document.getElementById(tabName).style.display = 'block';
+			event.currentTarget.className += ' active';
+		}
+		document.getElementById('default-tab').click();
+	</script>
 
 </body>
 
