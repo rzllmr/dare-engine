@@ -7,15 +7,17 @@ class Log {
         return Log._instance;
     }
 
-    private readonly logDiv: HTMLDivElement;
+    private readonly logList: HTMLUListElement;
     private constructor() {
-        this.logDiv = document.querySelector('#log') as HTMLDivElement;
+        this.logList = document.querySelector('#log') as HTMLUListElement;
     }
 
     public tell(line: string): void {
-        const newParagraph: HTMLSpanElement = document.createElement('span');
-        newParagraph.textContent = line;
-        this.logDiv.appendChild(newParagraph);
+        const listItem: HTMLLIElement = document.createElement('li');
+        listItem.textContent = line;
+        listItem.style.listStyleType = 'circle';
+        listItem.style.color = 'var(--text-faded)';
+        this.logList.appendChild(listItem);
     }
 }
 const log = Log.instance();

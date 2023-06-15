@@ -1,20 +1,50 @@
 
 @font-face {
+    font-family: 'Caveat';
+    src: url("../fonts/Caveat/Caveat-VariableFont_wght.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'Cedarville';
+    src: url("../placeholder/Cedarville_Cursive/CedarvilleCursive-Regular.ttf") format('truetype');
+}
+@font-face {
     font-family: 'EagleLake';
     src: url("../placeholder/Eagle_Lake/EagleLake-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'IndieFlower';
+    src: url("../placeholder/Indie_Flower/IndieFlower-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'PermanentMarker';
+    src: url("../placeholder/Permanent_Marker/PermanentMarker-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'RockSalt';
+    src: url("../placeholder/Rock_Salt/RockSalt-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'SpecialElite';
+    src: url("../placeholder/Special_Elite/SpecialElite-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'Zeyada';
+    src: url("../placeholder/Zeyada/Zeyada-Regular.ttf") format('truetype');
 }
 
 #tome {
     position: fixed;
     top: 0;
     right: 0;
-    background-image: url("../placeholder/book_cover_by_yd.png");
-    width: 766px;
-    height: 1080px;
+    background-image: url("../graphics/notebook.svg");
+    width: 758px;
+    height: 895px;
     background-size: cover;
-    padding: 76px 0px 68px 52px;
+    padding: 24px 62px 25px 50px;
+    margin-top: 30px;
     box-sizing: border-box;
-    font-family: 'EagleLake';
+    font-size: 20px;
+    font-family: 'Caveat';
 }
 
 #tome span {
@@ -30,29 +60,63 @@
     float: left;
     border: none;
     outline: none;
-    cursor: alias;
-    padding: 14px 16px;
     transition: 0.3s;
-    font: inherit;
-    border-radius: 10px;
-    background-color: #d6be90;
+    background: transparent;
+    font-family: 'RockSalt';
+    font-size: 16px;
+    color: var(--text-faded);
+    width: 167px;
+    height: 36px;
+    margin: 0 1px;
 }
 
 .tab button:hover {
-    background-color: #e0d2aa;
+    color: var(--text);
 }
 
 .tab button.active {
-    background-color: #efe4ce;
+    color: var(--text);
+    border-bottom: 2px solid #F1EDE0;
+}
+
+.tab button:not(.active) {
+    cursor: alias;
 }
 
 .tab-content {
     display: none;
-    padding: 40px 60px;
+    padding: 40px;
     animation: fadeEffect 1s;
+    height: calc(100% - 117px);
 }
   
 @keyframes fadeEffect {
     from {opacity: 0;}
     to {opacity: 1;}
+}
+
+p {
+    margin: 0;
+}
+
+#log-page {
+    height: 36%;
+    width: 75%;
+    position: absolute;
+    top: 53%;
+    padding: 40px;
+}
+
+#log-head {
+    border-bottom: 1px solid var(--divider);
+}
+
+#log {
+    overflow-y: auto;
+    height: 84%;
+    scrollbar-color: var(--divider) transparent;
+}
+
+ul {
+    padding-left: 20px;
 }

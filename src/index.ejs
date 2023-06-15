@@ -14,8 +14,8 @@
 			padding: 0;
 			height: 100%;
 			overflow: hidden;
-			background-image: url("placeholder/brown_ice_by_darkwood67.jpg");
-			background-size: cover;
+			background-image: url("graphics/groovepaper.png");
+			background-color: #FFFCF3;
 		}
 
 		#pixi-content {
@@ -32,6 +32,7 @@
 			font-family: 'Courier New', Courier, monospace;
 		}
 	</style>
+	<link rel="stylesheet" href="styles/variables.css">
 	<link rel="stylesheet" href="styles/tome.css">
 
 </head>
@@ -47,16 +48,15 @@
 			<button class="tab-link" onclick="changeTab(event, 'adversary')">Adversary</button>
 		</div>
 		<div id="diary" class="tab-content">
-			<p>This <u>Tome</u> is everlasting. A source of knowledge for all to venture forth. Take your part to aid the next...</p>
-
-			<p>You're currently looking at:</p>
-			<div id="info">
-				<span>Nothing specific.</span>
+			<div id="intro-section" style="height: 10%;">
+				<p>This <u>journal</u> is eternal. It cannot be lost or destroyed and remembers everything happened. A source of knowledge crucial to every adventurers success.</p>
 			</div>
 
-			<p>This is what happened so far:</p>
-			<div id="log">
-				<span>Your adventure began.</span>
+			<div id="status-section" style="height: 40%;">
+				<p>You're currently looking at:</p>
+				<div id="info">
+					<span>Nothing specific.</span>
+				</div>
 			</div>
 		</div>
 		<div id="inventory" class="tab-content">
@@ -64,6 +64,12 @@
 		</div>
 		<div id="adversary" class="tab-content">
 			<p>This is your current adversary.</p>
+		</div>
+		<div id="log-page" style="height: 50%;">
+			<p id="log-head"><b>Log</b> of everything that happened so far:</p>
+			<ul id="log">
+				<li>Your adventure began.</li>
+			</ul>
 		</div>
 	</div>
 
