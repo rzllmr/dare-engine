@@ -57,6 +57,15 @@ export class Graphic implements IComponent {
         this.sprite.y = value.y * TileMap.tileDim;
     }
 
+    public get realPos(): Point {
+        return new Point(this.sprite.x, this.sprite.y);
+    }
+
+    public set realPos(value: Point) {
+        this.sprite.x = value.x;
+        this.sprite.y = value.y;
+    }
+
     private loadSprite(image: string): Sprite {
         const sprite = Sprite.from(Graphic.loadTexture(image));
         sprite.scale.set(TileMap.scale);

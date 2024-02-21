@@ -37,6 +37,7 @@ export class Tile extends Entity {
         this._name = name;
         this.data = tileData;
         this.addComponent(new Graphic(this.image, position));
+        this.addComponent(new Move());
         this.initKind(this.kind);
     }
 
@@ -51,14 +52,14 @@ export class Tile extends Entity {
                 break;
             case 'item':
                 this.getComponent(Graphic).alpha = { start: 0.0, show: 1.0, hide: 0.0 };
-                this.addComponent(new Pick(this.name, this.data.info));
-                this.addComponent(new Move());
+                this.getComponent(Move).pass = true;
+                this.addComponent(new Pick());
                 break;
             case 'pass':
-                this.addComponent(new Move());
+                this.getComponent(Move).pass = true;
                 break;
             case 'door':
-                this.addComponent(new Move());
+                this.getComponent(Move).pass = true;
                 break;
             case 'chasm':
                 break;
@@ -82,10 +83,10 @@ export class Tile extends Entity {
         this.toBeDestroyed = true;
     }
 
-    public act(subject: Tile): void {
+    public async act(subject: Tile): Promise<void> {
         for (const component of this.components) {
             if (component instanceof Action) {
-                component.act(subject);
+                await component.act(subject);
             }
         }
         if (this.toBeDestroyed) this.destroy();

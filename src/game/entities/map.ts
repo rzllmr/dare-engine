@@ -158,9 +158,10 @@ export class TileMap extends Container {
         if (target === undefined) target = this.tile(targetCoord);
         if (target === undefined) return;
 
-        target.act(movable);
-
-        this.updateVision();
+        target.act(movable)
+        //  .then(() => {this.updateOthers()})
+            .then(() => {this.updateVision()})
+            .catch((msg) => {console.error(msg)});
     }
 
     public remove(tile: Tile): void {

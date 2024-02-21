@@ -5,6 +5,8 @@ import { Inventory } from './inventory';
 import { Graphic } from './graphic';
 import log from '../../log';
 import { Entity } from '../../entity';
+import { Tween, Easing } from '@tweenjs/tween.js';
+import animation from '../../animation';
 
 export abstract class Action implements IComponent {
     public entity: Entity | null = null;
@@ -12,7 +14,7 @@ export abstract class Action implements IComponent {
         return this.entity as Tile;
     }
 
-    public abstract act(subject: Tile): void;
+    public abstract act(subject: Tile): Promise<void>;
 
     protected decapitalize(line: string): string {
         return line.charAt(0).toLowerCase() + line.slice(1);
@@ -20,8 +22,37 @@ export abstract class Action implements IComponent {
 }
 
 export class Move extends Action {
-    public override act(subject: Tile): void {
-        subject.getComponent(Graphic).position = this.object.getComponent(Graphic).position;
+    public pass: boolean;
+
+    constructor(pass: boolean = false) {
+        super();
+        this.pass = pass;
+    }
+
+    public override async act(subject: Tile): Promise<void> {
+        const subjectPos = subject.getComponent(Graphic).realPos;
+        const objectPos =  this.object.getComponent(Graphic).realPos;
+
+        const tween = this.pass ? this.step(subjectPos, objectPos) : this.bounce(subjectPos, objectPos);
+        tween.onUpdate(() => {
+            subject.getComponent(Graphic).realPos = new Point(subjectPos.x, subjectPos.y);
+        });
+        tween.start();
+
+        animation.add(tween.update, tween);
+        await new Promise((resolve) => tween.onComplete(resolve));
+    }
+
+    private step(start: Point, end: Point): Tween<any> {
+        return new Tween(start, false).to(end, 100).easing(Easing.Sinusoidal.InOut);
+    }
+
+    private bounce(start: Point, end: Point): Tween<any> {
+        const target = {
+            x: start.x + ( end.x - start.x ) / 3,
+            y: start.y + ( end.y - start.y ) / 3
+        };
+        return new Tween(start, false).to(target, 100).easing(Easing.Sinusoidal.InOut).repeat(1).yoyo(true);
     }
 
     public static direction(direction: string): Point {
