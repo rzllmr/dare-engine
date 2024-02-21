@@ -4,6 +4,7 @@ import { TileMap } from '../entities/map';
 import { Move } from '../components/actions';
 
 export class GameScene extends Container implements IScene {
+    public gameName = 'Dare';
     private readonly tileMap: TileMap;
     private readonly offset: Point;
 

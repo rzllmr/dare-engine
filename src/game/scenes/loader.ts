@@ -53,10 +53,14 @@ export class LoaderScene extends Container implements IScene {
     }
 
     private gameLoaded(): void {
+        const version: string = Assets.get('version');
         const versionDiv = document.querySelector('#version') as HTMLDivElement;
-        versionDiv.textContent = Assets.get('version');
+        versionDiv.textContent = version;
 
-        manager.changeScene(new GameScene());
+        const gameScene = new GameScene();
+        console.log(`${gameScene.gameName} v${version}`);
+
+        manager.changeScene(gameScene);
     }
 
     public input(position: Point, button?: string): void {}
