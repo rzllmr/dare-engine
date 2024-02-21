@@ -1,0 +1,37 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background-image: url("../graphics/groovepaper.png");
+  background-color: var(--neutral1);
+  /* background-color:  #FFFCF3; */
+}
+
+#pixi-content {
+  width: calc(100% - 950px);
+  height: 100%;
+  padding: 5%;
+}
+
+#version {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 5px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+#tooltip {
+  position: absolute;
+  top: 10;
+  left: 10;
+  background-color: var(--neutral2);
+  padding: 2px 10px;
+  border-radius: 0 5px 5px 5px;
+  font-size: 20px;
+  font-family: 'Caveat';
+  pointer-events: none;
+  visibility: hidden;
+}

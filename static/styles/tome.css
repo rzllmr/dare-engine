@@ -12,6 +12,10 @@
     src: url("../placeholder/Eagle_Lake/EagleLake-Regular.ttf") format('truetype');
 }
 @font-face {
+    font-family: 'GloriaHallelujah';
+    src: url("../placeholder/Gloria_Hallelujah/GloriaHallelujah-Regular.ttf") format('truetype');
+}
+@font-face {
     font-family: 'IndieFlower';
     src: url("../placeholder/Indie_Flower/IndieFlower-Regular.ttf") format('truetype');
 }
@@ -31,6 +35,76 @@
     font-family: 'Zeyada';
     src: url("../placeholder/Zeyada/Zeyada-Regular.ttf") format('truetype');
 }
+@font-face {
+    font-family: 'ArchitectsDaughter';
+    src: url("../placeholder/new_fonts/Architects_Daughter/ArchitectsDaughter-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'CaveatBrush';
+    src: url("../placeholder/new_fonts/Caveat_Brush/CaveatBrush-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'IndieFlower';
+    src: url("../placeholder/new_fonts/Indie_Flower/IndieFlower-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'LaBelleAurore';
+    src: url("../placeholder/new_fonts/La_Belle_Aurore/LaBelleAurore-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'MarckScript';
+    src: url("../placeholder/new_fonts/Marck_Script/MarckScript-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'NanumBrushScript';
+    src: url("../placeholder/new_fonts/Nanum_Brush_Script/NanumBrushScript-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'NanumPenScript';
+    src: url("../placeholder/new_fonts/Nanum_Pen_Script/NanumPenScript-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'Neucha';
+    src: url("../placeholder/new_fonts/Neucha/Neucha-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'NothingYouCouldDo';
+    src: url("../placeholder/new_fonts/Nothing_You_Could_Do/NothingYouCouldDo-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'RockSalt';
+    src: url("../placeholder/new_fonts/Rock_Salt/RockSalt-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'SpecialElite';
+    src: url("../placeholder/new_fonts/Special_Elite/SpecialElite-Regular.ttf") format('truetype');
+}
+
+@font-face {
+    font-family: 'DavidLibre';
+    src: url("../placeholder/labels/David_Libre/DavidLibre-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'Quando';
+    src: url("../placeholder/labels/Quando/Quando-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'Sansita';
+    src: url("../placeholder/labels/Sansita/Sansita-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'Taviraj';
+    src: url("../placeholder/labels/Taviraj/Taviraj-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'CantoraOne';
+    src: url("../placeholder/labels/Cantora_One/CantoraOne-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: 'Volkhov';
+    src: url("../placeholder/labels/Volkhov/Volkhov-Regular.ttf") format('truetype');
+}
+
 
 #tome {
     position: fixed;
@@ -38,13 +112,22 @@
     right: 0;
     background-image: url("../graphics/notebook.svg");
     width: 758px;
-    height: 895px;
+    height: 912px;
     background-size: cover;
     padding: 24px 62px 25px 50px;
     margin-top: 30px;
     box-sizing: border-box;
-    font-size: 20px;
+    font-size: 21px;
     font-family: 'Caveat';
+    font-family: 'MarckScript';
+}
+
+.label {
+    font-family: 'Sansita';
+    font-family: 'Volkhov';
+    font-family: 'Quando';
+    font-family: 'CantoraOne';
+    font-size: 21px;
 }
 
 #tome span {
@@ -65,8 +148,8 @@
     font-family: 'RockSalt';
     font-size: 16px;
     color: var(--text-faded);
-    width: 167px;
-    height: 36px;
+    width: 170px;
+    height: 38px;
     margin: 0 1px;
 }
 
@@ -76,7 +159,7 @@
 
 .tab button.active {
     color: var(--text);
-    border-bottom: 2px solid #F1EDE0;
+    border-bottom: 3px solid #F1EDE0;
 }
 
 .tab button:not(.active) {

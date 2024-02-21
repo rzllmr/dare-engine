@@ -7,32 +7,8 @@
 		content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />
 	<meta name="apple-mobile-web-app-capable" content="yes">
 
-	<style>
-		html,
-		body {
-			margin: 0;
-			padding: 0;
-			height: 100%;
-			overflow: hidden;
-			background-image: url("graphics/groovepaper.png");
-			background-color: #FFFCF3;
-		}
-
-		#pixi-content {
-			width: calc(100% - 950px);
-			height: 100%;
-			padding: 5%;
-		}
-
-		#version {
-			position: fixed;
-			top: 0;
-			right: 0;
-			padding: 5px;
-			font-family: 'Courier New', Courier, monospace;
-		}
-	</style>
 	<link rel="stylesheet" href="styles/variables.css">
+	<link rel="stylesheet" href="styles/general.css">
 	<link rel="stylesheet" href="styles/tome.css">
 
 </head>
@@ -66,7 +42,7 @@
 			<p>This is your current adversary.</p>
 		</div>
 		<div id="log-page" style="height: 50%;">
-			<p id="log-head"><b>Log</b> of everything that happened so far:</p>
+			<p id="log-head" class="label"><b>Log</b> of everything that happened so far:</p>
 			<ul id="log">
 				<li>Your adventure began.</li>
 			</ul>
