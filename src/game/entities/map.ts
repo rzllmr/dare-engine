@@ -4,6 +4,7 @@ import computeFov from '../../fov';
 import properties from '../../properties';
 import info from '../../info';
 import { readMap } from '../../schemes';
+import tooltip from '../proxies/tooltip';
 
 export type PropertyNames = 'vision-distance' | 'map-tiles' | 'reveal-tiles';
 properties.register('vision-distance', 1, 'radius around player where tiles are revealed'); // only high number to prevent infinite recursion
@@ -117,7 +118,11 @@ export class TileMap extends Container {
         return new Point(Math.round(position.x / TileMap.tileDim), Math.round(position.y / TileMap.tileDim));
     }
 
-    public highlight(position: Point): void {
+    private coordToPos(coord: Point): Point {
+        return new Point(coord.x * TileMap.tileDim, coord.y * TileMap.tileDim);
+    }
+
+    public highlight(position: Point, offset: Point): void {
         if (this._highlight === undefined) return;
 
         const coord = this.posToCoord(position);
@@ -129,12 +134,16 @@ export class TileMap extends Container {
             if (this._highlight.graphic.visible) {
                 this._highlight.graphic.hide();
                 info.tell('Nothing specific.');
+                tooltip.tell('');
             }
             return;
         }
 
         if (!this._highlight.graphic.visible) this._highlight.graphic.show();
         info.tell(tile.info);
+
+        const nextCoordPos = this.coordToPos(new Point(coord.x + 1, coord.y));
+        tooltip.tell(tile.info, new Point(nextCoordPos.x + offset.x, nextCoordPos.y + offset.y));
     }
 
     public move(name: string, direction: Point): void {
@@ -161,6 +170,7 @@ export class TileMap extends Container {
     }
 
     private tile(coord: Point): Tile | undefined {
+        if (coord.x >= this.dimensions.x) return undefined;
         return this.tiles.at(coord.x + coord.y * this.dimensions.x);
     }
 

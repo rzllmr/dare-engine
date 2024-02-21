@@ -21,7 +21,7 @@ export class GameScene extends Container implements IScene {
 
     public input(position: Point, button?: string): void {
         if (button === undefined) {
-            this.tileMap.highlight(new Point(position.x - this.offset.x, position.y - this.offset.y));
+            this.tileMap.highlight(new Point(position.x - this.offset.x, position.y - this.offset.y), this.offset);
             return;
         }
 
