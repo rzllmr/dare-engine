@@ -1,0 +1,30 @@
+map:
+    image: "tile_1.7"
+    kind: "item"
+    info: "A detailed map of the vicinity."
+    specs:
+        take:
+            - ["reveal-tiles", true]
+parchment:
+    image: "tile_1.7"
+    kind: "item"
+    info: "Some parchment for mapping your findings."
+    specs:
+        take:
+            - ["map-tiles", true]
+torch:
+    image: "tile_1.7"
+    kind: "item"
+    info: "A torch lighting your surroundings as you raise it."
+    specs: 
+        part: "hand"
+        equip:
+            - ["vision-distance", 6]
+
+lantern:
+    image: "tile_1.7"
+    kind: "item"
+    info: "A lantern to light the surroundings from your belt."
+    specs:
+        take:
+            - ["vision-distance", 6]

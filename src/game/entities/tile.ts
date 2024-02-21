@@ -114,4 +114,8 @@ export class Tile extends Entity {
     public get info(): string {
         return this.data.info;
     }
+
+    public get specs(): any {
+        return this.data.specs;
+    }
 }

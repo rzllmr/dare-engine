@@ -7,9 +7,9 @@ class Scheme<T> {
         this.map = map;
     }
 
-    read(key: string): T | undefined {
+    read(key: string, optional = false): T | undefined {
         if (!this.map.has(key)) {
-            console.error(`Missing "${key}" in "${this.name}"`);
+            if (!optional) console.error(`Missing "${key}" in "${this.name}"`);
             return undefined;
         }
         return this.map.get(key);
@@ -33,6 +33,7 @@ export interface EntityData {
     kind: string;
     image: string;
     info: string;
+    specs: any;
 }
 
 export function readEntity(yaml: Map<string, any>): EntityData {
@@ -40,6 +41,7 @@ export function readEntity(yaml: Map<string, any>): EntityData {
     return {
         kind: data.read('kind'),
         image: data.read('image'),
-        info: data.read('info')
+        info: data.read('info'),
+        specs: data.read('specs', true)
     };
 }

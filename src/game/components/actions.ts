@@ -13,6 +13,10 @@ export abstract class Action implements IComponent {
     }
 
     public abstract act(subject: Tile): void;
+
+    protected decapitalize(line: string): string {
+        return line.charAt(0).toLowerCase() + line.slice(1);
+    }
 }
 
 export class Move extends Action {
@@ -37,19 +41,10 @@ export class Move extends Action {
 }
 
 export class Pick extends Action {
-    readonly itemName: string;
-    readonly itemInfo: string;
-
-    constructor(name: string, info: string) {
-        super();
-        this.itemName = name;
-        this.itemInfo = info;
-    }
-
-    public override act(subject: Tile): void {
+    public override async act(subject: Tile): Promise<void> {
         const inventory = subject.getComponent(Inventory);
-        log.tell(`You found ${this.itemInfo}`);
-        const couldBeAdded = inventory.addItem(this.itemName);
+        log.tell(`You found ${this.decapitalize(this.object.info)}`);
+        const couldBeAdded = inventory.addItem(this.object.name, this.object.specs);
         if (couldBeAdded) this.object.markForDestruction();
     }
 }

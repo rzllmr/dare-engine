@@ -1,16 +1,44 @@
 import { IComponent } from '../../component';
 import { Entity } from '../../entity';
+import { ListProxy } from '../proxies/list';
 import properties from '../../properties';
+import { PropertyNames } from '../entities/map';
+
+interface BodyPart {
+    max: number;
+    items: string[];
+}
 
 export class Inventory implements IComponent {
     public entity: Entity | null = null;
 
     private readonly items = new Map<string, Item>();
+    private readonly equippedList: ListProxy;
+    private readonly packedList: ListProxy;
+    private readonly equippedParts = new Map<string, BodyPart>();
 
-    public addItem(name: string): boolean {
-        const item = Item.create(name);
+    constructor() {
+        this.equippedList = new ListProxy('#equipped');
+        this.packedList = new ListProxy('#packed');
+        this.equippedParts = new Map([
+            ['hand', { max: 2, items: [] }],
+            ['head', { max: 1, items: [] }],
+            ['body', { max: 2, items: [] }]
+        ]);
+    }
+
+    public addItem(name: string, specs: any): boolean {
+        const item = new Item(name, specs);
         this.items.set(name, item);
-        item.onAdd();
+
+        if (item.isEquipment() && this.canEquip(item)) {
+            item.onEquip();
+            this.equippedList.add(`${name} (${item.part})`);
+        } else {
+            item.onTake();
+            this.packedList.add(name);
+        }
+
         return true;
     }
 
@@ -18,58 +46,69 @@ export class Inventory implements IComponent {
         const item = this.items.get(name);
         if (item === undefined) return true;
 
-        item.onRemove();
+        item.onDrop();
         this.items.delete(name);
         return true;
     }
-}
 
-// eslint-disable-next-line @typescript-eslint/prefer-function-type
-type constr<T> = { new (...args: any[]): T };
-
-abstract class Item {
-    public static create(name: string): Item {
-        const type = new Map<string, constr<Item>>([
-            ['parchment', ParchmentItem],
-            ['map', MapItem],
-            ['torch', TorchItem]
-        ]);
-
-        if (!type.has(name)) throw new Error(`unknown item: ${name}`);
-
-        return new (type.get(name) as constr<Item>)();
-    }
-
-    public abstract onAdd(): void;
-    public abstract onRemove(): void;
-}
-
-class ParchmentItem extends Item {
-    public override onAdd(): void {
-        properties.set('map-tiles', true);
-    }
-
-    public override onRemove(): void {
-        properties.set('map-tiles', false);
+    private canEquip(item: Item): boolean {
+        const part = this.equippedParts.get(item.part);
+        if (part !== undefined && part.items.length < part.max) {
+            part.items.push(item.name);
+            return true;
+        }
+        return false;
     }
 }
 
-class MapItem extends Item {
-    public override onAdd(): void {
-        properties.set('reveal-tiles', true);
+class Item {
+    public readonly name: string;
+    private readonly specs: any;
+
+    constructor(name: string, specs: any) {
+        this.name = name;
+        this.specs = specs;
     }
 
-    public override onRemove(): void {
-        properties.set('reveal-tiles', false);
-    }
-}
-
-class TorchItem extends Item {
-    public override onAdd(): void {
-        properties.set('vision-distance', 6);
+    public isEquipment(): boolean {
+        return this.specs.has('equip');
     }
 
-    public override onRemove(): void {
-        properties.reset('vision-distance');
+    public get part(): string {
+        return this.specs.get('part');
+    }
+
+    public onTake(): void {
+        this.onAdd('take');
+    }
+
+    public onDrop(): void {
+        this.onRemove('take');
+    }
+
+    public onEquip(): void {
+        this.onAdd('equip');
+    }
+
+    public onUnequip(): void {
+        this.onRemove('equip');
+    }
+
+    private onAdd(action: string): void {
+        const changes = this.specs.get(action) as string[][];
+        if (changes !== undefined) {
+            changes.forEach((change) => {
+                properties.set(change[0] as PropertyNames, change[1]);
+            });
+        }
+    }
+
+    private onRemove(action: string): void {
+        const changes = this.specs.get(action) as string[][];
+        if (changes !== undefined) {
+            changes.forEach((change) => {
+                properties.reset(change[0] as PropertyNames);
+            });
+        }
     }
 }

@@ -5,13 +5,13 @@ export const manifest: ResolverManifest = {
         {
             name: 'main',
             assets: {
-                version: './version.txt',
-                tiles: './tileset.json',
-                'map.test': './maps/test.yml',
-                'entities.creatures': './entities/creatures.yml',
-                'entities.items': './entities/items.yml',
-                'entities.meta': './entities/meta.yml',
-                'entities.surroundings': './entities/surroundings.yml'
+                'version': './version.txt',
+                'tiles': './tileset.json',
+                'map.test': './content/maps/test.yml',
+                'entities.creatures': './content/entities/creatures.yml',
+                'entities.items': './content/entities/items.yml',
+                'entities.meta': './content/entities/meta.yml',
+                'entities.surroundings': './content/entities/surroundings.yml'
             }
         }
     ]
