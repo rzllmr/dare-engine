@@ -1,6 +1,6 @@
 import { Point, Assets } from 'pixi.js';
 import { Entity } from '../../entity';
-import { Action, Move, Pick } from '../components/actions';
+import { Action, Move, Pick, Fight } from '../components/actions';
 import { Inventory } from '../components/inventory';
 import { Graphic } from '../components/graphic';
 import { EntityData, readEntity } from '../../schemes';
@@ -49,6 +49,7 @@ export class Tile extends Entity {
                 break;
             case 'enemy':
                 this.getComponent(Graphic).alpha = { start: 0.0, show: 1.0, hide: 0.0 };
+                this.addComponent(new Fight());
                 break;
             case 'item':
                 this.getComponent(Graphic).alpha = { start: 0.0, show: 1.0, hide: 0.0 };

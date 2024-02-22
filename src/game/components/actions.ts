@@ -79,3 +79,11 @@ export class Pick extends Action {
         if (couldBeAdded) this.object.markForDestruction();
     }
 }
+
+export class Fight extends Action {
+    public override async act(subject: Tile): Promise<void> {
+        log.tell(`You fight ${this.decapitalize(this.object.info)}`);
+        const defeated = false;
+        if (defeated) this.object.markForDestruction();
+    }
+}
