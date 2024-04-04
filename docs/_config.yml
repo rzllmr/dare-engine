@@ -21,7 +21,7 @@
 title: Dare
 email: 30299783+rzllmr@users.noreply.github.com
 description: >- # this means to ignore newlines until "baseurl:"
-  A traditional rogue-like in TypeScript.
+  An RPG engine to power little adventures.
 baseurl: "/pixi-engine" # the subpath of your site, e.g. /blog
 url: "https://rzllmr.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  rzllmr

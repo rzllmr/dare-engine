@@ -2,7 +2,7 @@
 layout: merlot_custom
 ---
 
-This text can be **bold**, _italic_, or ~~strikethrough~~.
+This test text can be **bold**, _italic_, or ~~strikethrough~~.
 
 [Link to another page](./another-page.html).
 
@@ -121,3 +121,9 @@ Long, single-line code blocks should not wrap. They should horizontally scroll i
 ```
 The final element.
 ```
+
+{% for post in site.posts %}
+* * *
+### [{{ post.title }}](.{{ post.url }})
+{{ post.excerpt }}
+{% endfor %}

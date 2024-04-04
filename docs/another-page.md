@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: merlot_custom
 ---
 
 ## Welcome to another page
