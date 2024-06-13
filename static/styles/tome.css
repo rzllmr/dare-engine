@@ -1,133 +1,51 @@
-
-@font-face {
-    font-family: 'Caveat';
-    src: url("../fonts/Caveat/Caveat-VariableFont_wght.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'Cedarville';
-    src: url("../placeholder/Cedarville_Cursive/CedarvilleCursive-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'EagleLake';
-    src: url("../placeholder/Eagle_Lake/EagleLake-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'GloriaHallelujah';
-    src: url("../placeholder/Gloria_Hallelujah/GloriaHallelujah-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'IndieFlower';
-    src: url("../placeholder/Indie_Flower/IndieFlower-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'PermanentMarker';
-    src: url("../placeholder/Permanent_Marker/PermanentMarker-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'RockSalt';
-    src: url("../placeholder/Rock_Salt/RockSalt-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'SpecialElite';
-    src: url("../placeholder/Special_Elite/SpecialElite-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'Zeyada';
-    src: url("../placeholder/Zeyada/Zeyada-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'ArchitectsDaughter';
-    src: url("../placeholder/new_fonts/Architects_Daughter/ArchitectsDaughter-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'CaveatBrush';
-    src: url("../placeholder/new_fonts/Caveat_Brush/CaveatBrush-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'IndieFlower';
-    src: url("../placeholder/new_fonts/Indie_Flower/IndieFlower-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'LaBelleAurore';
-    src: url("../placeholder/new_fonts/La_Belle_Aurore/LaBelleAurore-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'MarckScript';
-    src: url("../placeholder/new_fonts/Marck_Script/MarckScript-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'NanumBrushScript';
-    src: url("../placeholder/new_fonts/Nanum_Brush_Script/NanumBrushScript-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'NanumPenScript';
-    src: url("../placeholder/new_fonts/Nanum_Pen_Script/NanumPenScript-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'Neucha';
-    src: url("../placeholder/new_fonts/Neucha/Neucha-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'NothingYouCouldDo';
-    src: url("../placeholder/new_fonts/Nothing_You_Could_Do/NothingYouCouldDo-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'RockSalt';
-    src: url("../placeholder/new_fonts/Rock_Salt/RockSalt-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'SpecialElite';
-    src: url("../placeholder/new_fonts/Special_Elite/SpecialElite-Regular.ttf") format('truetype');
-}
-
-@font-face {
-    font-family: 'DavidLibre';
-    src: url("../placeholder/labels/David_Libre/DavidLibre-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'Quando';
-    src: url("../placeholder/labels/Quando/Quando-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'Sansita';
-    src: url("../placeholder/labels/Sansita/Sansita-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'Taviraj';
-    src: url("../placeholder/labels/Taviraj/Taviraj-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'CantoraOne';
-    src: url("../placeholder/labels/Cantora_One/CantoraOne-Regular.ttf") format('truetype');
-}
-@font-face {
-    font-family: 'Volkhov';
-    src: url("../placeholder/labels/Volkhov/Volkhov-Regular.ttf") format('truetype');
-}
-
-
 #tome {
     position: fixed;
-    top: 0;
-    right: 0;
-    background-image: url("../graphics/notebook.svg");
-    width: 758px;
-    height: 912px;
-    background-size: cover;
-    padding: 24px 62px 25px 50px;
-    margin-top: 30px;
+    left: calc(3 * 407px);
+    top: calc(3 * 36px);
+    width: calc(3 * 233px);
+    height: calc(3 * 291px);
+    background-image: url("../graphics/book.png");
+    background-repeat: no-repeat;
+    background-size: auto;
+    padding: 59px 80px 102px 84px;
     box-sizing: border-box;
-    font-size: 21px;
-    font-family: 'Caveat';
-    font-family: 'MarckScript';
+
+    /* font-family: 'Snide Asides';
+    font-weight: bold;
+    font-size: 22px; */
+
+    font-family: 'Abaddon Light';
+    font-family: 'CelticTime';
+    font-size: 24px;
 }
 
+.boxed {
+    border-image: url("../graphics/book_box.png");
+    border-image-slice: 30 fill;
+    border-width: 30px;
+    border-image-width: 30px;
+    border-image-repeat: repeat;
+    padding: 8px 15px;
+}
+.boxed.open {
+    border-image-source: url("../graphics/book_box_open.png");
+}
+.underline {
+    border-image: url("../graphics/book_line.png");
+    border-image-slice: 21 30 12 30 fill;
+    border-image-repeat: repeat;
+    border-style: solid;
+    border-width: 0px 30px 12px 30px;
+}
 .label {
-    font-family: 'Sansita';
-    font-family: 'Volkhov';
-    font-family: 'Quando';
-    font-family: 'CantoraOne';
-    font-size: 21px;
+    /* font-family: 'Old Fax';
+    font-size: 18px; */
+
+    font-family: 'Letterstyle';
+    font-size: 12px;    
+}
+.underline .label {
+    margin: 0 0 -7px -16px;
 }
 
 #tome span {
@@ -135,38 +53,7 @@
     display: inline-block;
 }
 
-.tab {
-    overflow: hidden;
-}
-
-.tab button {
-    float: left;
-    border: none;
-    outline: none;
-    transition: 0.3s;
-    background: transparent;
-    font-family: 'RockSalt';
-    font-size: 16px;
-    color: var(--text-faded);
-    width: 170px;
-    height: 38px;
-    margin: 0 1px;
-}
-
-.tab button:hover {
-    color: var(--text);
-}
-
-.tab button.active {
-    color: var(--text);
-    border-bottom: 3px solid #F1EDE0;
-}
-
-.tab button:not(.active) {
-    cursor: alias;
-}
-
-.tab-content {
+.page {
     display: none;
     padding: 40px;
     animation: fadeEffect 1s;
@@ -183,23 +70,136 @@ p {
 }
 
 #log-page {
-    height: 36%;
-    width: 75%;
+    height: 16%;
+    width: 71%;
     position: absolute;
-    top: 53%;
+    top: 64%;
     padding: 40px;
 }
 
-#log-head {
-    border-bottom: 1px solid var(--divider);
+#log-page .underline {
+    margin-right: 40px;
 }
 
 #log {
     overflow-y: auto;
-    height: 84%;
-    scrollbar-color: var(--divider) transparent;
+    height: 75%;
+    scrollbar-color: var(--lines) transparent;
+    scrollbar-width: thin;
 }
 
 ul {
     padding-left: 20px;
+    padding-right: 40px;
+    margin-top: 10px;
+}
+
+ul li {
+    list-style-type: none;
+    text-indent: -20px;
+}
+
+ul#log li:not(:last-child) {
+    opacity: 0.5;
+}
+
+#ribbon {
+    position: fixed;
+    left: calc(3 * 613px);
+    top: calc(3 * 37px);
+    width: calc(3 * 15px);
+    height: calc(3 * 268px);
+    background-repeat: no-repeat;
+    background-size: auto;
+    animation: fadeEffect 1s;
+}
+.diary-ribbon {
+    background-image: url("../graphics/pages/ribbon_diary.png");
+}
+.info-ribbon {
+    background-image: url("../graphics/pages/ribbon_info.png");
+}
+.items-ribbon {
+    background-image: url("../graphics/pages/ribbon_items.png");
+}
+.options-ribbon {
+    background-image: url("../graphics/pages/ribbon_options.png");
+}
+
+.marker {
+    position: fixed;
+    left: calc(3 * 401px);
+    width: calc(3 * 21px);
+    height: calc(3 * 15px);
+    background-repeat: no-repeat;
+    background-size: auto;
+    cursor: alias;
+}
+.marker.selected {
+    visibility: hidden;
+}
+
+#marker-1.marker {
+    top: calc(3 * 103px);
+    width: calc(3 * 21px);
+    background-image: url("../graphics/pages/marker_diary.png");
+}
+#marker-1.marker:hover {
+    left: calc(3 * 373px);
+    width: calc(3 * 49px);
+}
+
+#marker-2.marker {
+    top: calc(3 * 123px);
+    width: calc(3 * 20px);
+    background-image: url("../graphics/pages/marker_info.png");
+}
+#marker-2.marker:hover {
+    left: calc(3 * 378px);
+    width: calc(3 * 43px);
+}
+
+#marker-3.marker {
+    top: calc(3 * 143px);
+    width: calc(3 * 19px);
+    background-image: url("../graphics/pages/marker_items.png");
+}
+#marker-3.marker:hover {
+    left: calc(3 * 370px);
+    width: calc(3 * 50px);
+}
+
+#marker-4.marker {
+    top: calc(3 * 163px);
+    width: calc(3 * 18px);
+    background-image: url("../graphics/pages/marker_options.png");
+}
+#marker-4.marker:hover {
+    left: calc(3 * 358px);
+    width: calc(3 * 61px);
+}
+
+#page-flip {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 699px;
+    height: 981px;
+    display: none;
+}
+#page-flip.flip1 {
+    display: block;
+    background-image: url("../graphics/book_flip1.png");
+}
+#page-flip.flip2 {
+    display: block;
+    background-image: url("../graphics/book_flip2.png");
+}
+#page-flip.flip3 {
+    display: block;
+    background-image: url("../graphics/book_flip3.png");
+}
+#page-flip.flip4 {
+    display: block;
+    background-image: url("../graphics/book_flip4.png");
 }

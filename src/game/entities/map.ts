@@ -17,8 +17,8 @@ export class TileMap extends Container {
     private readonly layers = new Array<Container>(2);
     private readonly dimensions = new Point(0, 0);
 
-    public static readonly scale: number = 0.14;
-    public static readonly tileDim: number = TileMap.scale * 128;
+    public static readonly scale: number = 2.0;
+    public static readonly tileDim: number = TileMap.scale * 16;
 
     public player: Tile | undefined;
     private _highlight: Tile | undefined;
@@ -65,7 +65,7 @@ export class TileMap extends Container {
 
     public load(): void {
         const data = readMap(Assets.get(this.name));
-        const layout = data.layout.replace(/(.) /gm, '$1');
+        const layout = data.layout.replace(/(.) /gm, '$1').replace(/^\n/, '');
 
         this.checkMapDimensions(layout);
         Tile.removeFromMap = this.remove.bind(this);
@@ -123,6 +123,7 @@ export class TileMap extends Container {
     }
 
     public highlight(position: Point, offset: Point): void {
+        position = new Point(position.x - offset.x, position.y - offset.y);
         if (this._highlight === undefined) return;
 
         const coord = this.posToCoord(position);

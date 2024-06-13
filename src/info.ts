@@ -9,7 +9,7 @@ class Info {
 
     private readonly infoSpan: HTMLSpanElement;
     private constructor() {
-        this.infoSpan = document.querySelector('#info span') as HTMLSpanElement;
+        this.infoSpan = document.querySelector('#current-info span') as HTMLSpanElement;
     }
 
     public tell(line: string): void {

@@ -15,9 +15,8 @@ class Log {
     public tell(line: string): void {
         const listItem: HTMLLIElement = document.createElement('li');
         listItem.textContent = line;
-        listItem.style.listStyleType = 'circle';
-        listItem.style.color = 'var(--text-faded)';
         this.logList.appendChild(listItem);
+        this.logList.scrollTop = this.logList.scrollHeight;
     }
 }
 const log = Log.instance();

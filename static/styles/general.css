@@ -4,15 +4,26 @@ body {
   padding: 0;
   height: 100%;
   overflow: hidden;
-  background-image: url("../graphics/groovepaper.png");
-  background-color: var(--neutral1);
-  /* background-color:  #FFFCF3; */
+  color: var(--text);
+}
+
+#desk {
+  background-image: url("../graphics/desk.png");
+  background-position: top right;
+  height: 56.25vw;
 }
 
 #pixi-content {
-  width: calc(100% - 950px);
-  height: 100%;
-  padding: 5%;
+  background-image: url("../graphics/map.png");
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+  padding: 122px 162px 84px 98px;
+  position: absolute;
+  left: calc(3 * 27px);
+  top: calc(3 * 23px);
+  width: calc(3 * 417px);
+  height: calc(3 * 316px);
+
 }
 
 #version {
@@ -25,13 +36,122 @@ body {
 
 #tooltip {
   position: absolute;
-  top: 10;
-  left: 10;
-  background-color: var(--neutral2);
-  padding: 2px 10px;
-  border-radius: 0 5px 5px 5px;
-  font-size: 20px;
-  font-family: 'Caveat';
+  padding: 4px 10px 0px 10px;
+  font-family: 'Snide Asides';
+  font-size: 22px;
   pointer-events: none;
   visibility: hidden;
+  
+  border-image: url("../graphics/tooltip.png");
+  border-image-slice: 15 fill;
+  border-width: 15px;
+  border-image-width: 15px;
+  border-image-repeat: repeat;
 }
+
+#desk {
+  font-family: 'CelticTime';
+  /* font-family: 'Hickory 19px';
+  font-family: 'Letterstyle';
+  font-family: 'MyHandwriting';
+  font-family: 'Old Fax';
+  font-family: 'Snide Asides';
+  font-family: 'SquareSounds'; */
+}
+
+/* #desk {
+  font-family: 'Abaddon Bold';
+  font-family: 'Abaddon Light';
+  font-family: 'AKDPixel';
+  font-family: 'Ant Party';
+  font-family: 'AtariGames';
+  font-family: 'Awexbmp';
+  font-family: 'Beanstalk';
+  font-family: 'BIOSfontII';
+  font-family: 'Bitfantasy';
+  font-family: 'BitPotion';
+  font-family: 'Bore Blasters 16';
+  font-family: 'Breadcrumbs & Flakery';
+  font-family: 'c64esque';
+font-family: 'CelticTime';
+  font-family: 'ClassicShit';
+  font-family: 'CompassPro';
+  font-family: 'Corvid Conspirator v1.1';
+  font-family: 'Counting Apples';
+  font-family: 'daryloo';
+  font-family: 'EquipmentPro';
+  font-family: 'ExpressionPro';
+  font-family: 'Fool';
+  font-family: 'FutilePro';
+  font-family: 'GTA2PSX';
+  font-family: 'Habbo';
+font-family: 'Hickory 19px';
+  font-family: 'IllusionSerif-Bold';
+  font-family: 'IllusionSerif-BoldItalic';
+  font-family: 'IllusionSerif-Italic';
+  font-family: 'IllusionSerif-Regular';
+  font-family: 'Inkbit';
+  font-family: 'InkbitThree';
+  font-family: 'InkbitTwo';
+  font-family: 'KarenFat';
+  font-family: 'Khonjin';
+  font-family: 'Kubasta';
+  font-family: 'LCDBlock';
+  font-family: 'LessRoundBox';
+font-family: 'Letterstyle';
+  font-family: 'Lookout 7 Basic';
+  font-family: 'LowIndustrial';
+  font-family: 'MatchupPro';
+  font-family: 'MMXSNES';
+  font-family: 'MyDearestBit';
+font-family: 'MyHandwriting';
+  font-family: 'NameHereCondensed';
+  font-family: 'Not Jam Glasgow 13';
+  font-family: 'Not Jam Laika 11';
+  font-family: 'Not Jam Signature 17';
+  font-family: 'Not Jam Third Dimension 15';
+  font-family: 'Not Jam UI 12';
+  font-family: 'Not Jam UI Condensed 16';
+  font-family: 'NotJamBlackletter13';
+  font-family: 'NotJamChunky8';
+  font-family: 'NotJamChunkySans';
+  font-family: 'NotJamFaithless9';
+  font-family: 'NotJamOldStyle11';
+  font-family: 'NotJamPixel5';
+  font-family: 'NotJamSciMono10';
+  font-family: 'NotJamScrawl9';
+  font-family: 'NotJamSerif11';
+  font-family: 'NotJamSlabSerif11';
+font-family: 'Old Fax';
+  font-family: 'PixelNewspaperIII';
+  font-family: 'PixeloidMono';
+  font-family: 'PixeloidSans-Bold';
+  font-family: 'PixeloidSans';
+  font-family: 'PixelSans';
+  font-family: 'PixNull';
+  font-family: 'Pizel';
+  font-family: 'prevoard';
+  font-family: 'QuestSquare';
+  font-family: 'RetroSans';
+  font-family: 'Rockboxcond12';
+  font-family: 'RoyaltyMono';
+  font-family: 'Salmon Typewriter 9 Bold';
+  font-family: 'Salmon Typewriter 9 Regular';
+  font-family: 'SandyForest';
+  font-family: 'scribble1';
+  font-family: 'ScrollPixel';
+font-family: 'Snide Asides';
+  font-family: 'Sol Schori Bold';
+  font-family: 'Sol Schori';
+font-family: 'SquareSounds';
+  font-family: 'SuperTechnology';
+  font-family: 'Tallpix';
+  font-family: 'ThickPixels';
+  font-family: 'TinyPixie2';
+  font-family: 'TinyUnicode';
+  font-family: 'TripleN';
+  font-family: 'Undead Pixel 8';
+  font-family: 'Unknown';
+  font-family: 'Varnished';
+  font-family: 'VT323-Regular';
+} */

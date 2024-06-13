@@ -12,7 +12,8 @@ export class GameScene extends Container implements IScene {
         super();
 
         const canvas = document.querySelector('#pixi-canvas') as HTMLCanvasElement;
-        this.offset = new Point(canvas.offsetLeft, canvas.offsetTop);
+        const parent = canvas.parentElement as HTMLDivElement;
+        this.offset = new Point(canvas.offsetLeft + parent.offsetLeft, canvas.offsetTop + parent.offsetTop);
 
         this.tileMap = new TileMap('map.test');
         this.addChild(this.tileMap);
@@ -21,7 +22,7 @@ export class GameScene extends Container implements IScene {
 
     public input(position: Point, button?: string): void {
         if (button === undefined) {
-            this.tileMap.highlight(new Point(position.x - this.offset.x, position.y - this.offset.y), this.offset);
+            this.tileMap.highlight(position, this.offset);
             return;
         }
 

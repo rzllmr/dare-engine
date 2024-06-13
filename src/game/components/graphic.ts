@@ -1,6 +1,6 @@
 import { IComponent } from '../../component';
 import { Entity } from '../../entity';
-import { Point, Sprite, Texture } from 'pixi.js';
+import { Point, Sprite, Texture, SCALE_MODES } from 'pixi.js';
 import { TileMap } from '../entities/map';
 import properties from '../../properties';
 
@@ -67,7 +67,9 @@ export class Graphic implements IComponent {
     }
 
     private loadSprite(image: string): Sprite {
-        const sprite = Sprite.from(Graphic.loadTexture(image));
+        const texture = Graphic.loadTexture(image);
+        texture.baseTexture.scaleMode = SCALE_MODES.NEAREST;
+        const sprite = Sprite.from(texture);
         sprite.scale.set(TileMap.scale);
         sprite.anchor.set(0.0);
         sprite.alpha = this.alpha.start;
