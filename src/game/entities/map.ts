@@ -22,6 +22,7 @@ export class TileMap extends Container {
 
     public player: Tile | undefined;
     private _highlight: Tile | undefined;
+    private moving = false;
 
     constructor(name: string) {
         super();
@@ -147,9 +148,11 @@ export class TileMap extends Container {
         tooltip.tell(tile.info, new Point(nextCoordPos.x + offset.x, nextCoordPos.y + offset.y));
     }
 
-    public move(name: string, direction: Point): void {
+    public move(name: string, direction: Point): boolean {
+        if (this.moving) return false;
+
         const movable = name === 'player' ? this.player : this.movables.find((movable) => movable.name === name);
-        if (movable === undefined) return;
+        if (movable === undefined) return false;
 
         const targetCoord = new Point(
             movable.graphic.position.x + direction.x,
@@ -157,12 +160,17 @@ export class TileMap extends Container {
         );
         let target = this.movable(targetCoord);
         if (target === undefined) target = this.tile(targetCoord);
-        if (target === undefined) return;
+        if (target === undefined) return false;
 
+        this.moving = true;
         target.act(movable)
         //  .then(() => {this.updateOthers()})
             .then(() => {this.updateVision()})
+            .then(() => {this.moving = false})
             .catch((msg) => {console.error(msg)});
+        
+        return true;
+    }
     }
 
     public remove(tile: Tile): void {
