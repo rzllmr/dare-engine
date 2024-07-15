@@ -7,11 +7,12 @@
   "scripts": {
     "version": "shx echo $npm_package_version.$(git rev-list --count main) > static/version.txt",
     "start": "webpack serve --mode=development",
-    "build": "run-s version clean build-only",
+    "build": "run-s version clean build-only zip",
     "build-only": "webpack --mode=production",
     "clean": "rimraf dist",
-    "test": "jest",
-    "format": "prettier --config .prettierrc.json 'src/**/*.ts' --write"
+    "test": "npm-run-all --parallel tsc lint jest",
+    "format": "prettier --config .prettierrc.json 'src/**/*.ts' --write",
+    "zip": "cd dist; zip -qr dare_$(cat version.txt).zip *"
   },
   "dependencies": {
     "@tweenjs/tween.js": "^23.1.1",
