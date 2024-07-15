@@ -70,7 +70,12 @@ module.exports = (env, argv) => {
         plugins: [
             // Copy our static assets to the final build
             new CopyPlugin({
-                patterns: [{ from: 'static/' }],
+                patterns: [{
+                    from: 'static/',
+                    globOptions: {
+                        ignore: ['**/placeholder/**']
+                    }
+                }],
             }),
 
             // Make an index.html from the template
