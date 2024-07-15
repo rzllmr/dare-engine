@@ -1,3 +1,5 @@
+import dialog from './game/proxies/dialog';
+
 class Log {
     private static _instance: Log;
     public static instance(): Log {
@@ -17,6 +19,7 @@ class Log {
         listItem.textContent = line;
         this.logList.appendChild(listItem);
         this.logList.scrollTop = this.logList.scrollHeight;
+        dialog.tell(line);
     }
 }
 const log = Log.instance();

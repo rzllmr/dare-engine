@@ -3,8 +3,7 @@
 <head>
 	<title>Dare</title>
 
-	<meta id="viewport" name="viewport"
-		content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />
+	<meta id="viewport" name="viewport"	content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />
 	<meta name="apple-mobile-web-app-capable" content="yes">
 
 	<link rel="stylesheet" href="styles/variables.css">
@@ -18,8 +17,11 @@
 	<noscript>Please enable JavaScript in your web browser to view this page.</noscript>
 	<div id="desk">
 		<div id="version">0.0.0</div>
-		<div id="pixi-content"><canvas id="pixi-canvas" /></div>
-		<div id="tome">
+		<div id="map">
+			<div id="pixi-content"><canvas id="pixi-canvas" /></div>
+			<div id="overlay"></div>
+		</div>
+		<div id="tome" style="visibility: hidden;">
 			<div id="diary" class="page">
 				<div id="intro-section" class="boxed open">
 					<p>This <u>journal</u> is eternal. It cannot be lost or destroyed and remembers everything happened before. A source of knowledge crucial to every one who dares to venture forth.</p>
@@ -57,14 +59,19 @@
 					<li>Your adventure began.</li>
 				</ul>
 			</div>
-			<div id="marker-1" class="marker" onclick="changeTab(event, 'diary')"></div>
-			<div id="marker-2" class="marker" onclick="changeTab(event, 'info')"></div>
-			<div id="marker-3" class="marker" onclick="changeTab(event, 'items')"></div>
-			<div id="marker-4" class="marker" onclick="changeTab(event, 'options')"></div>
+			<div id="marker-1" class="marker"></div>
+			<div id="marker-2" class="marker"></div>
+			<div id="marker-3" class="marker"></div>
+			<div id="marker-4" class="marker"></div>
 			<div id="ribbon"></div>
 			<div id="page-flip" class="flip5"></div>
 		</div>
+		<!-- <div id="stopwatch"></div> -->
+		<button id="button" type="button"></button>
+		<div id="dpad" class="dpad-middle"></div>
+		<div id="dialog"><div id="dialog-text"></div><div id="dialog-next"></div></div>
 		<div id="tooltip">Tooltip text.</div>
+		<div id="lines"></div>
 
 		<svg id="filters">
 				<defs>
@@ -77,36 +84,6 @@
 				</defs>
 		</svg>
 	</div>
-
-	<script>
-		function flip(element, idx = 1) {
-			element.className = `flip${idx}`;
-			idx += 1;
-			if (idx < 6) setTimeout(flip, 16 * idx, element, idx);
-		}
-
-		function changeTab(event, tabName) {
-			var i, tabContent, tabLinks, markers;
-
-			tabContent = document.getElementsByClassName('page');
-			for (const content of tabContent) content.style.display = 'none';
-			
-			markers = document.getElementsByClassName('marker');
-			for (const marker of markers) marker.className = marker.className.replace(' selected', '');
-			document.getElementById(tabName).style.display = 'block';
-			event.currentTarget.className += ' selected';
-
-			ribbon = document.getElementById('ribbon');
-			ribbon.className = ribbon.className.replace(/ \w+-ribbon/, '');
-			ribbon.className += ` ${tabName}-ribbon`;
-
-			flip(document.getElementById('page-flip'));
-		}
-
-		// select default page
-		document.getElementById('marker-1').click();
-	</script>
-
 </body>
 
 </html>

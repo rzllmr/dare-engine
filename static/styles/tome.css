@@ -4,7 +4,7 @@
     top: calc(3 * 36px);
     width: calc(3 * 233px);
     height: calc(3 * 291px);
-    background-image: url("../graphics/book.png");
+    background-image: url("../graphics/book/book.d.png");
     background-repeat: no-repeat;
     background-size: auto;
     padding: 59px 80px 102px 84px;
@@ -18,9 +18,18 @@
     font-family: 'CelticTime';
     font-size: 24px;
 }
+@media (orientation: portrait) {
+    #tome {
+        left: calc(3 * 4px);
+        top: calc(3 * 25px);
+        width: calc(3 * 176px);
+        height: calc(3 * 216px);
+        background-image: url("../graphics/book/book.m.png");
+    }
+}
 
 .boxed {
-    border-image: url("../graphics/book_box.png");
+    border-image: url("../graphics/book/decoration/box.png");
     border-image-slice: 30 fill;
     border-width: 30px;
     border-image-width: 30px;
@@ -28,10 +37,10 @@
     padding: 8px 15px;
 }
 .boxed.open {
-    border-image-source: url("../graphics/book_box_open.png");
+    border-image-source: url("../graphics/book/decoration/open.png");
 }
 .underline {
-    border-image: url("../graphics/book_line.png");
+    border-image: url("../graphics/book/decoration/line.png");
     border-image-slice: 21 30 12 30 fill;
     border-image-repeat: repeat;
     border-style: solid;
@@ -114,16 +123,36 @@ ul#log li:not(:last-child) {
     animation: fadeEffect 1s;
 }
 .diary-ribbon {
-    background-image: url("../graphics/pages/ribbon_diary.png");
+    background-image: url("../graphics/book/ribbon/diary.d.png");
 }
 .info-ribbon {
-    background-image: url("../graphics/pages/ribbon_info.png");
+    background-image: url("../graphics/book/ribbon/info.d.png");
 }
 .items-ribbon {
-    background-image: url("../graphics/pages/ribbon_items.png");
+    background-image: url("../graphics/book/ribbon/items.d.png");
 }
 .options-ribbon {
-    background-image: url("../graphics/pages/ribbon_options.png");
+    background-image: url("../graphics/book/ribbon/options.d.png");
+}
+@media (orientation: portrait) {
+  #ribbon {
+    left: calc(3 * 157px);
+    top: calc(3 * 26px);
+    width: calc(3 * 15px);
+    height: calc(3 * 196px);
+  }
+  .diary-ribbon {
+      background-image: url("../graphics/book/ribbon/diary.m.png");
+  }
+  .info-ribbon {
+      background-image: url("../graphics/book/ribbon/info.m.png");
+  }
+  .items-ribbon {
+      background-image: url("../graphics/book/ribbon/items.m.png");
+  }
+  .options-ribbon {
+      background-image: url("../graphics/book/ribbon/options.m.png");
+  }
 }
 
 .marker {
@@ -142,7 +171,7 @@ ul#log li:not(:last-child) {
 #marker-1.marker {
     top: calc(3 * 103px);
     width: calc(3 * 21px);
-    background-image: url("../graphics/pages/marker_diary.png");
+    background-image: url("../graphics/book/marker/diary.d.png");
 }
 #marker-1.marker:hover {
     left: calc(3 * 373px);
@@ -152,7 +181,7 @@ ul#log li:not(:last-child) {
 #marker-2.marker {
     top: calc(3 * 123px);
     width: calc(3 * 20px);
-    background-image: url("../graphics/pages/marker_info.png");
+    background-image: url("../graphics/book/marker/info.d.png");
 }
 #marker-2.marker:hover {
     left: calc(3 * 378px);
@@ -162,7 +191,7 @@ ul#log li:not(:last-child) {
 #marker-3.marker {
     top: calc(3 * 143px);
     width: calc(3 * 19px);
-    background-image: url("../graphics/pages/marker_items.png");
+    background-image: url("../graphics/book/marker/items.d.png");
 }
 #marker-3.marker:hover {
     left: calc(3 * 370px);
@@ -172,11 +201,39 @@ ul#log li:not(:last-child) {
 #marker-4.marker {
     top: calc(3 * 163px);
     width: calc(3 * 18px);
-    background-image: url("../graphics/pages/marker_options.png");
+    background-image: url("../graphics/book/marker/options.d.png");
 }
 #marker-4.marker:hover {
     left: calc(3 * 358px);
     width: calc(3 * 61px);
+}
+
+@media (orientation: portrait) {
+    .marker {
+      width: calc(3 * 15px) !important;
+      height: calc(3 * 20px) !important;
+      top: calc(3 * 228px) !important;
+    }
+    #marker-1.marker {
+        left: calc(3 * 157px);
+        width: calc(3 * 15px);
+        background-image: url("../graphics/book/marker/diary.m.png");
+    }
+    #marker-2.marker {
+        left: calc(3 * 136px);
+        width: calc(3 * 15px);
+        background-image: url("../graphics/book/marker/info.m.png");
+    }
+    #marker-3.marker {
+        left: calc(3 * 115px);
+        width: calc(3 * 15px);
+        background-image: url("../graphics/book/marker/items.m.png");
+    }
+    #marker-4.marker {
+        left: calc(3 * 94px);
+        width: calc(3 * 15px);
+        background-image: url("../graphics/book/marker/options.m.png");
+    }
 }
 
 #page-flip {
@@ -189,17 +246,17 @@ ul#log li:not(:last-child) {
 }
 #page-flip.flip1 {
     display: block;
-    background-image: url("../graphics/book_flip1.png");
+    background-image: url("../graphics/book/flip/1.d.png");
 }
 #page-flip.flip2 {
     display: block;
-    background-image: url("../graphics/book_flip2.png");
+    background-image: url("../graphics/book/flip/2.d.png");
 }
 #page-flip.flip3 {
     display: block;
-    background-image: url("../graphics/book_flip3.png");
+    background-image: url("../graphics/book/flip/3.d.png");
 }
 #page-flip.flip4 {
     display: block;
-    background-image: url("../graphics/book_flip4.png");
+    background-image: url("../graphics/book/flip/4.d.png");
 }

@@ -5,16 +5,32 @@ body {
   height: 100%;
   overflow: hidden;
   color: var(--text);
+  background: black;
+
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 
 #desk {
-  background-image: url("../graphics/desk.png");
-  background-position: top right;
-  height: 56.25vw;
+  transform: scale(1.0);
+  transform-origin: top left;
+  filter: brightness(1.15);
+  font-family: 'CelticTime';
+  background-image: url("../graphics/desk/desk.d.png");
+  width: 1920px;
+  height: 1080px;
+}
+@media (orientation: portrait) {
+  #desk {
+    background-image: url("../graphics/desk/desk.m.png");
+    width: 540px;
+    height: 960px;
+  }
 }
 
-#pixi-content {
-  background-image: url("../graphics/map.png");
+#map {
+  background-image: url("../graphics/map/map.d.png");
   background-repeat: no-repeat;
   box-sizing: border-box;
   padding: 122px 162px 84px 98px;
@@ -23,7 +39,161 @@ body {
   top: calc(3 * 23px);
   width: calc(3 * 417px);
   height: calc(3 * 316px);
+}
+#pixi-content {
+  overflow: hidden;
 
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 100%;  
+  mask-mode: alpha;
+}
+@media (orientation: portrait) {
+  #map {
+    left: calc(3 * 0px);
+    top: calc(3 * 20px);
+    width: calc(3 * 180px);
+    height: calc(3 * 231px);
+    background-image: url("../graphics/map/sheet.m.png");
+    padding: 42px 0px;
+  }
+  #pixi-content {
+    position: absolute;
+    width: calc(3 * 180px);
+    height: calc(3 * 203px);
+    mask-image: url("../graphics/map/mask.m.png");
+  }
+  #overlay {
+    position: absolute;
+    width: calc(3 * 180px);
+    height: calc(3 * 203px);
+    background-image: url("../graphics/map/decoration.m.png");
+  }
+}
+
+#dialog {
+  visibility: hidden;
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+  position: absolute;
+  padding: 20px 20px;
+  font-size: 24px;
+  font-family: 'Snide Asides';
+  font-weight: bold;
+}
+@media (orientation: portrait) {
+  #dialog {
+    left: calc(3 * 8px);
+    top: calc(3 * 236px);
+    width: calc(3 * 164px);
+    height: calc(3 * 75px);
+    background-image: url("../graphics/dialog/dialog.m.png");
+    padding: 45px 20px 25px;
+    font-size: 28px;
+  }
+  #dialog-next {
+    background-image: url("../graphics/general/arrow_down.png");
+    width: calc(3 * 12px);
+    height: calc(3 * 8px);
+    right: 14px;
+    bottom: 20px;
+    position: absolute;
+
+    animation-name: next-function;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes next-function {
+    0% { bottom: 20px; }
+    50% { bottom: 26px; }
+    100% { bottom: 20px; }
+  }
+}
+
+#stopwatch {
+  background-image: url("../graphics/watch/stopwatch.d.png");
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+  position: absolute;
+  width: calc(3 * 45px);
+  height: calc(3 * 51px);
+  left: calc(3 * 353px);
+  top: calc(3 * 271px);
+}
+@media (orientation: portrait) {
+  #stopwatch {
+    left: calc(3 * 8px);
+    top: calc(3 * 260px);
+    background-image: url("../graphics/watch/stopwatch.m.png");
+  }
+}
+
+#button {
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+  position: absolute;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+@media (orientation: portrait) {
+  #button {
+    width: calc(3 * 33px);
+    height: calc(3 * 38px);
+    left: calc(3 * 17px);
+    top: calc(3 * 265px);
+    background-image: url("../graphics/button/book_active.png");
+  }
+  #button:active {
+    background-image: url("../graphics/button/book_pressed.png");
+  }
+  #button::after{
+    position:absolute; width:0; height:0; overflow:hidden; z-index:-1;
+    content: url("../graphics/button/book_pressed.png");
+  }
+}
+
+@media (orientation: portrait) {
+  #dpad {
+    background-image: url("../graphics/dpad/dpad_middle.png");
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    position: absolute;
+    width: calc(3 * 56px);
+    height: calc(3 * 56px);
+    left: calc(3 * 62px);
+    top: calc(3 * 254px);
+    left: calc(3 * 62px - 30px);
+    top: calc(3 * 254px - 30px);
+    border: 30px solid transparent;
+    box-sizing: content-box;
+  }
+  #dpad::after{
+    position:absolute; width:0; height:0; overflow:hidden; z-index:-1;
+    content: url("../graphics/dpad/dpad_up.png") url("../graphics/dpad/dpad_right.png") url("../graphics/dpad/dpad_down.png") url("../graphics/dpad/dpad_left.png") url("../graphics/dpad/dpad_inactive.png");
+  }
+  .dpad-middle {
+    background-image: url("../graphics/dpad/dpad_middle.png");
+  }
+  .dpad-up {
+    background-image: url("../graphics/dpad/dpad_up.png") !important;
+  }
+  .dpad-right {
+    background-image: url("../graphics/dpad/dpad_right.png") !important;
+  }
+  .dpad-down {
+    background-image: url("../graphics/dpad/dpad_down.png") !important;
+  }
+  .dpad-left {
+    background-image: url("../graphics/dpad/dpad_left.png") !important;
+  }
+  .dpad-inactive {
+    background-image: url("../graphics/dpad/dpad_inactive.png") !important;
+    pointer-events: none;
+  }
 }
 
 #version {
@@ -42,116 +212,23 @@ body {
   pointer-events: none;
   visibility: hidden;
   
-  border-image: url("../graphics/tooltip.png");
+  border-image: url("../graphics/general/tooltip.png");
   border-image-slice: 15 fill;
   border-width: 15px;
   border-image-width: 15px;
   border-image-repeat: repeat;
 }
 
-#desk {
-  font-family: 'CelticTime';
-  /* font-family: 'Hickory 19px';
-  font-family: 'Letterstyle';
-  font-family: 'MyHandwriting';
-  font-family: 'Old Fax';
-  font-family: 'Snide Asides';
-  font-family: 'SquareSounds'; */
+#lines {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url("../graphics/general/grid_3.png");
+  opacity: 0.05;
+  pointer-events: none;
 }
-
-/* #desk {
-  font-family: 'Abaddon Bold';
-  font-family: 'Abaddon Light';
-  font-family: 'AKDPixel';
-  font-family: 'Ant Party';
-  font-family: 'AtariGames';
-  font-family: 'Awexbmp';
-  font-family: 'Beanstalk';
-  font-family: 'BIOSfontII';
-  font-family: 'Bitfantasy';
-  font-family: 'BitPotion';
-  font-family: 'Bore Blasters 16';
-  font-family: 'Breadcrumbs & Flakery';
-  font-family: 'c64esque';
-font-family: 'CelticTime';
-  font-family: 'ClassicShit';
-  font-family: 'CompassPro';
-  font-family: 'Corvid Conspirator v1.1';
-  font-family: 'Counting Apples';
-  font-family: 'daryloo';
-  font-family: 'EquipmentPro';
-  font-family: 'ExpressionPro';
-  font-family: 'Fool';
-  font-family: 'FutilePro';
-  font-family: 'GTA2PSX';
-  font-family: 'Habbo';
-font-family: 'Hickory 19px';
-  font-family: 'IllusionSerif-Bold';
-  font-family: 'IllusionSerif-BoldItalic';
-  font-family: 'IllusionSerif-Italic';
-  font-family: 'IllusionSerif-Regular';
-  font-family: 'Inkbit';
-  font-family: 'InkbitThree';
-  font-family: 'InkbitTwo';
-  font-family: 'KarenFat';
-  font-family: 'Khonjin';
-  font-family: 'Kubasta';
-  font-family: 'LCDBlock';
-  font-family: 'LessRoundBox';
-font-family: 'Letterstyle';
-  font-family: 'Lookout 7 Basic';
-  font-family: 'LowIndustrial';
-  font-family: 'MatchupPro';
-  font-family: 'MMXSNES';
-  font-family: 'MyDearestBit';
-font-family: 'MyHandwriting';
-  font-family: 'NameHereCondensed';
-  font-family: 'Not Jam Glasgow 13';
-  font-family: 'Not Jam Laika 11';
-  font-family: 'Not Jam Signature 17';
-  font-family: 'Not Jam Third Dimension 15';
-  font-family: 'Not Jam UI 12';
-  font-family: 'Not Jam UI Condensed 16';
-  font-family: 'NotJamBlackletter13';
-  font-family: 'NotJamChunky8';
-  font-family: 'NotJamChunkySans';
-  font-family: 'NotJamFaithless9';
-  font-family: 'NotJamOldStyle11';
-  font-family: 'NotJamPixel5';
-  font-family: 'NotJamSciMono10';
-  font-family: 'NotJamScrawl9';
-  font-family: 'NotJamSerif11';
-  font-family: 'NotJamSlabSerif11';
-font-family: 'Old Fax';
-  font-family: 'PixelNewspaperIII';
-  font-family: 'PixeloidMono';
-  font-family: 'PixeloidSans-Bold';
-  font-family: 'PixeloidSans';
-  font-family: 'PixelSans';
-  font-family: 'PixNull';
-  font-family: 'Pizel';
-  font-family: 'prevoard';
-  font-family: 'QuestSquare';
-  font-family: 'RetroSans';
-  font-family: 'Rockboxcond12';
-  font-family: 'RoyaltyMono';
-  font-family: 'Salmon Typewriter 9 Bold';
-  font-family: 'Salmon Typewriter 9 Regular';
-  font-family: 'SandyForest';
-  font-family: 'scribble1';
-  font-family: 'ScrollPixel';
-font-family: 'Snide Asides';
-  font-family: 'Sol Schori Bold';
-  font-family: 'Sol Schori';
-font-family: 'SquareSounds';
-  font-family: 'SuperTechnology';
-  font-family: 'Tallpix';
-  font-family: 'ThickPixels';
-  font-family: 'TinyPixie2';
-  font-family: 'TinyUnicode';
-  font-family: 'TripleN';
-  font-family: 'Undead Pixel 8';
-  font-family: 'Unknown';
-  font-family: 'Varnished';
-  font-family: 'VT323-Regular';
-} */
+@media (orientation: portrait) {
+  #lines {
+    /* pointer-events: all; */
+  }
+}

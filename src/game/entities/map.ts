@@ -4,7 +4,7 @@ import computeFov from '../../fov';
 import properties from '../../properties';
 import info from '../../info';
 import { readMap } from '../../schemes';
-import tooltip from '../proxies/tooltip';
+import dialog from '../proxies/dialog';
 
 export type PropertyNames = 'vision-distance' | 'map-tiles' | 'reveal-tiles';
 properties.register('vision-distance', 1, 'radius around player where tiles are revealed'); // only high number to prevent infinite recursion
@@ -17,7 +17,7 @@ export class TileMap extends Container {
     private readonly layers = new Array<Container>(2);
     private readonly dimensions = new Point(0, 0);
 
-    public static readonly scale: number = 2.0;
+    public static readonly scale: number = 3.0;
     public static readonly tileDim: number = TileMap.scale * 16;
 
     public player: Tile | undefined;
@@ -112,6 +112,7 @@ export class TileMap extends Container {
         this.layers[1].addChild(this._highlight.graphic.sprite);
 
         this.updateVision();
+        if (this.player !== undefined) this.focusCoord(this.player.graphic.position);
     }
 
     private posToCoord(position: Point): Point {
@@ -136,7 +137,7 @@ export class TileMap extends Container {
             if (this._highlight.graphic.visible) {
                 this._highlight.graphic.hide();
                 info.tell('Nothing specific.');
-                tooltip.tell('');
+                dialog.tell('');
             }
             return;
         }
@@ -145,7 +146,7 @@ export class TileMap extends Container {
         info.tell(tile.info);
 
         const nextCoordPos = this.coordToPos(new Point(coord.x + 1, coord.y));
-        tooltip.tell(tile.info, new Point(nextCoordPos.x + offset.x, nextCoordPos.y + offset.y));
+        dialog.tell(tile.info, new Point(nextCoordPos.x + offset.x, nextCoordPos.y + offset.y));
     }
 
     public move(name: string, direction: Point): boolean {
@@ -162,6 +163,8 @@ export class TileMap extends Container {
         if (target === undefined) target = this.tile(targetCoord);
         if (target === undefined) return false;
 
+        this.focusCoord(targetCoord);
+
         this.moving = true;
         target.act(movable)
         //  .then(() => {this.updateOthers()})
@@ -171,6 +174,17 @@ export class TileMap extends Container {
         
         return true;
     }
+
+    public focusCoord(coord: Point): void {
+        const view = document.getElementById('pixi-content') as HTMLDivElement;
+
+        const playerPos = this.coordToPos(coord);
+        const cameraPos = new Point(
+            view.offsetWidth / 2 - playerPos.x - TileMap.tileDim / 2,
+            view.offsetHeight / 2 - playerPos.y - TileMap.tileDim / 2,
+        );
+        this.pivot.x = -cameraPos.x;
+        this.pivot.y = -cameraPos.y;
     }
 
     public remove(tile: Tile): void {
