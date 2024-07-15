@@ -6,7 +6,7 @@ export const manifest: ResolverManifest = {
             name: 'main',
             assets: {
                 'version': './version.txt',
-                'tiles': './tileset.json',
+                'tiles': './graphics/tileset.json',
                 'map.test': './content/maps/test.yml',
                 'entities.creatures': './content/entities/creatures.yml',
                 'entities.items': './content/entities/items.yml',
