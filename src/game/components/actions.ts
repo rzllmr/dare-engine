@@ -23,6 +23,7 @@ export abstract class Action implements IComponent {
 
 export class Move extends Action {
     public pass: boolean;
+    private readonly speed = 200; // in seconds
 
     constructor(pass: boolean = false) {
         super();
@@ -44,7 +45,7 @@ export class Move extends Action {
     }
 
     private step(start: Point, end: Point): Tween<any> {
-        return new Tween(start, false).to(end, 100).easing(Easing.Sinusoidal.InOut);
+        return new Tween(start, false).to(end, this.speed).easing(Easing.Sinusoidal.InOut);
     }
 
     private bounce(start: Point, end: Point): Tween<any> {
@@ -52,7 +53,7 @@ export class Move extends Action {
             x: start.x + ( end.x - start.x ) / 3,
             y: start.y + ( end.y - start.y ) / 3
         };
-        return new Tween(start, false).to(target, 100).easing(Easing.Sinusoidal.InOut).repeat(1).yoyo(true);
+        return new Tween(start, false).to(target, this.speed).easing(Easing.Sinusoidal.InOut).repeat(1).yoyo(true);
     }
 
     public static direction(direction: string): Point {
