@@ -1,7 +1,7 @@
 player:
     image: "tile_1.4"
     kind: "player"
-    info: "Yourself in only the most basic attire."
+    info: "That's you!"
 rat:
     image: "tile_1.5"
     kind: "enemy"

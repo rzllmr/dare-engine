@@ -1,16 +1,16 @@
 chasm:
     image: "tile_1.1"
     kind: "chasm"
-    info: "Missing info."
+    info: ""
 ground:
     image: "tile_1.2"
     kind: "pass"
-    info: "Missing info."
+    info: ""
 wall:
     image: "tile_1.3"
     kind: "block"
-    info: "A <u>wall</u> most solid."
+    info: ""
 door:
     image: "tile_1.6"
     kind: "door"
-    info: "Missing info."
+    info: ""
