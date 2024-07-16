@@ -68,6 +68,7 @@ body {
     width: calc(3 * 180px);
     height: calc(3 * 203px);
     background-image: url("../graphics/map/decoration.m.png");
+    pointer-events: none;
   }
 }
 
