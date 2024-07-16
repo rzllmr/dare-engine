@@ -11,7 +11,6 @@ class Manager {
     }
 
     private readonly app: Application;
-    private readonly mobile: boolean;
     private currentScene: IScene | undefined;
     private scale = 1.0;
 
@@ -35,7 +34,6 @@ class Manager {
         this.app.ticker.maxFPS = 30;
         // this.app.ticker.add(this.update);
 
-        this.mobile = this.detectMobile();
         input.register();
 
         const deskDiv = document.querySelector('#desk') as HTMLDivElement;
