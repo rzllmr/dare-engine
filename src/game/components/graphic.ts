@@ -13,6 +13,8 @@ interface Alpha {
 export class Graphic implements IComponent {
     public entity: Entity | null = null;
 
+    public onMove = (position: Point): void => {};
+
     public readonly sprite!: Sprite;
     private _alpha: Alpha = {
         start: properties.getBool('reveal-tiles') ? 0.3 : 0.0,
@@ -55,6 +57,7 @@ export class Graphic implements IComponent {
     public set position(value: Point) {
         this.sprite.x = value.x * TileMap.tileDim;
         this.sprite.y = value.y * TileMap.tileDim;
+        this.onMove(this.sprite.position);
     }
 
     public get realPos(): Point {
@@ -64,6 +67,7 @@ export class Graphic implements IComponent {
     public set realPos(value: Point) {
         this.sprite.x = value.x;
         this.sprite.y = value.y;
+        this.onMove(this.sprite.position);
     }
 
     private loadSprite(image: string): Sprite {

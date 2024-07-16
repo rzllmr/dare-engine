@@ -112,7 +112,10 @@ export class TileMap extends Container {
         this.layers[1].addChild(this._highlight.graphic.sprite);
 
         this.updateVision();
-        if (this.player !== undefined) this.focusCoord(this.player.graphic.position);
+        if (this.player !== undefined) {
+            this.player.graphic.onMove = this.focusPos.bind(this);
+            this.move('player', new Point());
+        }
     }
 
     private posToCoord(position: Point): Point {
@@ -125,7 +128,7 @@ export class TileMap extends Container {
     }
 
     public highlight(position: Point, offset: Point): void {
-        position = new Point(position.x - offset.x, position.y - offset.y);
+        position = new Point(position.x - offset.x + this.pivot.x, position.y - offset.y + this.pivot.y);
         if (this._highlight === undefined) return;
 
         const coord = this.posToCoord(position);
@@ -163,8 +166,6 @@ export class TileMap extends Container {
         if (target === undefined) target = this.tile(targetCoord);
         if (target === undefined) return false;
 
-        this.focusCoord(targetCoord);
-
         this.moving = true;
         target.act(movable)
         //  .then(() => {this.updateOthers()})
@@ -175,13 +176,12 @@ export class TileMap extends Container {
         return true;
     }
 
-    public focusCoord(coord: Point): void {
+    public focusPos(position: Point): void {
         const view = document.getElementById('pixi-content') as HTMLDivElement;
 
-        const playerPos = this.coordToPos(coord);
         const cameraPos = new Point(
-            view.offsetWidth / 2 - playerPos.x - TileMap.tileDim / 2,
-            view.offsetHeight / 2 - playerPos.y - TileMap.tileDim / 2,
+            view.offsetWidth / 2 - position.x - TileMap.tileDim / 2,
+            view.offsetHeight / 2 - position.y - TileMap.tileDim / 2,
         );
         this.pivot.x = -cameraPos.x;
         this.pivot.y = -cameraPos.y;
