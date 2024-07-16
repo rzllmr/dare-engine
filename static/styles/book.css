@@ -1,4 +1,4 @@
-#tome {
+#book {
     position: fixed;
     left: calc(3 * 407px);
     top: calc(3 * 36px);
@@ -19,12 +19,14 @@
     font-size: 24px;
 }
 @media (orientation: portrait) {
-    #tome {
+    #book {
         left: calc(3 * 4px);
         top: calc(3 * 25px);
         width: calc(3 * 176px);
         height: calc(3 * 216px);
         background-image: url("../graphics/book/book.m.png");
+        padding: 28px 68px 75px 48px;
+        font-size: 28px;
     }
 }
 
@@ -56,8 +58,13 @@
 .underline .label {
     margin: 0 0 -7px -16px;
 }
+@media (orientation: portrait) {
+    .label {
+        font-size: 14px;
+    }
+}
 
-#tome span {
+#book span {
     width: 100%;
     display: inline-block;
 }

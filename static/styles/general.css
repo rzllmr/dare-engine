@@ -131,7 +131,7 @@ body {
   }
 }
 
-#button {
+#book-button {
   background-repeat: no-repeat;
   box-sizing: border-box;
   position: absolute;
@@ -140,17 +140,17 @@ body {
   cursor: pointer;
 }
 @media (orientation: portrait) {
-  #button {
+  #book-button {
     width: calc(3 * 33px);
     height: calc(3 * 38px);
     left: calc(3 * 17px);
     top: calc(3 * 265px);
     background-image: url("../graphics/button/book_active.png");
   }
-  #button:active {
+  #book-button:active {
     background-image: url("../graphics/button/book_pressed.png");
   }
-  #button::after{
+  #book-button::after{
     position:absolute; width:0; height:0; overflow:hidden; z-index:-1;
     content: url("../graphics/button/book_pressed.png");
   }

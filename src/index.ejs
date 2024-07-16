@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="styles/variables.css">
 	<link rel="stylesheet" href="styles/fonts.css">
 	<link rel="stylesheet" href="styles/general.css">
-	<link rel="stylesheet" href="styles/tome.css">
+	<link rel="stylesheet" href="styles/book.css">
 
 </head>
 
@@ -21,7 +21,7 @@
 			<div id="pixi-content"><canvas id="pixi-canvas" /></div>
 			<div id="overlay"></div>
 		</div>
-		<div id="tome" style="visibility: hidden;">
+		<div id="book" style="visibility: hidden;">
 			<div id="diary" class="page">
 				<div id="intro-section" class="boxed open">
 					<p>This <u>journal</u> is eternal. It cannot be lost or destroyed and remembers everything happened before. A source of knowledge crucial to every one who dares to venture forth.</p>
@@ -67,21 +67,21 @@
 			<div id="page-flip" class="flip5"></div>
 		</div>
 		<!-- <div id="stopwatch"></div> -->
-		<button id="button" type="button"></button>
+		<button id="book-button" type="button"></button>
 		<div id="dpad" class="dpad-middle"></div>
 		<div id="dialog"><div id="dialog-text"></div><div id="dialog-next"></div></div>
 		<div id="tooltip">Tooltip text.</div>
 		<div id="lines"></div>
 
 		<svg id="filters">
-				<defs>
-						<filter id="threshold">
-								<feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0
-											0 1 0 0 0
-											0 0 1 0 0
-											0 0 0 255 -140" />
-						</filter>
-				</defs>
+			<defs>
+				<filter id="threshold">
+					<feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0
+						0 1 0 0 0
+						0 0 1 0 0
+						0 0 0 255 -140" />
+				</filter>
+			</defs>
 		</svg>
 	</div>
 </body>

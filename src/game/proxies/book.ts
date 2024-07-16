@@ -1,14 +1,15 @@
+import environment from "../../environment";
 
-class TomeProxy {
-    private static _instance: TomeProxy;
-    public static instance(): TomeProxy {
-        if (TomeProxy._instance === undefined) {
-            TomeProxy._instance = new TomeProxy();
+class BookProxy {
+    private static _instance: BookProxy;
+    public static instance(): BookProxy {
+        if (BookProxy._instance === undefined) {
+            BookProxy._instance = new BookProxy();
         }
-        return TomeProxy._instance;
+        return BookProxy._instance;
     }
 
-    private readonly tomeNode: HTMLDivElement;
+    private readonly bookNode: HTMLDivElement;
     private readonly ribbon: HTMLDivElement;
     private readonly pageFlip: HTMLDivElement;
     private readonly tabs = new Map<string, HTMLDivElement | null>();
@@ -16,24 +17,25 @@ class TomeProxy {
     private activeTab = 'diary';
 
     private constructor() {
-        this.tomeNode = document.querySelector('#tome') as HTMLDivElement;
+        this.bookNode = document.querySelector('#book') as HTMLDivElement;
 
         this.ribbon = document.querySelector('#ribbon') as HTMLDivElement;
 
         this.pageFlip = document.querySelector('#page-flip') as HTMLDivElement;
     
-        this.tabs.set('diary', this.tomeNode.querySelector('#diary.page'));
-        this.tabs.set('info', this.tomeNode.querySelector('#info.page'));
-        this.tabs.set('items', this.tomeNode.querySelector('#items.page'));
-        this.tabs.set('options', this.tomeNode.querySelector('#options.page'));
+        this.tabs.set('diary', this.bookNode.querySelector('#diary.page'));
+        this.tabs.set('info', this.bookNode.querySelector('#info.page'));
+        this.tabs.set('items', this.bookNode.querySelector('#items.page'));
+        this.tabs.set('options', this.bookNode.querySelector('#options.page'));
 
-        this.markers.set('diary', this.tomeNode.querySelector('#marker-1'));
-        this.markers.set('info', this.tomeNode.querySelector('#marker-2'));
-        this.markers.set('items', this.tomeNode.querySelector('#marker-3'));
-        this.markers.set('options', this.tomeNode.querySelector('#marker-4'));
+        this.markers.set('diary', this.bookNode.querySelector('#marker-1'));
+        this.markers.set('info', this.bookNode.querySelector('#marker-2'));
+        this.markers.set('items', this.bookNode.querySelector('#marker-3'));
+        this.markers.set('options', this.bookNode.querySelector('#marker-4'));
 
         this.markers.forEach((value, key) => {
-            value?.addEventListener('click', (event) => { this.changeTab(key) });
+            const eventType = environment.mobile ? 'touchstart' : 'click';
+            value?.addEventListener(eventType, (event) => { this.changeTab(key) });
         });
 
         // select default page
@@ -71,5 +73,5 @@ class TomeProxy {
     }
 
 }
-const tome = TomeProxy.instance();
-export default tome;
+const book = BookProxy.instance();
+export default book;

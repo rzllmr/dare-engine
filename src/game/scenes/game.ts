@@ -2,7 +2,7 @@ import { Container, Point } from 'pixi.js';
 import { IScene } from '../../manager';
 import { TileMap } from '../entities/map';
 import { Move } from '../components/actions';
-import tome from '../proxies/tome';
+import book from '../proxies/book';
 
 export class GameScene extends Container implements IScene {
     public gameName = 'Dare';
@@ -32,7 +32,7 @@ export class GameScene extends Container implements IScene {
             this.tileMap.move('player', Move.direction(direction));
         } else if (button.endsWith('Swipe')) {
             const direction = button.replace('Swipe', '');
-            tome.changeTab(direction);
+            book.changeTab(direction);
         }
     }
 
