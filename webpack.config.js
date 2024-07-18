@@ -80,7 +80,7 @@ module.exports = (env, argv) => {
 
             // Make an index.html from the template
             new HtmlWebpackPlugin({
-                template: 'src/index.ejs',
+                template: 'src/index.html',
                 favicon: 'src/favicon.png',
                 hash: true,
                 minify: false

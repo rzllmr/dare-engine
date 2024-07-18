@@ -1,4 +1,5 @@
 import environment from "../../environment";
+import { Assets } from "pixi.js";
 
 class BookProxy {
     private static _instance: BookProxy;
@@ -40,6 +41,16 @@ class BookProxy {
 
         // select default page
         this.changeTab(this.activeTab);
+    }
+
+    public load(): void {
+        this.tabs.forEach((node, tab) => {
+            if (node == null) return;
+
+            let html = Assets.get(`template.${tab}`);
+            html = html.replace('{tab}', tab);
+            node.innerHTML = html;
+        });
     }
 
     private flip(idx = 1): void {

@@ -11,7 +11,11 @@ export const manifest: ResolverManifest = {
                 'entities.creatures': './content/entities/creatures.yml',
                 'entities.items': './content/entities/items.yml',
                 'entities.meta': './content/entities/meta.yml',
-                'entities.surroundings': './content/entities/surroundings.yml'
+                'entities.surroundings': './content/entities/surroundings.yml',
+                'template.diary': './templates/diary.html',
+                'template.info': './templates/info.html',
+                'template.items': './templates/items.html',
+                'template.options': './templates/options.html'
             }
         }
     ]

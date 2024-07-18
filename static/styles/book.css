@@ -16,6 +16,7 @@
 
     font-family: 'Abaddon Light';
     font-family: 'CelticTime';
+    letter-spacing: 0.01em;
     font-size: 24px;
 }
 @media (orientation: portrait) {
@@ -73,7 +74,8 @@
     display: none;
     padding: 40px;
     animation: fadeEffect 1s;
-    height: calc(100% - 117px);
+    height: 100%;
+    box-sizing: border-box;
 }
   
 @keyframes fadeEffect {
@@ -83,18 +85,6 @@
 
 p {
     margin: 0;
-}
-
-#log-page {
-    height: 16%;
-    width: 71%;
-    position: absolute;
-    top: 64%;
-    padding: 40px;
-}
-
-#log-page .underline {
-    margin-right: 40px;
 }
 
 #log {

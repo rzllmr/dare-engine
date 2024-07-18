@@ -18,6 +18,12 @@ export class GameScene extends Container implements IScene {
 
         this.tileMap = new TileMap('map.test');
         this.addChild(this.tileMap);
+
+        this.load();
+    }
+
+    private load(): void {
+        book.load();
         this.tileMap.load();
     }
 
