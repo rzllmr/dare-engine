@@ -1,18 +1,18 @@
 import { extensions, ExtensionType, settings, utils } from '@pixi/core';
 import { LoaderParserPriority } from '@pixi/assets';
 import type { LoaderParser } from '@pixi/assets';
-import YAML from 'yaml';
+import { marked } from 'marked';
 
 /** simple loader plugin for loading yaml data */
 // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-export const loadYaml = {
+export const markdownParser = {
     extension: {
         type: ExtensionType.LoadParser,
         priority: LoaderParserPriority.Low
     },
 
     test: function (url: string): boolean {
-        return ['.yml', '.yaml'].includes(utils.path.extname(url).toLowerCase());
+        return ['.md'].includes(utils.path.extname(url).toLowerCase());
     },
 
     load: async function <T>(url: string): Promise<T> {
@@ -20,17 +20,15 @@ export const loadYaml = {
 
         const txt = await response.text();
 
-        let yaml;
+        let markdown;
         try {
-            yaml = YAML.parse(txt, { mapAsMap: true });
-        } catch (e) {
-            if (e instanceof YAML.YAMLParseError) {
-                console.error(`Invalid yaml file: ${url}\n${e.message}`);
-            }
+            markdown = marked.parse(txt);
+        } catch (e: any) {
+            console.error(`Invalid md file: ${url}\n${e}`);
         }
 
-        return yaml as T;
+        return markdown as T;
     }
 } as LoaderParser;
 
-extensions.add(loadYaml);
+extensions.add(markdownParser);

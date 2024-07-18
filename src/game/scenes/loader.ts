@@ -2,7 +2,9 @@ import { Container, Graphics, Assets, Point } from 'pixi.js';
 import { manifest } from '../assets';
 import { IScene, manager } from '../../manager';
 import { GameScene } from './game';
-import { loadYaml } from '../../loadyaml';
+import { yamlParser } from '../../extensions/yamlParser';
+import { htmlParser } from '../../extensions/htmlParser';
+import { markdownParser } from '../../extensions/markdownParser';
 
 export class LoaderScene extends Container implements IScene {
     private readonly loaderBar: Container;
@@ -39,7 +41,9 @@ export class LoaderScene extends Container implements IScene {
     }
 
     private async initializeLoader(): Promise<void> {
-        Assets.loader.parsers.push(loadYaml);
+        Assets.loader.parsers.push(yamlParser);
+        Assets.loader.parsers.push(htmlParser);
+        Assets.loader.parsers.push(markdownParser);
 
         await Assets.init({ manifest: manifest });
 
