@@ -2,6 +2,7 @@ import { Container, Point } from 'pixi.js';
 import { IScene } from '../../manager';
 import { TileMap } from '../entities/map';
 import { Move } from '../components/actions';
+import utils from '../../utils';
 import book from '../proxies/book';
 
 export class GameScene extends Container implements IScene {
@@ -13,8 +14,7 @@ export class GameScene extends Container implements IScene {
         super();
 
         const canvas = document.querySelector('#pixi-canvas') as HTMLCanvasElement;
-        const parent = canvas.parentElement as HTMLDivElement;
-        this.offset = new Point(canvas.offsetLeft + parent.offsetLeft, canvas.offsetTop + parent.offsetTop);
+        this.offset = utils.elementOffset(canvas);
 
         this.tileMap = new TileMap('map.test');
         this.addChild(this.tileMap);

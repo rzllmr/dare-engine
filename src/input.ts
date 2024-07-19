@@ -171,14 +171,6 @@ class Input {
             Math.round(y / this.scale)
         )
     }
-
-    private elementOffset(element: HTMLElement): {left: number, top: number} {
-        const rect: DOMRect = element.getBoundingClientRect();
-        return {
-          left: rect.left + window.scrollX,
-          top: rect.top + window.scrollY
-        };
-    }
 }
 const input = Input.instance();
 export default input;
