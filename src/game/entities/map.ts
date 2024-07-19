@@ -2,7 +2,6 @@ import { Container, Assets, Point } from 'pixi.js';
 import { Tile } from './tile';
 import computeFov from '../../fov';
 import properties from '../../properties';
-import info from '../../info';
 import { readMap } from '../../schemes';
 import dialog from '../proxies/dialog';
 
@@ -139,14 +138,12 @@ export class TileMap extends Container {
         if (tile === undefined || !tile.graphic.visible) {
             if (this._highlight.graphic.visible) {
                 this._highlight.graphic.hide();
-                info.tell('Nothing specific.');
                 dialog.tell('');
             }
             return;
         }
 
         if (!this._highlight.graphic.visible) this._highlight.graphic.show();
-        info.tell(tile.info);
 
         const nextCoordPos = this.coordToPos(new Point(coord.x + 1, coord.y));
         dialog.tell(tile.info, new Point(nextCoordPos.x + offset.x, nextCoordPos.y + offset.y));
