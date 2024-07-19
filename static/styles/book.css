@@ -89,14 +89,13 @@ p {
 
 #log {
     overflow-y: auto;
-    height: 75%;
+    height: 264px;
     scrollbar-color: var(--lines) transparent;
     scrollbar-width: thin;
 }
 
 ul {
     padding-left: 20px;
-    padding-right: 40px;
     margin-top: 10px;
 }
 
