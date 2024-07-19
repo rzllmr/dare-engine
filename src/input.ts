@@ -11,7 +11,11 @@ class Input {
         return Input._instance;
     }
 
-    private scale = 1.0;
+    private viewTransform = {
+        offset: new Point(),
+        scale: 1.0
+    };
+
     private scene: IScene | null = null;
     private mousePos = new Point(0, 0);
     private touchPos = new Point(0, 0);
@@ -28,8 +32,8 @@ class Input {
         }
     }
 
-    public changeScale(scale: number): void {
-        this.scale = scale;
+    public transformView(offset: Point, scale: number): void {
+        this.viewTransform = {offset: offset, scale: scale};
     }
 
     public changeScene(scene: IScene): void {
@@ -40,10 +44,7 @@ class Input {
         const pixiContent = document.querySelector('#pixi-content') as HTMLDivElement;
         
         pixiContent.addEventListener('mousemove', (event: MouseEvent) => {
-            this.mousePos = new Point(
-                Math.round(event.pageX / this.scale),
-                Math.round(event.pageY / this.scale)
-            );
+            this.mousePos = this.screenToView(event.pageX, event.pageY);
             this.scene?.input(this.mousePos);
         });
 
@@ -63,11 +64,7 @@ class Input {
         const pixiContent = document.querySelector('#pixi-content') as HTMLDivElement;
         pixiContent.addEventListener('touchstart', (event: TouchEvent) => {
             const firstTouch = event.touches[0];
-            this.touchPos = new Point(
-                Math.round(firstTouch.pageX / this.scale),
-                Math.round(firstTouch.pageY / this.scale)
-            );
-            console.log(this.touchPos);
+            this.touchPos = this.screenToView(firstTouch.pageX, firstTouch.pageY);
             this.scene?.input(this.touchPos);
         });
 
@@ -84,7 +81,7 @@ class Input {
             const firstTouch = event.touches[0];
             if (firstTouch === undefined) return;
 
-            const touchPos = this.scaledPoint(firstTouch.pageX, firstTouch.pageY);
+            const touchPos = this.screenToView(firstTouch.pageX, firstTouch.pageY);
             const offset = new Point(
                 touchPos.x - dPadMiddle.x,
                 touchPos.y - dPadMiddle.y
@@ -133,20 +130,14 @@ class Input {
         // swipe to turn pages
         book.addEventListener('touchstart', (event: TouchEvent) => {
             const firstTouch = event.touches[0];
-            this.touchPos = new Point(
-                Math.round(firstTouch.pageX / this.scale),
-                Math.round(firstTouch.pageY / this.scale)
-            );
+            this.touchPos = this.screenToView(firstTouch.pageX, firstTouch.pageY);
             this.scene?.input(this.touchPos);
         })
         book.addEventListener('touchend', (event: TouchEvent) => {
             const firstTouch = event.changedTouches[0];
             if (firstTouch === undefined) return;
 
-            const endPos = new Point(
-                Math.round(firstTouch.pageX / this.scale),
-                Math.round(firstTouch.pageY / this.scale)
-            );
+            const endPos = this.screenToView(firstTouch.pageX, firstTouch.pageY);
             const diff = new Point(
                 endPos.x - this.touchPos.x,
                 endPos.y - this.touchPos.y
@@ -165,10 +156,10 @@ class Input {
         });
     }
 
-    private scaledPoint(x: number, y: number): Point {
+    private screenToView(x: number, y: number): Point {
         return new Point(
-            Math.round(x / this.scale),
-            Math.round(y / this.scale)
+            Math.round((x - this.viewTransform.offset.x) / this.viewTransform.scale),
+            Math.round((y - this.viewTransform.offset.y) / this.viewTransform.scale)
         )
     }
 }

@@ -12,7 +12,6 @@ class Manager {
 
     private readonly app: Application;
     private currentScene: IScene | undefined;
-    private scale = 1.0;
 
     public get width(): number {
         return Math.max(document.documentElement.clientWidth, window.innerWidth);
@@ -41,12 +40,16 @@ class Manager {
             window.dispatchEvent(new Event('resize'));
         };
         window.onresize = () => {
-            this.scale = Math.min( 
+            const scale = Math.min( 
                 window.innerWidth / deskDiv.offsetWidth, 
                 window.innerHeight / deskDiv.offsetHeight
             );
-            deskDiv.style.transform = `scale(${this.scale}`;
-            input.changeScale(this.scale);
+            const offset = new Point(
+                Math.round((window.innerWidth - deskDiv.offsetWidth * scale) / 2),
+                Math.round((window.innerHeight - deskDiv.offsetHeight * scale) / 2)
+            );
+            deskDiv.style.transform = `translate(${offset.x}px, ${offset.y}px) scale(${scale})`;
+            input.transformView(offset, scale);
         };
     }
 
