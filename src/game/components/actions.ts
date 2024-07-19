@@ -3,7 +3,7 @@ import { Point } from 'pixi.js';
 import { IComponent } from '../../component';
 import { Inventory } from './inventory';
 import { Graphic } from './graphic';
-import log from '../../log';
+import log from '../proxies/log';
 import { Entity } from '../../entity';
 import { Tween, Easing } from '@tweenjs/tween.js';
 import animation from '../../animation';
