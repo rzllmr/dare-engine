@@ -7,9 +7,11 @@ html, body {
   color: var(--text);
   background: black;
 
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10 and IE 11 */
-  user-select: none; /* Standard syntax */
+  /* prevent text selection */
+  user-select: none;
+
+  /* prevent pull down page reload */
+  overscroll-behavior: contain;
 }
 
 #desk {
