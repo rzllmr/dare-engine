@@ -17,14 +17,23 @@ class DialogProxy {
         this.dialogText = document.querySelector('#dialog-text') as HTMLDivElement;
 
         this.dialogNode.addEventListener('touchstart', () => {
-            this.tell('');
+            this.hide();
         });
     }
 
     public tell(line: string, position = new Point()): void {
+        if (line === '') return;
+
         this.dialogText.innerHTML = line;
-        if (line === '') this.dialogNode.style.visibility = 'hidden';
-        else this.dialogNode.style.visibility = 'visible';
+        this.show();
+    }
+
+    public show(): void {
+        this.dialogNode.style.visibility = 'visible';
+    }
+
+    public hide(): void {
+        this.dialogNode.style.visibility = 'hidden';
     }
 
     public text(): string | null {

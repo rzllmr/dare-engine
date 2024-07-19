@@ -138,7 +138,6 @@ export class TileMap extends Container {
         if (tile === undefined || !tile.graphic.visible) {
             if (this._highlight.graphic.visible) {
                 this._highlight.graphic.hide();
-                dialog.tell('');
             }
             return;
         }
