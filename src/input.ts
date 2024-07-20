@@ -71,8 +71,8 @@ class Input {
         // virtual d-pad
         const dPad = document.querySelector('#dpad') as HTMLDivElement;
         const dPadMiddle = new Point(
-            dPad.offsetLeft + dPad.offsetWidth / 2,
-            dPad.offsetTop + dPad.offsetHeight / 2
+            dPad.offsetLeft + 3 + dPad.offsetWidth / 2,
+            dPad.offsetTop + 3 + dPad.offsetHeight / 2
         );
 
         let moveLoop : NodeJS.Timer;
@@ -87,9 +87,11 @@ class Input {
                 touchPos.y - dPadMiddle.y
             );
 
-            const deadZone = 3 * 10;
+            const deadZone = 25;
             let direction = '';
-            if (Math.abs(offset.x) < deadZone && Math.abs(offset.y) < deadZone) {
+            if (Math.abs(offset.x) < deadZone && Math.abs(offset.y) < deadZone
+                || Math.abs(offset.x) < deadZone && ['Right', 'Left'].includes(lastDirection)
+                || Math.abs(offset.y) < deadZone && ['Up', 'Down'].includes(lastDirection)) {
                 direction = 'Middle';
             } else if (Math.abs(offset.x) > Math.abs(offset.y)) {
                 direction = offset.x > 0 ? 'Right' : 'Left';
