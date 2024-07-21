@@ -153,9 +153,12 @@ html, body {
   #book-button:active {
     background-image: url("../graphics/button/book_pressed.png");
   }
+  #book-button:disabled {
+    background-image: url("../graphics/button/book_inactive.png");
+  }
   #book-button::after{
     position:absolute; width:0; height:0; overflow:hidden; z-index:-1;
-    content: url("../graphics/button/book_pressed.png");
+    content: url("../graphics/button/book_pressed.png") url("../graphics/button/book_inactive.png");
   }
 }
 

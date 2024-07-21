@@ -149,6 +149,10 @@ ul#log li:not(:last-child) {
   .options-ribbon {
       background-image: url("../graphics/book/ribbon/options.m.png");
   }
+  #ribbon::after{
+    position:absolute; width:0; height:0; overflow:hidden; z-index:-1;
+    content: url("../graphics/book/ribbon/diary.m.png") url("../graphics/book/ribbon/info.m.png") url("../graphics/book/ribbon/items.m.png") url("../graphics/book/ribbon/options.m.png");
+  }
 }
 
 .marker {
