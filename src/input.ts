@@ -2,6 +2,7 @@ import env from './environment';
 import { Point } from 'pixi.js';
 import { IScene } from './manager';
 import dpad from './game/proxies/dpad';
+import { bookButton } from './game/proxies/button';
 
 class Input {
     private static _instance: Input;
@@ -64,15 +65,11 @@ class Input {
             this.scene?.input(new Point(), `Arrow${direction}`);
         });
 
+        bookButton.register(() => {
+            book.show(!book.visible);
+            dpad.block(book.visible);
         });
 
-        // button to show and hide book
-        const book = document.querySelector('#book') as HTMLDivElement;
-        const bookButton = document.querySelector('#book-button') as HTMLDivElement;
-        bookButton.addEventListener('touchstart', (event: TouchEvent) => {
-            const bookHidden = book.style.visibility === 'hidden';
-            book.style.visibility = bookHidden ? 'visible' : 'hidden';
-            dPad.className = bookHidden ? 'dpad-inactive' : 'dpad-middle';
         });
 
         // swipe to turn pages
