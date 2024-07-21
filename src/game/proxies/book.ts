@@ -1,4 +1,5 @@
 import env from "../../environment";
+import dpad from "./dpad";
 import { Assets } from "pixi.js";
 
 class BookProxy {
@@ -16,6 +17,7 @@ class BookProxy {
     private readonly tabs = new Map<string, HTMLDivElement | null>();
     private readonly markers = new Map<string, HTMLDivElement | null>();
     private activeTab = 'diary';
+    private _visible = false;
 
     private constructor() {
         this.bookNode = document.querySelector('#book') as HTMLDivElement;
@@ -51,6 +53,15 @@ class BookProxy {
             html = html.replace('{tab}', tab);
             node.innerHTML = html;
         });
+    }
+
+    public show(show = true): void {
+        this.bookNode.style.visibility = show ? 'visible' : 'hidden';
+        this._visible = show;
+    }
+
+    public get visible(): boolean {
+        return this._visible;
     }
 
     public get element(): HTMLDivElement {

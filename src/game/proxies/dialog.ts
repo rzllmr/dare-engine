@@ -1,4 +1,6 @@
 import { Point } from 'pixi.js';
+import dpad from './dpad';
+import { bookButton } from './button';
 
 class DialogProxy {
     private static _instance: DialogProxy;
@@ -17,7 +19,7 @@ class DialogProxy {
         this.dialogText = document.querySelector('#dialog-text') as HTMLDivElement;
 
         this.dialogNode.addEventListener('touchstart', () => {
-            this.hide();
+            this.show(false);
         });
     }
 
@@ -28,12 +30,10 @@ class DialogProxy {
         this.show();
     }
 
-    public show(): void {
-        this.dialogNode.style.visibility = 'visible';
-    }
-
-    public hide(): void {
-        this.dialogNode.style.visibility = 'hidden';
+    public show(show = true): void {
+        dpad.block(show);
+        bookButton.disable(show);
+        this.dialogNode.style.visibility = show ? 'visible' : 'hidden';
     }
 
     public text(): string | null {
