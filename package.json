@@ -1,6 +1,6 @@
 {
   "name": "pixi-engine",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Simple game engine in TypeScript using pixi.js",
   "author": "rzllmr",
   "license": "MIT",
