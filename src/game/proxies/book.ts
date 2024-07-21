@@ -53,6 +53,10 @@ class BookProxy {
         });
     }
 
+    public get element(): HTMLDivElement {
+        return this.bookNode;
+    }
+
     private flip(idx = 1): void {
         this.pageFlip.className = `flip${idx}`;
         idx += 1;

@@ -2,6 +2,7 @@ import env from './environment';
 import { Point } from 'pixi.js';
 import { IScene } from './manager';
 import dpad from './game/proxies/dpad';
+import book from './game/proxies/book';
 import { bookButton } from './game/proxies/button';
 
 class Input {
@@ -70,34 +71,39 @@ class Input {
             dpad.block(book.visible);
         });
 
+        this.swipeOn(book.element, (key: string) => {
+            const direction = key.replace('Swipe', '');
+            book.changeTab(direction);
         });
+    }
 
-        // swipe to turn pages
-        book.addEventListener('touchstart', (event: TouchEvent) => {
+    private swipeOn(element: HTMLElement, swipe: (key: string) => void): void {
+        let touchPos = new Point();
+        element.addEventListener('touchstart', (event: TouchEvent) => {
             const firstTouch = event.touches[0];
-            this.touchPos = this.screenToView(firstTouch.pageX, firstTouch.pageY);
+            touchPos = env.screenToView(firstTouch.pageX, firstTouch.pageY);
             this.scene?.input(this.touchPos);
         })
-        book.addEventListener('touchend', (event: TouchEvent) => {
+        element.addEventListener('touchend', (event: TouchEvent) => {
             const firstTouch = event.changedTouches[0];
             if (firstTouch === undefined) return;
 
-            const endPos = this.screenToView(firstTouch.pageX, firstTouch.pageY);
+            const endPos = env.screenToView(firstTouch.pageX, firstTouch.pageY);
             const diff = new Point(
-                endPos.x - this.touchPos.x,
-                endPos.y - this.touchPos.y
+                endPos.x - touchPos.x,
+                endPos.y - touchPos.y
             );
             if (Math.abs(diff.x) < 100 && Math.abs(diff.y) < 100) return;
             
-            let swipeDirection = '';
+            let direction = '';
             if ( Math.abs( diff.x ) > Math.abs( diff.y ) ) {
-                swipeDirection = diff.x > 0 ? 'RightSwipe' : 'LeftSwipe';
+                direction = diff.x > 0 ? 'RightSwipe' : 'LeftSwipe';
             } else {
-                swipeDirection = diff.y > 0 ? 'DownSwipe' : 'UpSwipe';
+                direction = diff.y > 0 ? 'DownSwipe' : 'UpSwipe';
             }
 
-            this.touchPos = new Point();
-            this.scene?.input(this.touchPos, swipeDirection);
+            touchPos = new Point();
+            swipe(direction);
         });
     }
 }
