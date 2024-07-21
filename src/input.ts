@@ -1,4 +1,4 @@
-import environment from './environment';
+import env from './environment';
 import { Point } from 'pixi.js';
 import { IScene } from './manager';
 
@@ -11,11 +11,6 @@ class Input {
         return Input._instance;
     }
 
-    private viewTransform = {
-        offset: new Point(),
-        scale: 1.0
-    };
-
     private scene: IScene | null = null;
     private mousePos = new Point(0, 0);
     private touchPos = new Point(0, 0);
@@ -24,16 +19,12 @@ class Input {
     }
 
     public register(): void {
-        if (environment.mobile) {
+        if (env.mobile) {
             this.registerTouch();
         } else {
             this.registerMouse();
             this.registerKeyboard();
         }
-    }
-
-    public transformView(offset: Point, scale: number): void {
-        this.viewTransform = {offset: offset, scale: scale};
     }
 
     public changeScene(scene: IScene): void {
@@ -44,7 +35,7 @@ class Input {
         const pixiContent = document.querySelector('#pixi-content') as HTMLDivElement;
         
         pixiContent.addEventListener('mousemove', (event: MouseEvent) => {
-            this.mousePos = this.screenToView(event.pageX, event.pageY);
+            this.mousePos = env.screenToView(event.pageX, event.pageY);
             this.scene?.input(this.mousePos);
         });
 
@@ -64,7 +55,7 @@ class Input {
         const pixiContent = document.querySelector('#pixi-content') as HTMLDivElement;
         pixiContent.addEventListener('touchstart', (event: TouchEvent) => {
             const firstTouch = event.touches[0];
-            this.touchPos = this.screenToView(firstTouch.pageX, firstTouch.pageY);
+            this.touchPos = env.screenToView(firstTouch.pageX, firstTouch.pageY);
             this.scene?.input(this.touchPos);
         });
 
@@ -156,13 +147,6 @@ class Input {
             this.touchPos = new Point();
             this.scene?.input(this.touchPos, swipeDirection);
         });
-    }
-
-    private screenToView(x: number, y: number): Point {
-        return new Point(
-            Math.round((x - this.viewTransform.offset.x) / this.viewTransform.scale),
-            Math.round((y - this.viewTransform.offset.y) / this.viewTransform.scale)
-        )
     }
 }
 const input = Input.instance();

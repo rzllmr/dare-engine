@@ -1,4 +1,4 @@
-import environment from "../../environment";
+import env from "../../environment";
 import { Assets } from "pixi.js";
 
 class BookProxy {
@@ -35,7 +35,7 @@ class BookProxy {
         this.markers.set('options', this.bookNode.querySelector('#marker-4'));
 
         this.markers.forEach((value, key) => {
-            const eventType = environment.mobile ? 'touchstart' : 'click';
+            const eventType = env.mobile ? 'touchstart' : 'click';
             value?.addEventListener(eventType, (event) => { this.changeTab(key) });
         });
 

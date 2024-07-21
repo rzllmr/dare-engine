@@ -1,5 +1,6 @@
 import { Application, DisplayObject, Point } from 'pixi.js';
 import input from './input';
+import env from './environment';
 
 class Manager {
     private static _instance: Manager;
@@ -34,23 +35,7 @@ class Manager {
         // this.app.ticker.add(this.update);
 
         input.register();
-
-        const deskDiv = document.querySelector('#desk') as HTMLDivElement;
-        window.onload = () => {
-            window.dispatchEvent(new Event('resize'));
-        };
-        window.onresize = () => {
-            const scale = Math.min( 
-                window.innerWidth / deskDiv.offsetWidth, 
-                window.innerHeight / deskDiv.offsetHeight
-            );
-            const offset = new Point(
-                Math.round((window.innerWidth - deskDiv.offsetWidth * scale) / 2),
-                Math.round((window.innerHeight - deskDiv.offsetHeight * scale) / 2)
-            );
-            deskDiv.style.transform = `translate(${offset.x}px, ${offset.y}px) scale(${scale})`;
-            input.transformView(offset, scale);
-        };
+        env.register();
     }
 
     public changeScene(newScene: IScene): void {
