@@ -1,6 +1,7 @@
 import env from './environment';
 import { Point } from 'pixi.js';
 import { IScene } from './manager';
+import dpad from './game/proxies/dpad';
 
 class Input {
     private static _instance: Input;
@@ -59,56 +60,10 @@ class Input {
             this.scene?.input(this.touchPos);
         });
 
-        // virtual d-pad
-        const dPad = document.querySelector('#dpad') as HTMLDivElement;
-        const dPadMiddle = new Point(
-            dPad.offsetLeft + 3 + dPad.offsetWidth / 2,
-            dPad.offsetTop + 3 + dPad.offsetHeight / 2
-        );
+        dpad.register((direction: string) => {
+            this.scene?.input(new Point(), `Arrow${direction}`);
+        });
 
-        let moveLoop : NodeJS.Timer;
-        let lastDirection = 'Middle';
-        const moveDPad = (event: TouchEvent): void => {
-            const firstTouch = event.touches[0];
-            if (firstTouch === undefined) return;
-
-            const touchPos = this.screenToView(firstTouch.pageX, firstTouch.pageY);
-            const offset = new Point(
-                touchPos.x - dPadMiddle.x,
-                touchPos.y - dPadMiddle.y
-            );
-
-            const deadZone = 25;
-            let direction = '';
-            if (Math.abs(offset.x) < deadZone && Math.abs(offset.y) < deadZone
-                || Math.abs(offset.x) < deadZone && ['Right', 'Left'].includes(lastDirection)
-                || Math.abs(offset.y) < deadZone && ['Up', 'Down'].includes(lastDirection)) {
-                direction = 'Middle';
-            } else if (Math.abs(offset.x) > Math.abs(offset.y)) {
-                direction = offset.x > 0 ? 'Right' : 'Left';
-            } else {
-                direction = offset.y > 0 ? 'Down' : 'Up';
-            }
-
-            if (direction === lastDirection || lastDirection !== 'Middle' && direction !== 'Middle') return;
-            lastDirection = direction;
-
-            dPad.className = `dpad-${direction.toLowerCase()}`;
-            clearInterval(moveLoop);
-            if (direction !== 'Middle') {
-                this.scene?.input(new Point(), `Arrow${direction}`);
-                moveLoop = setInterval(() => {
-                    this.scene?.input(new Point(), `Arrow${direction}`);
-                }, 300);
-            }
-        };
-        dPad.addEventListener('touchstart', moveDPad);
-        dPad.addEventListener('touchmove', moveDPad);
-        dPad.addEventListener('touchend', (event: TouchEvent) => {
-            const direction = 'Middle';
-            lastDirection = direction;
-            dPad.className = `dpad-${direction.toLowerCase()}`;
-            clearInterval(moveLoop);
         });
 
         // button to show and hide book
