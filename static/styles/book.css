@@ -29,6 +29,11 @@
         padding: 28px 68px 75px 48px;
         font-size: 28px;
     }
+    #book::after{
+        position:absolute; width:0; height:0; overflow:hidden; z-index:-1;
+        content: url("../graphics/book/decoration/box.png") url("../graphics/book/decoration/open.png") url("../graphics/book/decoration/line.png");
+        font-family: 'Letterstyle';
+    }
 }
 
 .boxed {
