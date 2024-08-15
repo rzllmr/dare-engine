@@ -1,7 +1,7 @@
-import { IComponent } from '../../component';
-import { Entity } from '../../entity';
+import { IComponent } from '../../engine/component';
+import { Entity } from '../../engine/entity';
 import { ListProxy } from '../proxies/list';
-import properties from '../../properties';
+import properties from '../../engine/properties';
 import { PropertyNames } from '../entities/map';
 
 interface BodyPart {

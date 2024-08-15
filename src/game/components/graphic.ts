@@ -1,8 +1,8 @@
-import { IComponent } from '../../component';
-import { Entity } from '../../entity';
+import { IComponent } from '../../engine/component';
+import { Entity } from '../../engine/entity';
 import { Point, Sprite, Texture, SCALE_MODES } from 'pixi.js';
 import { TileMap } from '../entities/map';
-import properties from '../../properties';
+import properties from '../../engine/properties';
 
 interface Alpha {
     start: number;

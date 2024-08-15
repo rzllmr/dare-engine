@@ -1,9 +1,9 @@
 import env from './environment';
 import { Point } from 'pixi.js';
 import { IScene } from './manager';
-import dpad from './game/proxies/dpad';
-import book from './game/proxies/book';
-import { bookButton } from './game/proxies/button';
+import dpad from '../game/proxies/dpad';
+import book from '../game/proxies/book';
+import { bookButton } from '../game/proxies/button';
 
 class Input {
     private static _instance: Input;

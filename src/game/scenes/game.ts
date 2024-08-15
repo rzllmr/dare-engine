@@ -1,8 +1,8 @@
 import { Container, Point } from 'pixi.js';
-import { IScene } from '../../manager';
+import { IScene } from '../../engine/manager';
 import { TileMap } from '../entities/map';
 import { Move } from '../components/actions';
-import utils from '../../utils';
+import utils from '../../engine/utils';
 import book from '../proxies/book';
 
 export class GameScene extends Container implements IScene {

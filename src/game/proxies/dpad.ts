@@ -1,4 +1,4 @@
-import env from '../../environment';
+import env from '../../engine/environment';
 import { Point } from 'pixi.js';
 
 class Dpad {

@@ -1,8 +1,8 @@
 import { Container, Assets, Point } from 'pixi.js';
 import { Tile } from './tile';
-import computeFov from '../../fov';
-import properties from '../../properties';
-import { readMap } from '../../schemes';
+import computeFov from '../../fast/fov';
+import properties from '../../engine/properties';
+import { readMap } from '../../engine/schemes';
 import dialog from '../proxies/dialog';
 
 export type PropertyNames = 'vision-distance' | 'map-tiles' | 'reveal-tiles';

@@ -1,9 +1,9 @@
 import { Point, Assets } from 'pixi.js';
-import { Entity } from '../../entity';
+import { Entity } from '../../engine/entity';
 import { Action, Move, Pick, Fight } from '../components/actions';
 import { Inventory } from '../components/inventory';
 import { Graphic } from '../components/graphic';
-import { EntityData, readEntity } from '../../schemes';
+import { EntityData, readEntity } from '../../engine/schemes';
 
 export class Tile extends Entity {
     private static _data?: Map<string, EntityData>;
