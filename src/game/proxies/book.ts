@@ -1,5 +1,4 @@
 import env from "../../engine/environment";
-import dpad from "./dpad";
 import { Assets } from "pixi.js";
 
 class BookProxy {

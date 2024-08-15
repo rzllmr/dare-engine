@@ -23,7 +23,7 @@ export const htmlParser = {
         try {
             html = txt;
         } catch (e: any) {
-            console.error(`Invalid yaml file: ${url}\n${e}`);
+            console.error(`Invalid html file: ${url}\n${(e as Error).message}`);
         }
 
         return html as T;

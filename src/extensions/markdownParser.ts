@@ -24,7 +24,7 @@ export const markdownParser = {
         try {
             markdown = marked.parse(txt);
         } catch (e: any) {
-            console.error(`Invalid md file: ${url}\n${e}`);
+            console.error(`Invalid md file: ${url}\n${(e as Error).message}`);
         }
 
         return markdown as T;
