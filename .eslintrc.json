@@ -17,5 +17,6 @@
     "rules": {
         "object-shorthand": ["warn", "never"],
         "@typescript-eslint/consistent-type-definitions": "off"
-    }
+    },
+    "ignorePatterns": ["docs/**/*", "src/fast/wasm/**/*"]
 }

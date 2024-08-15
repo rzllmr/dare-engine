@@ -10,9 +10,10 @@
     "build": "run-s version clean build-only zip",
     "build-only": "webpack --mode=production",
     "clean": "rimraf dist",
-    "test": "npm-run-all --parallel tsc lint jest",
+    "test": "tsc; eslint .; jest",
     "format": "prettier --config .prettierrc.json 'src/**/*.ts' --write",
-    "zip": "cd dist; zip -qr dare_$(cat version.txt).zip *"
+    "zip": "cd dist; zip -qr dare_$(cat version.txt).zip *",
+    "docs": "cd docs; bundle exec jekyll serve"
   },
   "dependencies": {
     "@tweenjs/tween.js": "^23.1.1",
