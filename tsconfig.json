@@ -25,6 +25,7 @@
     },
     // Folder for your code
     "include": [
-        "./src/**/*"
+        "./src/**/*",
+        "./test/**/*"
     ]
 }

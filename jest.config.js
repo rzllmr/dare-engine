@@ -1,7 +1,7 @@
 module.exports = {
     testEnvironment: 'jsdom',
     moduleNameMapper: {
-        '^@/(.*)$': '<rootDir>/src/$1'
+        '^engine/(.*)$': '<rootDir>/src/engine/$1'
     },
     moduleFileExtensions: ['js', 'ts'],
     transform: {
@@ -19,7 +19,8 @@ module.exports = {
     testMatch: [
         '**/*.spec.(js|ts)'
     ],
+    collectCoverage: true,
     roots: [
-        '<rootDir>/src'
+        '<rootDir>/test'
     ]
 }

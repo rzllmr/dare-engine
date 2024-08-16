@@ -1,5 +1,5 @@
-import { Entity } from './entity';
-import { IComponent } from './component';
+import { Entity } from 'engine/entity';
+import { IComponent } from 'engine/component';
 
 class E extends Entity {}
 class C1 implements IComponent {
