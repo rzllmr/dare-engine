@@ -64,6 +64,10 @@ module.exports = (env, argv) => {
                 '.tsx',
                 '.ts',
                 '.js'
+            ],
+            modules: [
+                path.join(__dirname, './node_modules'),
+                path.join(__dirname, './src')
             ]
         },
 

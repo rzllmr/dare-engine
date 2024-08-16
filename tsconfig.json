@@ -21,6 +21,7 @@
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
 
+        "baseUrl": "./src",
     },
     // Folder for your code
     "include": [
