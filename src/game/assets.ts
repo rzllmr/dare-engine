@@ -12,6 +12,7 @@ export const manifest: ResolverManifest = {
                 'entities.items': './content/entities/items.yml',
                 'entities.meta': './content/entities/meta.yml',
                 'entities.surroundings': './content/entities/surroundings.yml',
+                'dialog.intro': './content/dialogs/intro.ink',
                 'template.diary': './templates/diary.html',
                 'template.info': './templates/info.html',
                 'template.items': './templates/items.html',

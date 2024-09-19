@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@tweenjs/tween.js": "^23.1.1",
+    "inkjs": "^2.3.0",
     "pixi.js": "^7.1.1",
     "yaml": "^2.2.1"
   },

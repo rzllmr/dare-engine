@@ -115,6 +115,8 @@ export class TileMap extends Container {
             this.player.graphic.onMove = this.focusPos.bind(this);
             this.move('player', new Point());
         }
+
+        dialog.tellStory('intro', 'enter');
     }
 
     private posToCoord(position: Point): Point {
