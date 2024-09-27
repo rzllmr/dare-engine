@@ -1,5 +1,5 @@
 import env from "../../engine/environment";
-import { Assets } from "pixi.js";
+import { Page } from "./page";
 
 class BookProxy {
     private static _instance: BookProxy;
@@ -48,9 +48,7 @@ class BookProxy {
         this.tabs.forEach((node, tab) => {
             if (node == null) return;
 
-            let html = Assets.get(`template.${tab}`);
-            html = html.replace('{tab}', tab);
-            node.innerHTML = html;
+            node.innerHTML = (new Page(tab)).html;
         });
     }
 

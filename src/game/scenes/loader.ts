@@ -4,7 +4,6 @@ import { IScene, manager } from '../../engine/manager';
 import { GameScene } from './game';
 import { yamlParser } from '../../extensions/yamlParser';
 import { htmlParser } from '../../extensions/htmlParser';
-import { markdownParser } from '../../extensions/markdownParser';
 import { inkParser } from '../../extensions/inkParser';
 
 export class LoaderScene extends Container implements IScene {
@@ -44,7 +43,6 @@ export class LoaderScene extends Container implements IScene {
     private async initializeLoader(): Promise<void> {
         Assets.loader.parsers.push(yamlParser);
         Assets.loader.parsers.push(htmlParser);
-        Assets.loader.parsers.push(markdownParser);
         Assets.loader.parsers.push(inkParser);
 
         await Assets.init({ manifest: manifest });
