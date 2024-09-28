@@ -19,20 +19,20 @@ html, body {
   transform-origin: top left;
   filter: brightness(1.15);
   font-family: 'CelticTime';
-  background-image: url("../graphics/desk/desk.d.png");
+  background-image: url("../images/desk/desk.d.png");
   width: 1920px;
   height: 1080px;
 }
 @media (orientation: portrait) {
   #desk {
-    background-image: url("../graphics/desk/desk.m.png");
+    background-image: url("../images/desk/desk.m.png");
     width: 540px;
     height: 960px;
   }
 }
 
 #map {
-  background-image: url("../graphics/map/map.d.png");
+  background-image: url("../images/map/map.d.png");
   background-repeat: no-repeat;
   box-sizing: border-box;
   padding: 122px 162px 84px 98px;
@@ -56,20 +56,20 @@ html, body {
     top: calc(3 * 20px);
     width: calc(3 * 180px);
     height: calc(3 * 231px);
-    background-image: url("../graphics/map/sheet.m.png");
+    background-image: url("../images/map/sheet.m.png");
     padding: 42px 0px;
   }
   #pixi-content {
     position: absolute;
     width: calc(3 * 180px);
     height: calc(3 * 203px);
-    mask-image: url("../graphics/map/mask.m.png");
+    mask-image: url("../images/map/mask.m.png");
   }
   #overlay {
     position: absolute;
     width: calc(3 * 180px);
     height: calc(3 * 203px);
-    background-image: url("../graphics/map/decoration.m.png");
+    background-image: url("../images/map/decoration.m.png");
     pointer-events: none;
   }
 }
@@ -90,12 +90,12 @@ html, body {
     top: calc(3 * 236px);
     width: calc(3 * 164px);
     height: calc(3 * 75px);
-    background-image: url("../graphics/dialog/dialog.m.png");
+    background-image: url("../images/dialog/dialog.m.png");
     padding: 45px 20px 25px;
     font-size: 28px;
   }
   #dialog-next {
-    background-image: url("../graphics/general/arrow_down.png");
+    background-image: url("../images/general/arrow_down.png");
     width: calc(3 * 12px);
     height: calc(3 * 8px);
     right: 14px;
@@ -117,7 +117,7 @@ html, body {
 }
 
 #stopwatch {
-  background-image: url("../graphics/watch/stopwatch.d.png");
+  background-image: url("../images/watch/stopwatch.d.png");
   background-repeat: no-repeat;
   box-sizing: border-box;
   position: absolute;
@@ -130,7 +130,7 @@ html, body {
   #stopwatch {
     left: calc(3 * 8px);
     top: calc(3 * 260px);
-    background-image: url("../graphics/watch/stopwatch.m.png");
+    background-image: url("../images/watch/stopwatch.m.png");
   }
 }
 
@@ -148,23 +148,23 @@ html, body {
     height: calc(3 * 38px);
     left: calc(3 * 17px);
     top: calc(3 * 265px);
-    background-image: url("../graphics/button/book_active.png");
+    background-image: url("../images/button/book_active.png");
   }
   #book-button:active {
-    background-image: url("../graphics/button/book_pressed.png");
+    background-image: url("../images/button/book_pressed.png");
   }
   #book-button:disabled {
-    background-image: url("../graphics/button/book_inactive.png");
+    background-image: url("../images/button/book_inactive.png");
   }
   #book-button::after{
     position:absolute; width:0; height:0; overflow:hidden; z-index:-1;
-    content: url("../graphics/button/book_pressed.png") url("../graphics/button/book_inactive.png");
+    content: url("../images/button/book_pressed.png") url("../images/button/book_inactive.png");
   }
 }
 
 @media (orientation: portrait) {
   #dpad {
-    background-image: url("../graphics/dpad/dpad_middle.png");
+    background-image: url("../images/dpad/dpad_middle.png");
     background-repeat: no-repeat;
     box-sizing: border-box;
     position: absolute;
@@ -179,25 +179,25 @@ html, body {
   }
   #dpad::after{
     position:absolute; width:0; height:0; overflow:hidden; z-index:-1;
-    content: url("../graphics/dpad/dpad_up.png") url("../graphics/dpad/dpad_right.png") url("../graphics/dpad/dpad_down.png") url("../graphics/dpad/dpad_left.png") url("../graphics/dpad/dpad_inactive.png");
+    content: url("../images/dpad/dpad_up.png") url("../images/dpad/dpad_right.png") url("../images/dpad/dpad_down.png") url("../images/dpad/dpad_left.png") url("../images/dpad/dpad_inactive.png");
   }
   .dpad-middle {
-    background-image: url("../graphics/dpad/dpad_middle.png");
+    background-image: url("../images/dpad/dpad_middle.png");
   }
   .dpad-up {
-    background-image: url("../graphics/dpad/dpad_up.png") !important;
+    background-image: url("../images/dpad/dpad_up.png") !important;
   }
   .dpad-right {
-    background-image: url("../graphics/dpad/dpad_right.png") !important;
+    background-image: url("../images/dpad/dpad_right.png") !important;
   }
   .dpad-down {
-    background-image: url("../graphics/dpad/dpad_down.png") !important;
+    background-image: url("../images/dpad/dpad_down.png") !important;
   }
   .dpad-left {
-    background-image: url("../graphics/dpad/dpad_left.png") !important;
+    background-image: url("../images/dpad/dpad_left.png") !important;
   }
   .dpad-inactive {
-    background-image: url("../graphics/dpad/dpad_inactive.png") !important;
+    background-image: url("../images/dpad/dpad_inactive.png") !important;
     pointer-events: none;
   }
 }
@@ -219,7 +219,7 @@ html, body {
   pointer-events: none;
   visibility: hidden;
   
-  border-image: url("../graphics/general/tooltip.png");
+  border-image: url("../images/general/tooltip.png");
   border-image-slice: 15 fill;
   border-width: 15px;
   border-image-width: 15px;
@@ -230,7 +230,7 @@ html, body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-image: url("../graphics/general/grid_3.png");
+  background-image: url("../images/general/grid_3.png");
   opacity: 0.05;
   pointer-events: none;
 }

@@ -24,12 +24,12 @@ The project requires an installation of [Node.js](https://nodejs.org) including 
   * __extensions__ _// framework extensions_
   * __fast__ _// algorithms optimized for performance_
   * __game__ _// source specific to the game_
+  * __templates__ _// templates for html components_
 * __static__ _// files to be served with the game_
   * __content__ _// defining data files_
   * __fonts__ _// fonts used throughout the game_
-  * __graphics__ _// separate images and spritesheets_
+  * __images__ _// separate images and spritesheets_
   * __styles__ _// css files defining the layout and ui_
-  * __templates__ _// templates for html components_
   * __version.txt__ _// current game version_
 * __test__ _// jest tests for the src files_
 * __.eslintrc.json__ _// eslint config_

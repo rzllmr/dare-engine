@@ -4,7 +4,7 @@
     top: calc(3 * 36px);
     width: calc(3 * 233px);
     height: calc(3 * 291px);
-    background-image: url("../graphics/book/book.d.png");
+    background-image: url("../images/book/book.d.png");
     background-repeat: no-repeat;
     background-size: auto;
     padding: 59px 80px 102px 84px;
@@ -25,19 +25,19 @@
         top: calc(3 * 25px);
         width: calc(3 * 176px);
         height: calc(3 * 216px);
-        background-image: url("../graphics/book/book.m.png");
+        background-image: url("../images/book/book.m.png");
         padding: 28px 68px 75px 48px;
         font-size: 28px;
     }
     #book::after{
         position:absolute; width:0; height:0; overflow:hidden; z-index:-1;
-        content: url("../graphics/book/decoration/box.png") url("../graphics/book/decoration/open.png") url("../graphics/book/decoration/line.png");
+        content: url("../images/book/decoration/box.png") url("../images/book/decoration/open.png") url("../images/book/decoration/line.png");
         font-family: 'Letterstyle';
     }
 }
 
 .boxed {
-    border-image: url("../graphics/book/decoration/box.png");
+    border-image: url("../images/book/decoration/box.png");
     border-image-slice: 30 fill;
     border-width: 30px;
     border-image-width: 30px;
@@ -45,10 +45,10 @@
     padding: 8px 15px;
 }
 .boxed.open {
-    border-image-source: url("../graphics/book/decoration/open.png");
+    border-image-source: url("../images/book/decoration/open.png");
 }
 .underline {
-    border-image: url("../graphics/book/decoration/line.png");
+    border-image: url("../images/book/decoration/line.png");
     border-image-slice: 21 30 12 30 fill;
     border-image-repeat: repeat;
     border-style: solid;
@@ -124,16 +124,16 @@ ul#log li:not(:last-child) {
     animation: fadeEffect 1s;
 }
 .diary-ribbon {
-    background-image: url("../graphics/book/ribbon/diary.d.png");
+    background-image: url("../images/book/ribbon/diary.d.png");
 }
 .info-ribbon {
-    background-image: url("../graphics/book/ribbon/info.d.png");
+    background-image: url("../images/book/ribbon/info.d.png");
 }
 .items-ribbon {
-    background-image: url("../graphics/book/ribbon/items.d.png");
+    background-image: url("../images/book/ribbon/items.d.png");
 }
 .options-ribbon {
-    background-image: url("../graphics/book/ribbon/options.d.png");
+    background-image: url("../images/book/ribbon/options.d.png");
 }
 @media (orientation: portrait) {
   #ribbon {
@@ -143,20 +143,20 @@ ul#log li:not(:last-child) {
     height: calc(3 * 196px);
   }
   .diary-ribbon {
-      background-image: url("../graphics/book/ribbon/diary.m.png");
+      background-image: url("../images/book/ribbon/diary.m.png");
   }
   .info-ribbon {
-      background-image: url("../graphics/book/ribbon/info.m.png");
+      background-image: url("../images/book/ribbon/info.m.png");
   }
   .items-ribbon {
-      background-image: url("../graphics/book/ribbon/items.m.png");
+      background-image: url("../images/book/ribbon/items.m.png");
   }
   .options-ribbon {
-      background-image: url("../graphics/book/ribbon/options.m.png");
+      background-image: url("../images/book/ribbon/options.m.png");
   }
   #ribbon::after{
     position:absolute; width:0; height:0; overflow:hidden; z-index:-1;
-    content: url("../graphics/book/ribbon/diary.m.png") url("../graphics/book/ribbon/info.m.png") url("../graphics/book/ribbon/items.m.png") url("../graphics/book/ribbon/options.m.png");
+    content: url("../images/book/ribbon/diary.m.png") url("../images/book/ribbon/info.m.png") url("../images/book/ribbon/items.m.png") url("../images/book/ribbon/options.m.png");
   }
 }
 
@@ -176,7 +176,7 @@ ul#log li:not(:last-child) {
 #marker-1.marker {
     top: calc(3 * 103px);
     width: calc(3 * 21px);
-    background-image: url("../graphics/book/marker/diary.d.png");
+    background-image: url("../images/book/marker/diary.d.png");
 }
 #marker-1.marker:hover {
     left: calc(3 * 373px);
@@ -186,7 +186,7 @@ ul#log li:not(:last-child) {
 #marker-2.marker {
     top: calc(3 * 123px);
     width: calc(3 * 20px);
-    background-image: url("../graphics/book/marker/info.d.png");
+    background-image: url("../images/book/marker/info.d.png");
 }
 #marker-2.marker:hover {
     left: calc(3 * 378px);
@@ -196,7 +196,7 @@ ul#log li:not(:last-child) {
 #marker-3.marker {
     top: calc(3 * 143px);
     width: calc(3 * 19px);
-    background-image: url("../graphics/book/marker/items.d.png");
+    background-image: url("../images/book/marker/items.d.png");
 }
 #marker-3.marker:hover {
     left: calc(3 * 370px);
@@ -206,7 +206,7 @@ ul#log li:not(:last-child) {
 #marker-4.marker {
     top: calc(3 * 163px);
     width: calc(3 * 18px);
-    background-image: url("../graphics/book/marker/options.d.png");
+    background-image: url("../images/book/marker/options.d.png");
 }
 #marker-4.marker:hover {
     left: calc(3 * 358px);
@@ -222,22 +222,22 @@ ul#log li:not(:last-child) {
     #marker-1.marker {
         left: calc(3 * 157px);
         width: calc(3 * 15px);
-        background-image: url("../graphics/book/marker/diary.m.png");
+        background-image: url("../images/book/marker/diary.m.png");
     }
     #marker-2.marker {
         left: calc(3 * 136px);
         width: calc(3 * 15px);
-        background-image: url("../graphics/book/marker/info.m.png");
+        background-image: url("../images/book/marker/info.m.png");
     }
     #marker-3.marker {
         left: calc(3 * 115px);
         width: calc(3 * 15px);
-        background-image: url("../graphics/book/marker/items.m.png");
+        background-image: url("../images/book/marker/items.m.png");
     }
     #marker-4.marker {
         left: calc(3 * 94px);
         width: calc(3 * 15px);
-        background-image: url("../graphics/book/marker/options.m.png");
+        background-image: url("../images/book/marker/options.m.png");
     }
 }
 
@@ -251,17 +251,17 @@ ul#log li:not(:last-child) {
 }
 #page-flip.flip1 {
     display: block;
-    background-image: url("../graphics/book/flip/1.d.png");
+    background-image: url("../images/book/flip/1.d.png");
 }
 #page-flip.flip2 {
     display: block;
-    background-image: url("../graphics/book/flip/2.d.png");
+    background-image: url("../images/book/flip/2.d.png");
 }
 #page-flip.flip3 {
     display: block;
-    background-image: url("../graphics/book/flip/3.d.png");
+    background-image: url("../images/book/flip/3.d.png");
 }
 #page-flip.flip4 {
     display: block;
-    background-image: url("../graphics/book/flip/4.d.png");
+    background-image: url("../images/book/flip/4.d.png");
 }
