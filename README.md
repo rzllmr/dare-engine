@@ -43,23 +43,29 @@ The project requires an installation of [Node.js](https://nodejs.org) including 
 
 ## Third Party
 
-* __Node.js__: Node.js JavaScript runtime (https://nodejs.org)
+* __Node.js__: JavaScript runtime (https://nodejs.org)
 
 Obtained through Node.js package management (NPM):
 
-* __PixiJS__: The HTML5 Creation Engine (https://www.npmjs.com/package/pixi.js)
+* __PixiJS__: HTML5 Creation Engine (https://www.npmjs.com/package/pixi.js)
 
-* __TypeScript__: TypeScript is a language for application scale JavaScript development (https://www.npmjs.com/package/typescript)
+* __TypeScript__: Language for application-scale JavaScript (https://www.npmjs.com/package/typescript)
 
 * __webpack__: Packs ECMAScript/CommonJs/AMD modules for the browser (https://www.npmjs.com/package/webpack)
 
-* __YAML__: JavaScript parser and stringifier for YAML (https://www.npmjs.com/package/yaml)
+* __Jest__: Testing framework (https://www.npmjs.com/package/jest)
 
-* __Prettier__: Prettier is an opinionated code formatter (https://www.npmjs.com/package/prettier)
+* __YAML__: Human-friendly data serialization
+  language (https://www.npmjs.com/package/yaml)
 
-* __ESLint__: An AST-based pattern checker for JavaScript (https://www.npmjs.com/package/eslint)
+* __Handlebars.js__: Extension to the logicless templating language Mustache (https://www.npmjs.com/package/handlebars)
 
-* __eslint-config-prettier__: Turns off all rules that are unnecessary or might conflict with Prettier (https://www.npmjs.com/package/eslint-config-prettier)
+* __inkjs__: Port of inkle's ink, a scripting language for writing interactive narrative (https://www.npmjs.com/package/inkjs)
+
+* __Prettier__: Opinionated code formatter (https://www.npmjs.com/package/prettier)
+
+* __ESLint__: AST-based pattern checker (https://www.npmjs.com/package/eslint)
+
 
 ## Contribution
 
