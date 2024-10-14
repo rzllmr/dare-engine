@@ -77,7 +77,7 @@
 
 .page {
     display: none;
-    padding: 40px;
+    padding: 25px 20px;
     animation: fadeEffect 1s;
     height: 100%;
     box-sizing: border-box;
@@ -137,10 +137,10 @@ ul#log li:not(:last-child) {
 }
 @media (orientation: portrait) {
   #ribbon {
-    left: calc(3 * 157px);
+    left: calc(3 * 158px);
     top: calc(3 * 26px);
-    width: calc(3 * 15px);
-    height: calc(3 * 196px);
+    width: calc(3 * 14px);
+    height: calc(3 * 197px);
   }
   .diary-ribbon {
       background-image: url("../images/book/ribbon/diary.m.png");
@@ -220,22 +220,22 @@ ul#log li:not(:last-child) {
       top: calc(3 * 228px) !important;
     }
     #marker-1.marker {
-        left: calc(3 * 157px);
+        left: calc(3 * 158px);
         width: calc(3 * 15px);
         background-image: url("../images/book/marker/diary.m.png");
     }
     #marker-2.marker {
-        left: calc(3 * 136px);
+        left: calc(3 * 137px);
         width: calc(3 * 15px);
         background-image: url("../images/book/marker/info.m.png");
     }
     #marker-3.marker {
-        left: calc(3 * 115px);
+        left: calc(3 * 116px);
         width: calc(3 * 15px);
         background-image: url("../images/book/marker/items.m.png");
     }
     #marker-4.marker {
-        left: calc(3 * 94px);
+        left: calc(3 * 95px);
         width: calc(3 * 15px);
         background-image: url("../images/book/marker/options.m.png");
     }
@@ -264,4 +264,34 @@ ul#log li:not(:last-child) {
 #page-flip.flip4 {
     display: block;
     background-image: url("../images/book/flip/4.d.png");
+}
+@media (orientation: portrait) {
+    #page-flip {
+        position: fixed;
+        left: calc(3 * 4px);
+        top: calc(3 * 5px);
+        width: calc(3 * 176px);
+        height: calc(3 * 236px);
+        display: none;
+    }
+    #page-flip.flip1 {
+        display: block;
+        background-image: url("../images/book/flip/1.m.png");
+    }
+    #page-flip.flip2 {
+        display: block;
+        background-image: url("../images/book/flip/2.m.png");
+    }
+    #page-flip.flip3 {
+        display: block;
+        background-image: url("../images/book/flip/3.m.png");
+    }
+    #page-flip.flip4 {
+        display: block;
+        background-image: url("../images/book/flip/4.m.png");
+    }
+    #page-flip::after{
+      position:absolute; width:0; height:0; overflow:hidden; z-index:-1;
+      content: url("../images/book/flip/1.m.png") url("../images/book/flip/2.m.png") url("../images/book/flip/3.m.png") url("../images/book/flip/4.m.png");
+    }
 }

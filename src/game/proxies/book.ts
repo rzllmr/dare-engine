@@ -65,15 +65,21 @@ class BookProxy {
         return this.bookNode;
     }
 
-    private flip(idx = 1): void {
+    private flip(direction = 0, idx = -2): void {
+        if (direction === 0) return;
+
+        if (idx === -2) idx = direction > 0 ? 1 : 5;
         this.pageFlip.className = `flip${idx}`;
-        idx += 1;
-        if (idx < 6) setTimeout(() => this.flip, 16 * idx, idx);
+        idx += direction > 0 ? 1 : -1;
+        if (idx > -1 && idx < 6) {
+            setTimeout(() => { this.flip(direction, idx) }, 32);
+        }
     }
 
     public changeTab(tabName: string): void {
+        const tabNames = Array.from(this.tabs.keys());
+
         if (['Left', 'Right'].includes(tabName)) {
-            const tabNames = Array.from(this.tabs.keys());
             let idx = tabNames.indexOf(this.activeTab);
             idx += tabName === 'Right' ? 1 : -1;
             idx = Math.min(Math.max(idx, 0), tabNames.length - 1);
@@ -82,6 +88,8 @@ class BookProxy {
 
         if (!this.tabs.has(tabName)) return;
         
+        const direction = tabNames.indexOf(tabName) - tabNames.indexOf(this.activeTab);
+
         this.tabs.get(this.activeTab)?.style.setProperty('display', 'none');
         this.markers.get(this.activeTab)?.classList.remove('selected');
         this.ribbon.classList.remove(`${this.activeTab}-ribbon`);
@@ -92,7 +100,7 @@ class BookProxy {
         this.markers.get(this.activeTab)?.classList.add('selected');
         this.ribbon.classList.add(`${this.activeTab}-ribbon`);
 
-        // this.flip();
+        this.flip(direction);
     }
 
 }
