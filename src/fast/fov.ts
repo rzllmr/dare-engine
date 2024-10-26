@@ -15,7 +15,7 @@ export default function computeFov(
     markVisible: (tile: Point) => void,
     maxDistance: number = Infinity
 ): void {
-    // markVisible(origin);
+    markVisible(origin);
 
     for (const transform of quadrantTransforms(origin)) {
         function reveal(tile: Point): void {
@@ -75,8 +75,7 @@ function* quadrantTransforms(origin: Point): Generator<(tile: Point) => Point> {
             yield (tile: Point): Point => {
                 return new Point(origin.x + tile.x, origin.y + tile.y);
             };
-        // quadrant === "west"
-        else
+        else // quadrant === "west"
             yield (tile: Point): Point => {
                 return new Point(origin.x - tile.x, origin.y + tile.y);
             };
