@@ -1,0 +1,46 @@
+{
+	"frames": {
+		"dirt_grey.1": {
+			"anchor": { "x": 0, "y": 13 },
+			"frame": { "x": 0, "y": 3, "w": 16, "h": 32 },
+			"sourceSize": { "w": 16, "h": 32 },
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
+		},
+		"dirt_grey.2": {
+			"anchor": { "x": 0, "y": 13 },
+			"frame": { "x": 16, "y": 3, "w": 16, "h": 32 },
+			"sourceSize": { "w": 16, "h": 32 },
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
+		},
+		"dirt_grey.3": {
+			"anchor": { "x": 0, "y": 13 },
+			"frame": { "x": 32, "y": 3, "w": 16, "h": 32 },
+			"sourceSize": { "w": 16, "h": 32 },
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
+		},
+		"dirt_grey.4": {
+			"anchor": { "x": 0, "y": 13 },
+			"frame": { "x": 48, "y": 3, "w": 16, "h": 32 },
+			"sourceSize": { "w": 16, "h": 32 },
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
+		},
+		"empty": {
+			"anchor": { "x": 0, "y": 16 },
+			"frame": { "x": 224, "y": 224, "w": 16, "h": 32 },
+			"sourceSize": { "w": 16, "h": 32 },
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
+		},
+		"frame": {
+			"anchor": { "x": 0, "y": 0 },
+			"frame": { "x": 240, "y": 240, "w": 16, "h": 16 },
+			"sourceSize": { "w": 16, "h": 16 },
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 }
+		}
+	},
+	"meta": {
+		"image": "tiles.png",
+		"format": "RGBA8888",
+		"size": { "w": 256, "h": 256 },
+		"scale": 1
+	}
+}

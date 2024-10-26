@@ -75,6 +75,32 @@ Obtained through Node.js package management (NPM):
 4. Push to the branch (`git push origin feature/example`)
 5. Create a new Pull Request
 
-## License
+## Licenses
 
-Licensed under the [MIT license](https://github.com/rzllmr/pixi-engine/blob/main/LICENSE).
+[![License: MIT][mit-license-badge]][mit-license]
+
+Most files in this repository with the exemptions below are licensed under [MIT License](https://github.com/rzllmr/pixi-engine/blob/main/LICENSE).
+
+<br>
+
+[![License: CC0 1.0][cc0-license-badge]][cc0-license]
+
+All fonts at the following path are not mine and licensed under [Creative Commons Zero 1.0 Universal License](https://creativecommons.org/publicdomain/zero/1.0/).
+* *static/fonts/\*\*/\**
+
+<br>
+
+![License: All rights reserved][rights-reserved-license-badge]
+
+All game content and asset files at the following paths and their sub-directories have all their rights reserved.
+* *design/\*\*/\**
+* *static/content/\*\*/\**
+* *static/images/\*\*/\**
+
+[mit-license]: LICENSE
+[mit-license-badge]: https://img.shields.io/badge/License-MIT-yellow.svg
+
+[cc0-license]: https://creativecommons.org/publicdomain/zero/1.0/
+[cc0-license-badge]: https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg
+
+[rights-reserved-license-badge]: https://img.shields.io/badge/License-All_rights_reserved-red.svg

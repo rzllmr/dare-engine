@@ -1,16 +1,16 @@
 chasm:
-    image: "tile_1.1"
+    image: "empty"
     kind: "chasm"
     info: ""
-ground:
-    image: "tile_1.2"
-    kind: "pass"
+floor:
+    image: "dirt_grey.*"
+    kind: "floor"
     info: ""
 wall:
-    image: "tile_1.3"
-    kind: "block"
+    image: "wall_grey.*"
+    kind: "wall"
     info: ""
 door:
-    image: "tile_1.6"
+    image: "door.*"
     kind: "door"
     info: ""

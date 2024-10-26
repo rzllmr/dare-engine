@@ -1,8 +1,8 @@
 player:
-    image: "tile_1.4"
+    image: "player.1"
     kind: "player"
     info: "That's you!"
 rat:
-    image: "tile_1.5"
+    image: "rat.1"
     kind: "enemy"
     info: "A ridiculously sized rat rummaging around."
