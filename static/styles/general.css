@@ -63,13 +63,13 @@ html, body {
     position: absolute;
     width: calc(3 * 180px);
     height: calc(3 * 203px);
-    mask-image: url("../images/map/mask.m.png");
+    /* mask-image: url("../images/map/mask.m.png"); */
   }
   #overlay {
     position: absolute;
     width: calc(3 * 180px);
     height: calc(3 * 203px);
-    background-image: url("../images/map/decoration.m.png");
+    /* background-image: url("../images/map/decoration.m.png"); */
     pointer-events: none;
   }
 }
