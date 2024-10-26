@@ -12,7 +12,7 @@ properties.register('reveal-tiles', false, 'all tiles are revealed on map');
 
 export class TileMap extends Container {
     private readonly tiles = new Array<Tile>();
-    private readonly movables = new Array<Tile>();
+    private readonly objects = new Array<Tile>();
     private readonly layers = new Array<Container>(2);
     private readonly dimensions = new Point(0, 0);
 
@@ -29,7 +29,7 @@ export class TileMap extends Container {
         this.name = name;
 
         this.layers[0] = this.addChild(new Container()); // for tiles
-        this.layers[1] = this.addChild(new Container()); // for movables
+        this.layers[1] = this.addChild(new Container()); // for objects
         this.layers[1].sortableChildren = true;
 
         this.registerChanges();
@@ -41,11 +41,18 @@ export class TileMap extends Container {
             this.tiles.forEach((tile) => {
                 tile.graphic.fadeToHide = mapTiles;
             });
+            this.objects.forEach((tile) => {
+                tile.graphic.fadeToHide = mapTiles && tile.graphic.onlyFade;
+            });
         });
         properties.onChange('reveal-tiles', () => {
             const revealTiles = properties.getBool('reveal-tiles');
             this.tiles.forEach((tile) => {
                 if (revealTiles) tile.graphic.show();
+                tile.graphic.hide();
+            });
+            this.objects.forEach((tile) => {
+                if (revealTiles && tile.graphic.onlyFade) tile.graphic.show();
                 tile.graphic.hide();
             });
         });
@@ -91,32 +98,33 @@ export class TileMap extends Container {
                     tileName = 'chasm';
                 }
 
-                let subTile = '';
-                if (tileName === 'wall') subTile = this.wallsAround(layout, idx, wallChar);
-                else if (tileName === 'floor') subTile = this.randomFloor();
-                else if (tileName === 'door') subTile = this.alignedDoor(this.wallsAround(layout, idx, wallChar));
+                if (tileName !== 'floor') {
+                    let subTile = '';
+                    if (tileName === 'wall') subTile = this.wallsAround(layout, idx, wallChar);
+                    else if (tileName === 'door') subTile = this.alignedDoor(this.wallsAround(layout, idx, wallChar));
 
-                let tile = new Tile(tileName, currentPosition, subTile);
+                    const tile = new Tile(tileName, currentPosition, subTile);
 
-                if (['player', 'enemy', 'item'].includes(tile.kind)) {
-                    if (tile.kind === 'player') {
-                        this.player = tile;
+                    if (['player', 'enemy', 'item'].includes(tile.kind)) {
+                        if (tile.kind === 'player') {
+                            this.player = tile;
+                        } else {
+                            this.objects.push(tile);
+                        }
+                        tileName = 'floor';
                     } else {
-                        this.movables.push(tile);
+                        this.objects.push(tile);
+                        tileName = 'floor';
                     }
+
                     const child = this.layers[1].addChild(tile.graphic.sprite);
                     child.zIndex = currentPosition.y;
-                    tileName = 'floor';
-                    tile = new Tile(tileName, currentPosition, this.randomFloor());
                 }
 
-                this.tiles.push(tile);
-                if (['wall', 'door'].includes(tile.kind)) {
-                    const child = this.layers[1].addChild(tile.graphic.sprite);
-                    child.zIndex = currentPosition.y;
-                } else {
-                    this.layers[0].addChild(tile.graphic.sprite);
-                }
+                const floorTile = new Tile('floor', currentPosition, this.randomFloor());
+                if (tileName === 'floor') this.tiles.push(floorTile);
+                this.layers[0].addChild(floorTile.graphic.sprite);
+
                 currentPosition.x++;
             }
         }
@@ -198,24 +206,24 @@ export class TileMap extends Container {
     public move(name: string, direction: Point): boolean {
         if (this.moving) return false;
 
-        const movable = name === 'player' ? this.player : this.movables.find((movable) => movable.name === name);
-        if (movable === undefined) return false;
+        const object = name === 'player' ? this.player : this.objects.find((object) => object.name === name);
+        if (object === undefined) return false;
 
         const targetCoord = new Point(
-            movable.graphic.position.x + direction.x,
-            movable.graphic.position.y + direction.y
+            object.graphic.position.x + direction.x,
+            object.graphic.position.y + direction.y
         );
-        let target = this.movable(targetCoord);
+        let target = this.object(targetCoord);
         if (target === undefined) target = this.tile(targetCoord);
         if (target === undefined) return false;
 
         this.moving = true;
-        target.act(movable)
+        target.act(object)
         //  .then(() => {this.updateOthers()})
             .then(() => {this.updateVision()})
             .then(() => {
                 this.moving = false;
-                movable.graphic.sprite.zIndex = targetCoord.y;
+                object.graphic.sprite.zIndex = targetCoord.y;
             })
             .catch((msg) => {console.error(msg)});
         
@@ -235,8 +243,8 @@ export class TileMap extends Container {
 
     public remove(tile: Tile): void {
         this.layers[1].removeChild(tile.graphic.sprite);
-        const idx = this.movables.indexOf(tile);
-        if (idx > -1) this.movables.splice(idx, 1);
+        const idx = this.objects.indexOf(tile);
+        if (idx > -1) this.objects.splice(idx, 1);
     }
 
     private tile(coord: Point): Tile | undefined {
@@ -244,15 +252,15 @@ export class TileMap extends Container {
         return this.tiles.at(coord.x + coord.y * this.dimensions.x);
     }
 
-    private movable(coord: Point): Tile | undefined {
-        for (const movable of this.movables.values()) {
-            if (movable.graphic.position.x === coord.x && movable.graphic.position.y === coord.y) return movable;
+    private object(coord: Point): Tile | undefined {
+        for (const object of this.objects.values()) {
+            if (object.graphic.position.x === coord.x && object.graphic.position.y === coord.y) return object;
         }
         return undefined;
     }
 
     private entity(coord: Point): Tile | undefined {
-        let tile = this.movable(coord);
+        let tile = this.object(coord);
         if (tile === undefined && this.player !== undefined && this.player.graphic.position.equals(coord))
             tile = this.player;
         if (tile === undefined) tile = this.tile(coord);
@@ -261,7 +269,7 @@ export class TileMap extends Container {
 
     private updateVision(): void {
         this.visibles.forEach((coord) => {
-            this.movable(coord)?.graphic.hide();
+            this.object(coord)?.graphic.hide();
             this.tile(coord)?.graphic.hide();
         });
         this.visibles.length = 0;
@@ -276,7 +284,7 @@ export class TileMap extends Container {
         }
 
         this.visibles.forEach((coord) => {
-            this.movable(coord)?.graphic.show();
+            this.object(coord)?.graphic.show();
             this.tile(coord)?.graphic.show();
         });
     }
@@ -288,7 +296,7 @@ export class TileMap extends Container {
     }
 
     private isBlocking(coord: Point): boolean {
-        const tile = this.tile(coord);
+        const tile = this.object(coord);
         if (tile === undefined) return false;
 
         return tile.blocksView;
