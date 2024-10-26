@@ -30,6 +30,7 @@ export class TileMap extends Container {
 
         this.layers[0] = this.addChild(new Container()); // for tiles
         this.layers[1] = this.addChild(new Container()); // for movables
+        this.layers[1].sortableChildren = true;
 
         this.registerChanges();
     }
@@ -38,14 +39,14 @@ export class TileMap extends Container {
         properties.onChange('map-tiles', () => {
             const mapTiles = properties.getBool('map-tiles');
             this.tiles.forEach((tile) => {
-                tile.graphic.alpha.hide = mapTiles ? 0.3 : 0.0;
+                tile.graphic.fadeToHide = mapTiles;
             });
         });
         properties.onChange('reveal-tiles', () => {
             const revealTiles = properties.getBool('reveal-tiles');
             this.tiles.forEach((tile) => {
-                tile.graphic.sprite.alpha = revealTiles ? 0.3 : 0.0;
-                tile.graphic.alpha.hide = revealTiles ? 0.3 : 0.0;
+                if (revealTiles) tile.graphic.show();
+                tile.graphic.hide();
             });
         });
     }
@@ -212,7 +213,10 @@ export class TileMap extends Container {
         target.act(movable)
         //  .then(() => {this.updateOthers()})
             .then(() => {this.updateVision()})
-            .then(() => {this.moving = false})
+            .then(() => {
+                this.moving = false;
+                movable.graphic.sprite.zIndex = targetCoord.y;
+            })
             .catch((msg) => {console.error(msg)});
         
         return true;
@@ -257,9 +261,8 @@ export class TileMap extends Container {
 
     private updateVision(): void {
         this.visibles.forEach((coord) => {
-            const movable = this.movable(coord);
-            if (movable !== undefined) movable.graphic.hide();
-            else this.tile(coord)?.graphic.hide();
+            this.movable(coord)?.graphic.hide();
+            this.tile(coord)?.graphic.hide();
         });
         this.visibles.length = 0;
 
@@ -273,9 +276,8 @@ export class TileMap extends Container {
         }
 
         this.visibles.forEach((coord) => {
-            const movable = this.movable(coord);
-            if (movable !== undefined) movable.graphic.show();
-            else this.tile(coord)?.graphic.show();
+            this.movable(coord)?.graphic.show();
+            this.tile(coord)?.graphic.show();
         });
     }
 

@@ -1,34 +1,23 @@
 import { IComponent } from '../../engine/component';
 import { Entity } from '../../engine/entity';
-import { Point, Sprite, Texture, SCALE_MODES } from 'pixi.js';
+import { Point, Sprite, Texture, SCALE_MODES, ColorMatrixFilter } from 'pixi.js';
 import { TileMap } from '../entities/map';
-import properties from '../../engine/properties';
-
-interface Alpha {
-    start: number;
-    show: number;
-    hide: number;
-}
 
 export class Graphic implements IComponent {
     public entity: Entity | null = null;
 
     public onMove = (position: Point): void => {};
+    public onlyFade = true;
+    public fadeToHide = false;
 
     public readonly sprite!: Sprite;
-    private _alpha: Alpha = {
-        start: properties.getBool('reveal-tiles') ? 0.3 : 0.0,
-        show: 1.0,
-        hide: properties.getBool('map-tiles') ? 0.3 : 0.0
-    };
 
-    public get alpha(): Alpha {
-        return this._alpha;
+    public get alpha(): number {
+        return this.sprite.alpha;
     }
 
-    public set alpha(alpha: Alpha) {
-        this._alpha = alpha;
-        this.sprite.alpha = this._alpha.start;
+    public set alpha(alpha: number) {
+        this.sprite.alpha = alpha;
     }
 
     constructor(image: string, position: Point) {
@@ -39,15 +28,34 @@ export class Graphic implements IComponent {
     }
 
     public show(): void {
-        this.sprite.alpha = this.alpha.show;
+        // this.sprite.alpha = 1.0;
+        this.sprite.tint = 0xffffff;
+        // this.sprite.filters = [];
+        this.sprite.visible = true;
+    }
+
+    public fade(): void {
+        // this.sprite.alpha = 0.3;
+        this.sprite.tint = 0xaaaaaa;
+        // this.sprite.filters = [this.filter];
+        this.sprite.visible = true;
     }
 
     public hide(): void {
-        this.sprite.alpha = this.alpha.hide;
+        if (this.fadeToHide) this.fade();
+        else this.sprite.visible = false;
+    }
+
+    private get filter(): ColorMatrixFilter {
+        const filter = new ColorMatrixFilter();
+        filter.sepia(true);
+        return filter;
     }
 
     public get visible(): boolean {
-        return this.sprite.alpha === this.alpha.show;
+        let visible = this.sprite.visible;
+        if (this.onlyFade) visible &&= this.sprite.tint === 0xffffff;
+        return visible;
     }
 
     public get position(): Point {
@@ -74,9 +82,13 @@ export class Graphic implements IComponent {
         const texture = Graphic.loadTexture(image);
         texture.baseTexture.scaleMode = SCALE_MODES.NEAREST;
         const sprite = Sprite.from(texture);
+        const anchor = new Point(
+            sprite.anchor.x / sprite.width,
+            sprite.anchor.y / sprite.height
+        );
+        sprite.anchor.set(anchor.x, anchor.y);
+        sprite.visible = false;
         sprite.scale.set(TileMap.scale);
-        sprite.anchor.set(0.0);
-        sprite.alpha = this.alpha.start;
         return sprite;
     }
 

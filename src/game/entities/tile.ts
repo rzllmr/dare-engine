@@ -46,15 +46,15 @@ export class Tile extends Entity {
     private initKind(kind: string): void {
         switch (kind) {
             case 'player':
-                this.getComponent(Graphic).alpha = { start: 1.0, show: 1.0, hide: 0.3 };
+                this.graphic.show();
                 this.addComponent(new Inventory());
                 break;
             case 'enemy':
-                this.getComponent(Graphic).alpha = { start: 0.0, show: 1.0, hide: 0.0 };
+                this.graphic.onlyFade = false;
                 this.addComponent(new Fight());
                 break;
             case 'item':
-                this.getComponent(Graphic).alpha = { start: 0.0, show: 1.0, hide: 0.0 };
+                this.graphic.onlyFade = false;
                 this.getComponent(Move).pass = true;
                 this.addComponent(new Pick());
                 break;
@@ -69,7 +69,6 @@ export class Tile extends Entity {
             case 'wall':
                 break;
             case 'meta':
-                this.getComponent(Graphic).alpha = { start: 0.0, show: 1.0, hide: 0.0 };
                 break;
             default:
                 console.error(`unknown kind: ${kind}`);
