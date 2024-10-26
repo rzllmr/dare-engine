@@ -1,7 +1,11 @@
 .vscode
 .cache
+coverage
 dist
 node_modules
 
+archive
+design/old
 design/inspiration
+src/fast/wasm/target
 static/placeholder
