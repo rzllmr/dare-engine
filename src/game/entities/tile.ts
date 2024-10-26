@@ -26,9 +26,10 @@ export class Tile extends Entity {
     public static removeFromMap: (tile: Tile) => void;
 
     private readonly _name: string;
+    private readonly _image: string;
     private readonly data: EntityData;
 
-    constructor(name: string, position: Point) {
+    constructor(name: string, position: Point, subtile = '') {
         super();
 
         const tileData = Tile.data.get(name);
@@ -36,6 +37,7 @@ export class Tile extends Entity {
 
         this._name = name;
         this.data = tileData;
+        this._image = this.data.image.replace('*', subtile);
         this.addComponent(new Graphic(this.image, position));
         this.addComponent(new Move());
         this.initKind(this.kind);
@@ -56,7 +58,7 @@ export class Tile extends Entity {
                 this.getComponent(Move).pass = true;
                 this.addComponent(new Pick());
                 break;
-            case 'pass':
+            case 'floor':
                 this.getComponent(Move).pass = true;
                 break;
             case 'door':
@@ -64,7 +66,7 @@ export class Tile extends Entity {
                 break;
             case 'chasm':
                 break;
-            case 'block':
+            case 'wall':
                 break;
             case 'meta':
                 this.getComponent(Graphic).alpha = { start: 0.0, show: 1.0, hide: 0.0 };
@@ -98,7 +100,7 @@ export class Tile extends Entity {
     }
 
     public get blocksView(): boolean {
-        return ['block', 'door'].includes(this.kind);
+        return ['wall', 'door'].includes(this.kind);
     }
 
     public get name(): string {
@@ -106,7 +108,7 @@ export class Tile extends Entity {
     }
 
     public get image(): string {
-        return this.data.image;
+        return this._image;
     }
 
     public get kind(): string {

@@ -66,12 +66,14 @@ export class TileMap extends Container {
     public load(): void {
         const data = readMap(Assets.get(this.name));
         const layout = data.layout.replace(/(.) /gm, '$1').replace(/^\n/, '');
+        const wallChar = this.getKey(data.key, 'wall');
 
         this.checkMapDimensions(layout);
         Tile.removeFromMap = this.remove.bind(this);
 
         const currentPosition = new Point(0, 0);
-        for (const char of layout) {
+        for (let idx = 0; idx < layout.length; idx++) {
+            const char = layout[idx];
             if (char === '\n') {
                 while (currentPosition.x < this.dimensions.x) {
                     const tile = new Tile('chasm', currentPosition);
@@ -88,7 +90,12 @@ export class TileMap extends Container {
                     tileName = 'chasm';
                 }
 
-                let tile = new Tile(tileName, currentPosition);
+                let subTile = '';
+                if (tileName === 'wall') subTile = this.wallsAround(layout, idx, wallChar);
+                else if (tileName === 'floor') subTile = this.randomFloor();
+                else if (tileName === 'door') subTile = this.alignedDoor(this.wallsAround(layout, idx, wallChar));
+
+                let tile = new Tile(tileName, currentPosition, subTile);
 
                 if (['player', 'enemy', 'item'].includes(tile.kind)) {
                     if (tile.kind === 'player') {
@@ -96,13 +103,19 @@ export class TileMap extends Container {
                     } else {
                         this.movables.push(tile);
                     }
-                    this.layers[1].addChild(tile.graphic.sprite);
-                    tileName = 'ground';
-                    tile = new Tile(tileName, currentPosition);
+                    const child = this.layers[1].addChild(tile.graphic.sprite);
+                    child.zIndex = currentPosition.y;
+                    tileName = 'floor';
+                    tile = new Tile(tileName, currentPosition, this.randomFloor());
                 }
 
                 this.tiles.push(tile);
-                this.layers[0].addChild(tile.graphic.sprite);
+                if (['wall', 'door'].includes(tile.kind)) {
+                    const child = this.layers[1].addChild(tile.graphic.sprite);
+                    child.zIndex = currentPosition.y;
+                } else {
+                    this.layers[0].addChild(tile.graphic.sprite);
+                }
                 currentPosition.x++;
             }
         }
@@ -117,6 +130,37 @@ export class TileMap extends Container {
         }
 
         dialog.tellStory('intro', 'enter');
+    }
+
+    private getKey(map: Map<any, any>, value: any): string {
+        return [...map].find(([k, v]) => v === value)?.at(0);
+    }
+
+    private wallsAround(layout: string, idx: number, wallChar: string): string {
+        let subtile = '';
+        if (layout[idx-this.dimensions.x-1] === wallChar) subtile += 'n';
+        if (layout[idx+1] === wallChar) subtile += 'e';
+        if (layout[idx+this.dimensions.x+1] === wallChar) subtile += 's';
+        if (layout[idx-1] === wallChar) subtile += 'w';
+        if (subtile === '') subtile += 'o';
+        return subtile;
+    }
+
+    private randomFloor(): string {
+        const randomNumber = Math.random();
+        let floorVariant = 1;
+        if (randomNumber < 0.7) floorVariant = 1;
+        else if (randomNumber < 0.8) floorVariant = 2;
+        else if (randomNumber < 0.9) floorVariant = 3;
+        else floorVariant = 4;
+        return floorVariant.toString();
+    }
+
+    private alignedDoor(walls: string): string {
+        let alignment = '';
+        if (walls.includes('n') || walls.includes('s')) alignment = 'vc';
+        else if (walls.includes('e') || walls.includes('w')) alignment = 'hc';
+        return alignment;
     }
 
     private posToCoord(position: Point): Point {
