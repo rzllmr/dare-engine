@@ -83,6 +83,24 @@ export class Pick extends Action {
     }
 }
 
+export class Open extends Action {
+    public override async act(subject: Tile): Promise<void> {
+        if (this.object.image.endsWith('c')) {
+            const openSprite = this.object.image.replace(/c$/, 'o');
+            this.object.graphic.changeSprite(openSprite);
+            this.object.graphic.sprite.zIndex -= 1;
+        }
+    }
+
+    public override async leave(subject: Tile): Promise<void> {
+        if (this.object.image.endsWith('o')) {
+            const openSprite = this.object.image.replace(/o$/, 'c');
+            this.object.graphic.changeSprite(openSprite);
+            this.object.graphic.sprite.zIndex += 1;
+        }
+    }
+}
+
 export class Fight extends Action {
     public override async act(subject: Tile): Promise<void> {
         log.tell(`You fight ${this.decapitalize(this.object.info)}`);

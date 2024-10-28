@@ -94,6 +94,11 @@ export class Graphic implements IComponent {
         return sprite;
     }
 
+    public changeSprite(image: string): void {
+        this.sprite.texture = Graphic.loadTexture(image);
+        this.image = image;
+    }
+
     private static readonly textures = new Map<string, Texture>();
     private static loadTexture(image: string): Texture {
         let texture = Graphic.textures.get(image);

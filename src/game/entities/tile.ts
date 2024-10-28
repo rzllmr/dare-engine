@@ -1,6 +1,6 @@
 import { Point, Assets } from 'pixi.js';
 import { Entity } from '../../engine/entity';
-import { Action, Move, Pick, Fight } from '../components/actions';
+import { Action, Move, Pick, Open, Fight } from '../components/actions';
 import { Inventory } from '../components/inventory';
 import { Graphic } from '../components/graphic';
 import { EntityData, readEntity } from '../../engine/schemes';
@@ -61,6 +61,7 @@ export class Tile extends Entity {
                 break;
             case 'door':
                 this.getComponent(Move).pass = true;
+                this.addComponent(new Open());
                 break;
             case 'chasm':
                 break;
