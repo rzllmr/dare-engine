@@ -26,7 +26,6 @@ export class Tile extends Entity {
     public static removeFromMap: (tile: Tile) => void;
 
     private readonly _name: string;
-    private readonly _image: string;
     private readonly data: EntityData;
 
     constructor(name: string, position: Point, subtile = '') {
@@ -37,8 +36,7 @@ export class Tile extends Entity {
 
         this._name = name;
         this.data = tileData;
-        this._image = this.data.image.replace('*', subtile);
-        this.addComponent(new Graphic(this.image, position));
+        this.addComponent(new Graphic(this.data.image.replace('*', subtile), position));
         this.addComponent(new Move());
         this.initKind(this.kind);
     }
@@ -107,7 +105,7 @@ export class Tile extends Entity {
     }
 
     public get image(): string {
-        return this._image;
+        return this.graphic.image;
     }
 
     public get kind(): string {

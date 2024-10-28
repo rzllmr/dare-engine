@@ -11,6 +11,7 @@ export class Graphic implements IComponent {
     public fadeToHide = false;
 
     public readonly sprite!: Sprite;
+    public image = '';
 
     public get alpha(): number {
         return this.sprite.alpha;
@@ -82,6 +83,7 @@ export class Graphic implements IComponent {
         const texture = Graphic.loadTexture(image);
         texture.baseTexture.scaleMode = SCALE_MODES.NEAREST;
         const sprite = Sprite.from(texture);
+        this.image = image;
         const anchor = new Point(
             sprite.anchor.x / sprite.width,
             sprite.anchor.y / sprite.height
