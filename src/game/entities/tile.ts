@@ -83,6 +83,15 @@ export class Tile extends Entity {
         this.toBeDestroyed = true;
     }
 
+    public async leave(subject: Tile): Promise<void> {
+        for (const component of this.components) {
+            if (component instanceof Action) {
+                await component.leave(subject);
+            }
+        }
+        if (this.toBeDestroyed) this.destroy();
+    }
+
     public async act(subject: Tile): Promise<void> {
         for (const component of this.components) {
             if (component instanceof Action) {

@@ -209,6 +209,11 @@ export class TileMap extends Container {
         const object = name === 'player' ? this.player : this.objects.find((object) => object.name === name);
         if (object === undefined) return false;
 
+        const originCoord = object.graphic.position;
+        let origin = this.object(originCoord);
+        if (origin === undefined) origin = this.tile(originCoord);
+        if (origin === undefined) return false;
+
         const targetCoord = new Point(
             object.graphic.position.x + direction.x,
             object.graphic.position.y + direction.y
@@ -217,15 +222,20 @@ export class TileMap extends Container {
         if (target === undefined) target = this.tile(targetCoord);
         if (target === undefined) return false;
 
+        const queue = async (): Promise<void> => {
+            await target?.act(object);
+            await origin?.leave(object);
+            // this.updateOthers();
+            this.updateVision();
+        };
+        
         this.moving = true;
-        target.act(object)
-        //  .then(() => {this.updateOthers()})
-            .then(() => {this.updateVision()})
-            .then(() => {
-                this.moving = false;
-                object.graphic.sprite.zIndex = targetCoord.y;
-            })
-            .catch((msg) => {console.error(msg)});
+        queue().then(() => {
+            this.moving = false;
+            object.graphic.sprite.zIndex = targetCoord.y;
+        }).catch((message) => {
+            console.error(message);
+        });
         
         return true;
     }

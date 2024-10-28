@@ -14,7 +14,9 @@ export abstract class Action implements IComponent {
         return this.entity as Tile;
     }
 
-    public abstract act(subject: Tile): Promise<void>;
+    public async act(subject: Tile): Promise<void> {}
+
+    public async leave(subject: Tile): Promise<void> {}
 
     protected decapitalize(line: string): string {
         return line.charAt(0).toLowerCase() + line.slice(1);
