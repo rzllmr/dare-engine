@@ -1,5 +1,4 @@
-import { IComponent } from '../../engine/component';
-import { Entity } from '../../engine/entity';
+import { Component } from '../../engine/component';
 import { ListProxy } from '../proxies/list';
 import properties from '../../engine/properties';
 import { PropertyNames } from '../entities/map';
@@ -9,15 +8,15 @@ interface BodyPart {
     items: string[];
 }
 
-export class Inventory implements IComponent {
-    public entity: Entity | null = null;
-
+export class Inventory extends Component {
     private readonly items = new Map<string, Item>();
     private readonly equippedList: ListProxy;
     private readonly packedList: ListProxy;
     private readonly equippedParts = new Map<string, BodyPart>();
 
     constructor() {
+        super();
+        
         this.equippedList = new ListProxy('#equipped');
         this.packedList = new ListProxy('#packed');
         this.equippedParts = new Map([

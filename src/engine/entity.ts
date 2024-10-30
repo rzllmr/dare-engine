@@ -1,21 +1,22 @@
-import { IComponent } from './component';
+import { Component } from './component';
 
 // eslint-disable-next-line @typescript-eslint/prefer-function-type
 type constr<T> = { new (...args: any[]): T };
 
 export abstract class Entity {
-    protected _components: IComponent[] = [];
+    protected _components: Component[] = [];
 
-    public get components(): IComponent[] {
+    public get components(): Component[] {
         return this._components;
     }
 
-    public addComponent(component: IComponent): void {
+    public addComponent(component: Component): void {
         this._components.push(component);
         component.entity = this;
+        component.init();
     }
 
-    public getComponent<C extends IComponent>(constr: constr<C>): C {
+    public getComponent<C extends Component>(constr: constr<C>): C {
         for (const component of this._components) {
             if (component instanceof constr) {
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
@@ -25,8 +26,8 @@ export abstract class Entity {
         throw new Error(`Component ${constr.name} not found on Entity ${this.constructor.name}`);
     }
 
-    public removeComponent<C extends IComponent>(constr: constr<C>): void {
-        let toRemove: IComponent | undefined;
+    public removeComponent<C extends Component>(constr: constr<C>): void {
+        let toRemove: Component | undefined;
         let index: number | undefined;
 
         for (let i = 0; i < this._components.length; i++) {
@@ -44,7 +45,7 @@ export abstract class Entity {
         }
     }
 
-    public hasComponent<C extends IComponent>(constr: constr<C>): boolean {
+    public hasComponent<C extends Component>(constr: constr<C>): boolean {
         for (const component of this._components) {
             if (component instanceof constr) {
                 return true;

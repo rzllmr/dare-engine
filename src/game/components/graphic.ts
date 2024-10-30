@@ -1,11 +1,8 @@
-import { IComponent } from '../../engine/component';
-import { Entity } from '../../engine/entity';
+import { Component } from '../../engine/component';
 import { Point, Sprite, Texture, SCALE_MODES, ColorMatrixFilter } from 'pixi.js';
 import { TileMap } from '../entities/map';
 
-export class Graphic implements IComponent {
-    public entity: Entity | null = null;
-
+export class Graphic extends Component {
     public onMove = (position: Point): void => {};
     public onlyFade = true;
     public fadeToHide = false;
@@ -22,6 +19,8 @@ export class Graphic implements IComponent {
     }
 
     constructor(image: string, position: Point) {
+        super();
+
         this.sprite = this.loadSprite(image);
         this.position = position;
 

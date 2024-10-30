@@ -1,15 +1,12 @@
 import { Entity } from 'engine/entity';
-import { IComponent } from 'engine/component';
+import { Component } from 'engine/component';
 
 class E extends Entity {}
-class C1 implements IComponent {
-    public entity!: E;
+class C1 extends Component {
 }
-class C2 implements IComponent {
-    public entity!: E;
+class C2 extends Component {
 }
-class C3 implements IComponent {
-    public entity!: E;
+class C3 extends Component {
 }
 
 describe('>>> Entity', () => {

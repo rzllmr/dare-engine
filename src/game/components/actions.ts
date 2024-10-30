@@ -1,15 +1,13 @@
 import { Tile } from '../entities/tile';
 import { Point } from 'pixi.js';
-import { IComponent } from '../../engine/component';
 import { Inventory } from './inventory';
+import { Component } from '../../engine/component';
 import { Graphic } from './graphic';
 import log from '../proxies/log';
-import { Entity } from '../../engine/entity';
 import { Tween, Easing } from '@tweenjs/tween.js';
 import animation from '../../engine/animation';
 
-export abstract class Action implements IComponent {
-    public entity: Entity | null = null;
+export abstract class Action extends Component {
     public get object(): Tile {
         return this.entity as Tile;
     }

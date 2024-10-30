@@ -1,5 +1,6 @@
 import { Entity } from './entity';
 
-export interface IComponent {
-    entity: Entity | null;
+export class Component {
+    public entity: Entity | null = null;
+    public init(): void {}
 }
