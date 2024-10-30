@@ -14,3 +14,7 @@ door:
     image: "door.*"
     kind: "door"
     info: ""
+chest:
+    image: "chest.c"
+    kind: "container"
+    info: "A mysterious chest with unknown content."

@@ -7,7 +7,7 @@ import { EntityData, readEntity } from '../../engine/schemes';
 
 export class Tile extends Entity {
     private static _data?: Map<string, EntityData>;
-    private static get data(): Map<string, EntityData> {
+    public static get data(): Map<string, EntityData> {
         if (this._data === undefined) {
             const creatures = Assets.get('entities.creatures');
             const items = Assets.get('entities.items');
@@ -31,17 +31,20 @@ export class Tile extends Entity {
     constructor(name: string, position: Point, subtile = '') {
         super();
 
+        const details = name.match(/\s\((.+)\)$/)?.at(1) ?? '';
+        if (details !== null) name = name.replace(` (${details})`, '');
+
         const tileData = Tile.data.get(name);
-        if (tileData === undefined) throw new Error(`entity unknown: ${name}`);
+        if (tileData === undefined) throw new Error(`unknown entity: ${name}`);
 
         this._name = name;
         this.data = tileData;
         this.addComponent(new Graphic(this.data.image.replace('*', subtile), position));
         this.addComponent(new Move());
-        this.initKind(this.kind);
+        this.initKind(this.kind, details);
     }
 
-    private initKind(kind: string): void {
+    private initKind(kind: string, details: string): void {
         switch (kind) {
             case 'player':
                 this.graphic.show();
@@ -55,6 +58,10 @@ export class Tile extends Entity {
                 this.graphic.onlyFade = false;
                 this.getComponent(Move).pass = true;
                 this.addComponent(new Pick());
+                break;
+            case 'container':
+                this.addComponent(new Open());
+                this.addComponent(new Pick(details));
                 break;
             case 'floor':
                 this.getComponent(Move).pass = true;

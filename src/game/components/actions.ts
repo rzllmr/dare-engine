@@ -1,7 +1,7 @@
 import { Tile } from '../entities/tile';
 import { Point } from 'pixi.js';
-import { Inventory } from './inventory';
 import { Component } from '../../engine/component';
+import { Inventory, Item } from './inventory';
 import { Graphic } from './graphic';
 import log from '../proxies/log';
 import { Tween, Easing } from '@tweenjs/tween.js';
@@ -73,11 +73,37 @@ export class Move extends Action {
 }
 
 export class Pick extends Action {
+    private item: Item | undefined;
+    private readonly destroyObject: boolean = true;
+
+    constructor(itemName = '') {
+        super();
+
+        if (itemName !== '') {
+            const data = Tile.data.get(itemName);
+            if (data === undefined) throw new Error(`unknown item: ${itemName}`);
+
+            this.item = new Item(itemName, data.info, data.specs);
+            this.destroyObject = false;
+        }
+    }
+
+    public override init(): void {
+        if (this.item === undefined) {
+            this.item = new Item(this.object.name, this.object.info, this.object.specs);
+        }
+    }
+
     public override async act(subject: Tile): Promise<void> {
+        if (this.item === undefined) return;
+
         const inventory = subject.getComponent(Inventory);
-        log.tell(`You found ${this.decapitalize(this.object.info)}`);
-        const couldBeAdded = inventory.addItem(this.object.name, this.object.specs);
-        if (couldBeAdded) this.object.markForDestruction();
+        log.tell(`You found ${this.decapitalize(this.item.info)}`);
+        const couldBeAdded = inventory.addItem(this.item);
+        if (couldBeAdded) {
+            this.item = undefined;
+            if (this.destroyObject) this.object.markForDestruction();
+        }
     }
 }
 

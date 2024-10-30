@@ -26,16 +26,15 @@ export class Inventory extends Component {
         ]);
     }
 
-    public addItem(name: string, specs: any): boolean {
-        const item = new Item(name, specs);
-        this.items.set(name, item);
+    public addItem(item: Item): boolean {
+        this.items.set(item.name, item);
 
         if (item.isEquipment() && this.canEquip(item)) {
             item.onEquip();
-            this.equippedList.add(`${name} (${item.part})`);
+            this.equippedList.add(`${item.name} (${item.part})`);
         } else {
             item.onTake();
-            this.packedList.add(name);
+            this.packedList.add(item.name);
         }
 
         return true;
@@ -60,12 +59,14 @@ export class Inventory extends Component {
     }
 }
 
-class Item {
+export class Item {
     public readonly name: string;
+    public readonly info: string;
     private readonly specs: any;
 
-    constructor(name: string, specs: any) {
+    constructor(name: string, info: string, specs: any) {
         this.name = name;
+        this.info = info;
         this.specs = specs;
     }
 
