@@ -34,6 +34,8 @@ export class Move extends Action {
         const subjectPos = subject.getComponent(Graphic).realPos;
         const objectPos =  this.object.getComponent(Graphic).realPos;
 
+        if (this.pass) this.object.graphic.sprite.zIndex -= 1;
+
         const tween = this.pass ? this.step(subjectPos, objectPos) : this.bounce(subjectPos, objectPos);
         tween.onUpdate(() => {
             subject.getComponent(Graphic).realPos = new Point(subjectPos.x, subjectPos.y);
@@ -42,6 +44,10 @@ export class Move extends Action {
 
         animation.add(tween.update, tween);
         await new Promise((resolve) => tween.onComplete(resolve));
+    }
+
+    public override async leave(subject: Tile): Promise<void> {
+        this.object.graphic.sprite.zIndex += 1;
     }
 
     private step(start: Point, end: Point): Tween<any> {
@@ -112,7 +118,6 @@ export class Open extends Action {
         if (this.object.image.endsWith('c')) {
             const openSprite = this.object.image.replace(/c$/, 'o');
             this.object.graphic.changeSprite(openSprite);
-            this.object.graphic.sprite.zIndex -= 1;
         }
     }
 
@@ -120,7 +125,6 @@ export class Open extends Action {
         if (this.object.image.endsWith('o')) {
             const openSprite = this.object.image.replace(/o$/, 'c');
             this.object.graphic.changeSprite(openSprite);
-            this.object.graphic.sprite.zIndex += 1;
         }
     }
 }
