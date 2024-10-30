@@ -36,8 +36,7 @@ export class TileMap extends Container {
     }
 
     private registerChanges(): void {
-        properties.onChange('map-tiles', () => {
-            const mapTiles = properties.getBool('map-tiles');
+        properties.onChange('map-tiles', (mapTiles: boolean) => {
             this.tiles.forEach((tile) => {
                 tile.graphic.fadeToHide = mapTiles;
             });
@@ -45,8 +44,7 @@ export class TileMap extends Container {
                 tile.graphic.fadeToHide = mapTiles && tile.graphic.onlyFade;
             });
         });
-        properties.onChange('reveal-tiles', () => {
-            const revealTiles = properties.getBool('reveal-tiles');
+        properties.onChange('reveal-tiles', (revealTiles: boolean) => {
             this.tiles.forEach((tile) => {
                 if (revealTiles) tile.graphic.show();
                 tile.graphic.hide();

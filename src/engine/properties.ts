@@ -2,6 +2,8 @@ import { PropertyNames as mapProperties } from '../game/entities/map';
 
 type PropertyName = mapProperties;
 
+type Callback<T> = (value: T) => void;
+
 class Property<T> {
     public readonly name: PropertyName;
     public readonly comment: string;
@@ -9,7 +11,7 @@ class Property<T> {
     public value: T;
     public default: T;
 
-    public readonly callbacks = new Array<() => void>();
+    public readonly callbacks = new Array<Callback<string> | Callback<number> | Callback<boolean>>();
     public readonly references = new Set<string>();
 
     constructor(name: PropertyName, value: T, comment: string, immutable: boolean) {
@@ -64,7 +66,7 @@ class Properties {
         property.value = value;
         console.debug(`property set: ${name} = ${property.value.toString()}`);
         property.callbacks.forEach((callback) => {
-            callback();
+            (callback as Callback<typeof property.value>)(property.value);
         });
     }
 
@@ -74,7 +76,7 @@ class Properties {
         property.value = property.default;
         console.debug(`property set: ${name} = ${property.value.toString()}`);
         property.callbacks.forEach((callback) => {
-            callback();
+            (callback as Callback<typeof property.value>)(property.value);
         });
     }
 
@@ -118,7 +120,10 @@ class Properties {
         return property.default;
     }
 
-    public onChange(name: PropertyName, callback: () => void): void {
+    public onChange(name: PropertyName, callback: (value: string) => void): void;
+    public onChange(name: PropertyName, callback: (value: number) => void): void;
+    public onChange(name: PropertyName, callback: (value: boolean) => void): void;
+    public onChange(name: PropertyName, callback: ((value: string) => void) | ((value: number) => void) | ((value: boolean) => void)): void {
         const property = this.registered.get(name);
         if (property === undefined) throw new Error(`property not registered: ${name}`);
         property.callbacks.push(callback);
