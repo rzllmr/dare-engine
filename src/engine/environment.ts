@@ -49,7 +49,6 @@ class Environment {
         });
     }
 
-
     public screenToView(x: number, y: number): Point {
         return new Point(
             Math.round((x - this.viewTransform.offset.x) / this.viewTransform.scale),

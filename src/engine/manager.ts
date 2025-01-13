@@ -14,31 +14,25 @@ class Manager {
     private readonly app: Application;
     private currentScene: IScene | undefined;
 
-    public get width(): number {
-        return Math.max(document.documentElement.clientWidth, window.innerWidth);
-    }
-
-    public get height(): number {
-        return Math.max(document.documentElement.clientHeight, window.innerHeight);
-    }
-
     private constructor() {
         this.app = new Application({
             view: document.getElementById('pixi-canvas') as HTMLCanvasElement,
-            resolution: window.devicePixelRatio,
             resizeTo: document.getElementById('pixi-content') as HTMLDivElement,
+            resolution: window.devicePixelRatio,
             autoDensity: true,
             backgroundAlpha: 0,
             hello: true
         });
         this.app.ticker.maxFPS = 30;
-        // this.app.ticker.add(this.update);
+        this.app.ticker.add(this.update);
 
         input.register();
         env.register();
     }
 
     public changeScene(newScene: IScene): void {
+        if (!env.mobile) return;
+
         if (this.currentScene !== undefined) {
             this.app.stage.removeChild(this.currentScene);
             this.currentScene.destroy();

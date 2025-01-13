@@ -7,8 +7,10 @@ import book from '../proxies/book';
 
 export class GameScene extends Container implements IScene {
     public gameName = 'Dare';
-    private readonly tileMap: TileMap;
+    public startMap = 'map.test';
+
     private readonly offset: Point;
+    private tileMap!: TileMap;
 
     constructor() {
         super();
@@ -16,14 +18,16 @@ export class GameScene extends Container implements IScene {
         const canvas = document.querySelector('#pixi-canvas') as HTMLCanvasElement;
         this.offset = utils.elementOffset(canvas);
 
-        this.tileMap = new TileMap('map.test');
-        this.addChild(this.tileMap);
-
-        this.load();
+        book.load();
+        this.changeMap(this.startMap);
     }
 
-    private load(): void {
-        book.load();
+    public changeMap(mapName: string): void {
+        if (this.tileMap !== undefined) {
+            this.removeChild(this.tileMap);
+        }
+        this.tileMap = new TileMap(mapName);
+        this.addChild(this.tileMap);
         this.tileMap.load();
     }
 
