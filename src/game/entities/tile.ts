@@ -51,11 +51,11 @@ export class Tile extends Entity {
                 this.addComponent(new Inventory());
                 break;
             case 'enemy':
-                this.graphic.onlyFade = false;
+                this.graphic.hideInDark = true;
                 this.addComponent(new Fight());
                 break;
             case 'item':
-                this.graphic.onlyFade = false;
+                this.graphic.hideInDark = true;
                 this.getComponent(Move).pass = true;
                 this.addComponent(new Pick());
                 break;

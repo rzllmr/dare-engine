@@ -11,6 +11,6 @@ You just have to catch it!
 -> DONE
 
 === door ===
-I open the door once you did. #speaker: stranger
+I open the door once you have it. #speaker: stranger
 I don't want it to slip out.
 -> DONE

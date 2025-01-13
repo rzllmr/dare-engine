@@ -1,11 +1,10 @@
 import { Component } from '../../engine/component';
-import { Point, Sprite, Texture, SCALE_MODES, ColorMatrixFilter } from 'pixi.js';
+import { Point, Sprite, Texture, SCALE_MODES } from 'pixi.js';
 import { TileMap } from '../entities/map';
 
 export class Graphic extends Component {
     public onMove = (position: Point): void => {};
-    public onlyFade = true;
-    public fadeToHide = false;
+    public hideInDark = false;
 
     public readonly sprite!: Sprite;
     public image = '';
@@ -28,33 +27,26 @@ export class Graphic extends Component {
     }
 
     public show(): void {
-        // this.sprite.alpha = 1.0;
         this.sprite.tint = 0xffffff;
-        // this.sprite.filters = [];
         this.sprite.visible = true;
     }
 
     public fade(): void {
-        // this.sprite.alpha = 0.3;
-        this.sprite.tint = 0xaaaaaa;
-        // this.sprite.filters = [this.filter];
-        this.sprite.visible = true;
+        if (this.hideInDark) {
+            this.sprite.visible = false;
+        } else {
+            this.sprite.tint = 0x819796;
+            this.sprite.visible = true;
+        }
     }
 
     public hide(): void {
-        if (this.fadeToHide) this.fade();
-        else this.sprite.visible = false;
-    }
-
-    private get filter(): ColorMatrixFilter {
-        const filter = new ColorMatrixFilter();
-        filter.sepia(true);
-        return filter;
+        this.sprite.visible = false;
     }
 
     public get visible(): boolean {
         let visible = this.sprite.visible;
-        if (this.onlyFade) visible &&= this.sprite.tint === 0xffffff;
+        if (!this.hideInDark) visible &&= this.sprite.tint === 0xffffff;
         return visible;
     }
 

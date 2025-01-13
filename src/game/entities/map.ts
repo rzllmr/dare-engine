@@ -1,6 +1,7 @@
 import { Container, Assets, Point } from 'pixi.js';
 import { Tile } from './tile';
 import computeFov from '../../fast/fov';
+import unveilRoom from '../../fast/fill';
 import properties from '../../engine/properties';
 import { readMap } from '../../engine/schemes';
 import dialog from '../proxies/dialog';
@@ -36,23 +37,14 @@ export class TileMap extends Container {
     }
 
     private registerChanges(): void {
-        properties.onChange('map-tiles', (mapTiles: boolean) => {
-            this.tiles.forEach((tile) => {
-                tile.graphic.fadeToHide = mapTiles;
-            });
-            this.objects.forEach((tile) => {
-                tile.graphic.fadeToHide = mapTiles && tile.graphic.onlyFade;
-            });
-        });
         properties.onChange('reveal-tiles', (revealTiles: boolean) => {
-            this.tiles.forEach((tile) => {
-                if (revealTiles) tile.graphic.show();
-                tile.graphic.hide();
-            });
-            this.objects.forEach((tile) => {
-                if (revealTiles && tile.graphic.onlyFade) tile.graphic.show();
-                tile.graphic.hide();
-            });
+            this.visibles.length = 0;
+            if (revealTiles) {
+                this.tiles.forEach((tile) => {
+                    this.visibles.push(tile.graphic.position);
+                });
+            }
+            this.updateVision();
         });
     }
 
@@ -130,7 +122,8 @@ export class TileMap extends Container {
         this._highlight = new Tile('frame', currentPosition);
         this.layers[1].addChild(this._highlight.graphic.sprite);
 
-        this.updateVision();
+        if (this.player === undefined) return;
+
         if (this.player !== undefined) {
             this.player.graphic.onMove = this.focusPos.bind(this);
             this.move('player', new Point());
@@ -204,25 +197,25 @@ export class TileMap extends Container {
     public move(name: string, direction: Point): boolean {
         if (this.moving) return false;
 
-        const object = name === 'player' ? this.player : this.objects.find((object) => object.name === name);
-        if (object === undefined) return false;
+        const actor = name === 'player' ? this.player : this.objects.find((object) => object.name === name);
+        if (actor === undefined) return false;
 
-        const originCoord = object.graphic.position;
+        const originCoord = actor.graphic.position;
         let origin = this.object(originCoord);
         if (origin === undefined) origin = this.tile(originCoord);
         if (origin === undefined) return false;
 
         const targetCoord = new Point(
-            object.graphic.position.x + direction.x,
-            object.graphic.position.y + direction.y
+            actor.graphic.position.x + direction.x,
+            actor.graphic.position.y + direction.y
         );
         let target = this.object(targetCoord);
         if (target === undefined) target = this.tile(targetCoord);
         if (target === undefined) return false;
 
         const queue = async (): Promise<void> => {
-            await target?.act(object);
-            await origin?.leave(object);
+            await target?.act(actor);
+            await origin?.leave(actor);
             // this.updateOthers();
             this.updateVision();
         };
@@ -230,7 +223,7 @@ export class TileMap extends Container {
         this.moving = true;
         queue().then(() => {
             this.moving = false;
-            object.graphic.sprite.zIndex = targetCoord.y;
+            actor.graphic.sprite.zIndex = targetCoord.y;
         }).catch((message) => {
             console.error(message);
         });
@@ -276,37 +269,69 @@ export class TileMap extends Container {
     }
 
     private updateVision(): void {
+        if (this.player === undefined) return;
+
         this.visibles.forEach((coord) => {
             this.object(coord)?.graphic.hide();
             this.tile(coord)?.graphic.hide();
         });
-        this.visibles.length = 0;
 
-        if (this.player !== undefined) {
-            computeFov(
+        if (!properties.getBool('reveal-tiles')) {
+            if (!properties.getBool('map-tiles')) this.visibles.length = 0;
+            unveilRoom(
                 this.player.graphic.position,
                 this.isBlocking.bind(this),
                 this.markVisible.bind(this),
-                properties.getNumber('vision-distance')
+                this.isVisible.bind(this),
+                Infinity
             );
         }
-
         this.visibles.forEach((coord) => {
+            this.object(coord)?.graphic.fade();
+            this.tile(coord)?.graphic.fade();
+        });
+
+        this.lits.length = 0;
+        computeFov(
+            this.player.graphic.position,
+            this.isBlocking.bind(this),
+            this.markLit.bind(this),
+            properties.getNumber('vision-distance')
+        );
+        this.lits.forEach((coord) => {
             this.object(coord)?.graphic.show();
             this.tile(coord)?.graphic.show();
         });
     }
 
     private readonly visibles = new Array<Point>();
+    private readonly lits = new Array<Point>();
 
     private markVisible(coord: Point): void {
         this.visibles.push(coord);
     }
 
+    private isVisible(coord: Point): boolean {
+        return this.visibles.find((c) => {
+            return c.x === coord.x && c.y === coord.y
+        }) !== undefined;
+    }
+
+    private markLit(coord: Point): void {
+        this.lits.push(coord);
+    }
+
     private isBlocking(coord: Point): boolean {
+        if (this.outOfBounds(coord)) return true;
+
         const tile = this.object(coord);
         if (tile === undefined) return false;
 
         return tile.blocksView;
+    }
+
+    private outOfBounds(coord: Point): boolean {
+        return coord.x < 0 || coord.x > this.dimensions.x
+            || coord.y < 0 || coord.y > this.dimensions.y;
     }
 }
