@@ -38,6 +38,7 @@ The project requires an installation of [Node.js](https://nodejs.org) including 
 * __LICENSE__ _// main license for source files_
 * __package.json__ _// npm config_
 * __README.md__ _// this file you're reading_
+* __TODO.md__ _// list of tasks at hand_
 * __tsconfig.json__ _// typescript config_
 * __webpack.config.js__ _// webpack config_
 
