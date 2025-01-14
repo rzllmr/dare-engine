@@ -1,6 +1,6 @@
-import type { ResolverManifest } from 'pixi.js';
+import type { AssetsManifest } from 'pixi.js';
 
-export const manifest: ResolverManifest = {
+export const manifest: AssetsManifest = {
     bundles: [
         {
             name: 'main',

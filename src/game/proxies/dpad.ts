@@ -38,7 +38,7 @@ class Dpad {
     }
 
     public register(move: (direction: string) => void): void {
-        let moveLoop : NodeJS.Timer;
+        let moveLoop : NodeJS.Timeout;
         let lastDirection = 'Middle';
         
         const moveDPad = (event: TouchEvent): void => {

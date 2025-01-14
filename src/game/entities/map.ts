@@ -62,7 +62,7 @@ export class TileMap extends Container {
     }
 
     public load(): void {
-        const data = readMap(Assets.get(this.name));
+        const data = readMap(Assets.get(this.name as string));
         const layout = data.layout.replace(/(.) /gm, '$1').replace(/^\n/, '');
         const wallChar = this.getKey(data.key, 'wall');
 
