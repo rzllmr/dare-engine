@@ -52,5 +52,5 @@ export class LoaderScene extends Container implements IScene {
 
     public input(position: Point, button?: string): void {}
 
-    public update(framesPassed: number): void {}
+    public update(lastTime: number): void {}
 }

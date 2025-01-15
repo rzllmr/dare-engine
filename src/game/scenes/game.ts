@@ -46,5 +46,5 @@ export class GameScene extends Container implements IScene {
         }
     }
 
-    public update(framesPassed: number): void {}
+    public update(lastTime: number): void {}
 }

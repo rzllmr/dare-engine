@@ -72,7 +72,7 @@ export class Graphic extends Component {
 
     private loadSprite(image: string): Sprite {
         const texture = Graphic.loadTexture(image);
-        texture.baseTexture.scaleMode = SCALE_MODES.NEAREST;
+        texture.source.scaleMode = 'nearest';
         const sprite = Sprite.from(texture);
         this.image = image;
         const anchor = new Point(

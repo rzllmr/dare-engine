@@ -27,7 +27,7 @@ export class TileMap extends Container {
     constructor(name: string) {
         super();
 
-        this.name = name;
+        this.label = name;
 
         this.layers[0] = this.addChild(new Container()); // for tiles
         this.layers[1] = this.addChild(new Container()); // for objects
@@ -62,7 +62,7 @@ export class TileMap extends Container {
     }
 
     public load(): void {
-        const data = readMap(Assets.get(this.name as string));
+        const data = readMap(Assets.get(this.label as string));
         const layout = data.layout.replace(/(.) /gm, '$1').replace(/^\n/, '');
         const wallChar = this.getKey(data.key, 'wall');
 

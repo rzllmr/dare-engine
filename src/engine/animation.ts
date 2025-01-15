@@ -18,9 +18,9 @@ class Animation {
         this.ticker.start();
     }
 
-    public add(callback: TickerCallback<any>, context?: Tween<any>): void {
-        this.ticker.add((): void => {
-            callback.bind(context)(this.ticker.lastTime);
+    public add(callback: (time: number) => void, context?: Tween<any>): void {
+        this.ticker.add((ticker: Ticker): void => {
+            callback.bind(context)(ticker.lastTime);
         }, this);
     }
 }

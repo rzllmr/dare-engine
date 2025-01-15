@@ -1,6 +1,6 @@
-import { extensions, ExtensionType, settings, utils } from '@pixi/core';
-import { LoaderParserPriority } from '@pixi/assets';
-import type { LoaderParser } from '@pixi/assets';
+import { extensions, ExtensionType, DOMAdapter, path } from 'pixi.js';
+import { LoaderParserPriority } from 'pixi.js';
+import type { LoaderParser } from 'pixi.js';
 
 /** simple loader plugin for loading yaml data */
 export const htmlParser = {
@@ -10,11 +10,11 @@ export const htmlParser = {
     },
 
     test: function (url: string): boolean {
-        return ['.html'].includes(utils.path.extname(url).toLowerCase());
+        return ['.html'].includes(path.extname(url).toLowerCase());
     },
 
     load: async function <T>(url: string): Promise<T> {
-        const response = await settings.ADAPTER.fetch(url);
+        const response = await DOMAdapter.get().fetch(url);
 
         const txt = await response.text();
 
