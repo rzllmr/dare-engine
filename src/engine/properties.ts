@@ -38,6 +38,7 @@ class Properties {
 
     private readonly registered = new Map<PropertyName, Property<string> | Property<number> | Property<boolean>>();
 
+    /* eslint-disable @typescript-eslint/unified-signatures */
     public register(name: PropertyName, value: string, comment: string, immutable?: boolean): void;
     public register(name: PropertyName, value: number, comment: string, immutable?: boolean): void;
     public register(name: PropertyName, value: boolean, comment: string, immutable?: boolean): void;

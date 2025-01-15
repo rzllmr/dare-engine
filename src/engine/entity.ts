@@ -1,6 +1,6 @@
 import { Component } from './component';
 
-type constr<T> = { new (...args: any[]): T };
+type constr<T> = new (...args: any[]) => T;
 
 export abstract class Entity {
     protected _components: Component[] = [];
