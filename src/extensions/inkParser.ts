@@ -4,7 +4,6 @@ import type { LoaderParser } from '@pixi/assets';
 import { Compiler } from 'inkjs/compiler/Compiler';
 
 /** simple loader plugin for loading ink data */
-// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 export const inkParser = {
     extension: {
         type: ExtensionType.LoadParser,

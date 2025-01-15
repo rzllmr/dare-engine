@@ -3,7 +3,6 @@ import { LoaderParserPriority } from '@pixi/assets';
 import type { LoaderParser } from '@pixi/assets';
 
 /** simple loader plugin for loading yaml data */
-// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 export const htmlParser = {
     extension: {
         type: ExtensionType.LoadParser,

@@ -95,7 +95,6 @@ class Properties {
     private getOfType(name: PropertyName, type: TypeName): string | number | boolean {
         const property = this.registered.get(name);
         if (property === undefined) throw new Error(`property not registered: ${name}`);
-        // eslint-disable-next-line valid-typeof
         if (typeof property.value !== type) throw new Error(`property "${name}" not of type: ${type}`);
         return property.value;
     }
@@ -115,7 +114,6 @@ class Properties {
     private getDefaultOfType(name: PropertyName, type: TypeName): string | number | boolean {
         const property = this.registered.get(name);
         if (property === undefined) throw new Error(`property not registered: ${name}`);
-        // eslint-disable-next-line valid-typeof
         if (typeof property.default !== type) throw new Error(`property "${name}" not of type: ${type}`);
         return property.default;
     }

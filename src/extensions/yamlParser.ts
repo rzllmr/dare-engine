@@ -4,7 +4,6 @@ import type { LoaderParser } from '@pixi/assets';
 import YAML from 'yaml';
 
 /** simple loader plugin for loading yaml data */
-// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 export const yamlParser = {
     extension: {
         type: ExtensionType.LoadParser,

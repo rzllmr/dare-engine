@@ -1,5 +1,5 @@
 # Pixi Engine
-> A simple game engine in TypeScript using PixiJS.
+> A humble game engine in TypeScript using PixiJS.
 
 The intention of this project is to experiment with game development for the web and on mobile. Although the most basic tasks should be handled by frameworks like [PixiJS](https://pixijs.com/) for rendering, I want to create the rest of the engine making it run a game on my own. Details about the game I'm going to make with this you can find on its [homepage](https://rzllmr.github.io/pixi-engine/).
 
