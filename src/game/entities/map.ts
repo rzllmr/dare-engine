@@ -138,10 +138,10 @@ export class TileMap extends Container {
 
     private wallsAround(layout: string, idx: number, wallChar: string): string {
         let subtile = '';
-        if (layout[idx-this.dimensions.x-1] === wallChar) subtile += 'n';
-        if (layout[idx+1] === wallChar) subtile += 'e';
-        if (layout[idx+this.dimensions.x+1] === wallChar) subtile += 's';
-        if (layout[idx-1] === wallChar) subtile += 'w';
+        if (layout[idx - this.dimensions.x - 1] === wallChar) subtile += 'n';
+        if (layout[idx + 1] === wallChar) subtile += 'e';
+        if (layout[idx + this.dimensions.x + 1] === wallChar) subtile += 's';
+        if (layout[idx - 1] === wallChar) subtile += 'w';
         if (subtile === '') subtile += 'o';
         return subtile;
     }
@@ -165,15 +165,15 @@ export class TileMap extends Container {
 
     private posToCoord(position: Point): Point {
         position = new Point(position.x - TileMap.tileDim / 2, position.y - TileMap.tileDim / 2);
-        return new Point(Math.round(position.x / TileMap.tileDim), Math.round(position.y / TileMap.tileDim));
+        return position.multiplyScalar(1 / TileMap.tileDim).round();
     }
 
     private coordToPos(coord: Point): Point {
-        return new Point(coord.x * TileMap.tileDim, coord.y * TileMap.tileDim);
+        return coord.multiplyScalar(TileMap.tileDim);
     }
 
     public highlight(position: Point, offset: Point): void {
-        position = new Point(position.x - offset.x + this.pivot.x, position.y - offset.y + this.pivot.y);
+        position = position.subtract(offset).add(this.pivot);
         if (this._highlight === undefined) return;
 
         const coord = this.posToCoord(position);
@@ -191,7 +191,7 @@ export class TileMap extends Container {
         if (!this._highlight.graphic.visible) this._highlight.graphic.show();
 
         const nextCoordPos = this.coordToPos(new Point(coord.x + 1, coord.y));
-        dialog.tell(tile.info, new Point(nextCoordPos.x + offset.x, nextCoordPos.y + offset.y));
+        dialog.tell(tile.info, nextCoordPos.add(offset));
     }
 
     public move(name: string, direction: Point): boolean {
@@ -205,10 +205,7 @@ export class TileMap extends Container {
         if (origin === undefined) origin = this.tile(originCoord);
         if (origin === undefined) return false;
 
-        const targetCoord = new Point(
-            actor.graphic.position.x + direction.x,
-            actor.graphic.position.y + direction.y
-        );
+        const targetCoord = actor.graphic.position.add(direction);
         let target = this.object(targetCoord);
         if (target === undefined) target = this.tile(targetCoord);
         if (target === undefined) return false;
@@ -238,8 +235,7 @@ export class TileMap extends Container {
             view.offsetWidth / 2 - position.x - TileMap.tileDim / 2,
             view.offsetHeight / 2 - position.y - TileMap.tileDim / 2,
         );
-        this.pivot.x = -cameraPos.x;
-        this.pivot.y = -cameraPos.y;
+        this.pivot.copyFrom(cameraPos.multiplyScalar(-1));
     }
 
     public remove(tile: Tile): void {
@@ -255,7 +251,7 @@ export class TileMap extends Container {
 
     private object(coord: Point): Tile | undefined {
         for (const object of this.objects.values()) {
-            if (object.graphic.position.x === coord.x && object.graphic.position.y === coord.y) return object;
+            if (object.graphic.position.equals(coord)) return object;
         }
         return undefined;
     }
@@ -312,8 +308,8 @@ export class TileMap extends Container {
     }
 
     private isVisible(coord: Point): boolean {
-        return this.visibles.find((c) => {
-            return c.x === coord.x && c.y === coord.y
+        return this.visibles.find((c: Point) => {
+            return c.equals(coord);
         }) !== undefined;
     }
 

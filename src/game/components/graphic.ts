@@ -51,22 +51,20 @@ export class Graphic extends Component {
     }
 
     public get position(): Point {
-        return new Point(Math.round(this.sprite.x / TileMap.tileDim), Math.round(this.sprite.y / TileMap.tileDim));
+        return this.sprite.position.multiplyScalar(1 / TileMap.tileDim).round();
     }
 
     public set position(value: Point) {
-        this.sprite.x = value.x * TileMap.tileDim;
-        this.sprite.y = value.y * TileMap.tileDim;
+        this.sprite.position.copyFrom(value.multiplyScalar(TileMap.tileDim));
         this.onMove(this.sprite.position);
     }
 
     public get realPos(): Point {
-        return new Point(this.sprite.x, this.sprite.y);
+        return this.sprite.position.clonePoint();
     }
 
     public set realPos(value: Point) {
-        this.sprite.x = value.x;
-        this.sprite.y = value.y;
+        this.sprite.position.copyFrom(value);
         this.onMove(this.sprite.position);
     }
 
@@ -79,7 +77,7 @@ export class Graphic extends Component {
             sprite.anchor.x / sprite.width,
             sprite.anchor.y / sprite.height
         );
-        sprite.anchor.set(anchor.x, anchor.y);
+        sprite.anchor.copyFrom(anchor);
         sprite.visible = false;
         sprite.scale.set(TileMap.scale);
         return sprite;

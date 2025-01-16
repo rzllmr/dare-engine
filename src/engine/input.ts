@@ -89,10 +89,7 @@ class Input {
             if (firstTouch === undefined) return;
 
             const endPos = env.screenToView(firstTouch.pageX, firstTouch.pageY);
-            const diff = new Point(
-                endPos.x - touchPos.x,
-                endPos.y - touchPos.y
-            );
+            const diff = endPos.subtract(touchPos);
             if (Math.abs(diff.x) < 100 && Math.abs(diff.y) < 100) return;
             
             let direction = '';

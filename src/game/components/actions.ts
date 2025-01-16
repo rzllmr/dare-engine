@@ -38,7 +38,7 @@ export class Move extends Action {
 
         const tween = this.pass ? this.step(subjectPos, objectPos) : this.bounce(subjectPos, objectPos);
         tween.onUpdate(() => {
-            subject.getComponent(Graphic).realPos = new Point(subjectPos.x, subjectPos.y);
+            subject.getComponent(Graphic).realPos = subjectPos.clone();
         });
         tween.start();
 

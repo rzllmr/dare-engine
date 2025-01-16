@@ -47,10 +47,7 @@ class Dpad {
             if (this.blocked) return;
             
             const touchPos = env.screenToView(firstTouch.pageX, firstTouch.pageY);
-            const offset = new Point(
-                touchPos.x - this.dPadMiddle.x,
-                touchPos.y - this.dPadMiddle.y
-            );
+            const offset = touchPos.subtract(this.dPadMiddle);
             
             let direction = '';
             if (Math.abs(offset.x) < this.deadZone && Math.abs(offset.y) < this.deadZone

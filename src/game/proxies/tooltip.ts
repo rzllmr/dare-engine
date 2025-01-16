@@ -28,8 +28,8 @@ class TooltipProxy {
     }
 
     private setPosition(position: Point): void {
-        this.tooltipNode.style.top = String(position.y);
         this.tooltipNode.style.left = String(position.x);
+        this.tooltipNode.style.top = String(position.y);
     }
 
     public tell(line: string, position = this.defaultPosition): void {
