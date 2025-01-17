@@ -17,18 +17,20 @@ export class GameScene extends Container implements IScene {
 
         const canvas = document.querySelector('#pixi-canvas') as HTMLCanvasElement;
         this.offset = utils.elementOffset(canvas);
-
-        book.load();
-        this.changeMap(this.startMap);
     }
 
-    public changeMap(mapName: string): void {
+    public async load(): Promise<void> {
+        await book.load();
+        await this.changeMap(this.startMap);
+    }
+
+    public async changeMap(mapName: string): Promise<void> {
         if (this.tileMap !== undefined) {
             this.removeChild(this.tileMap);
         }
         this.tileMap = new TileMap(mapName);
+        await this.tileMap.load();
         this.addChild(this.tileMap);
-        this.tileMap.load();
     }
 
     public input(position: Point, button?: string): void {

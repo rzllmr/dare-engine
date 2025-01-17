@@ -30,7 +30,7 @@ class Input {
         }
     }
 
-    public changeScene(scene: IScene): void {
+    public attach(scene: IScene): void {
         this.scene = scene;
     }
 

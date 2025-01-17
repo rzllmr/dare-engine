@@ -44,7 +44,7 @@ class BookProxy {
         this.changeTab(this.activeTab);
     }
 
-    public load(): void {
+    public async load(): Promise<void> {
         this.tabs.forEach((node, tab) => {
             if (node == null) return;
 

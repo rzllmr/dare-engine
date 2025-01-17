@@ -15,10 +15,11 @@ export class LoaderScene extends Container implements IScene {
 
         this.splashScreen = document.querySelector('#splash-screen') as HTMLDivElement;
         this.loaderBarFill = document.querySelector('.progress-bar > div') as HTMLDivElement;
+    }
 
-        this.loadAssets().then(() => {
-            this.startGame();
-        }).catch(() => {});
+    public async load(): Promise<void> {
+        await this.loadAssets();
+        this.startGame();
     }
 
     private async loadAssets(): Promise<void> {

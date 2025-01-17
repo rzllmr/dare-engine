@@ -40,16 +40,17 @@ class Manager {
             });
     }
 
-    public changeScene(newScene: IScene): void {
+    public async changeScene(newScene: IScene): Promise<void> {
         if (!env.mobile) return;
 
+        await newScene.load();
         if (this.currentScene !== undefined) {
             this.app.stage.removeChild(this.currentScene);
             this.currentScene.destroy();
         }
         this.currentScene = newScene;
         this.app.stage.addChild(this.currentScene);
-        input.changeScene(this.currentScene);
+        input.attach(this.currentScene);
     }
 
     private update(ticker: Ticker): void {
@@ -61,6 +62,7 @@ class Manager {
 export const manager = Manager.instance();
 
 export interface IScene extends Container {
+    load: () => Promise<void>;
     input: (position: Point, button?: string) => void;
     update: (lastTime: number) => void;
 }

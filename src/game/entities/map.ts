@@ -61,7 +61,7 @@ export class TileMap extends Container {
         }
     }
 
-    public load(): void {
+    public async load(): Promise<void> {
         const data = readMap(Assets.get(this.label as string));
         const layout = data.layout.replace(/(.) /gm, '$1').replace(/^\n/, '');
         const wallChar = this.getKey(data.key, 'wall');
@@ -126,7 +126,7 @@ export class TileMap extends Container {
 
         if (this.player !== undefined) {
             this.player.graphic.onMove = this.focusPos.bind(this);
-            this.move('player', new Point());
+            await this.move('player', new Point());
         }
 
         dialog.tellStory('intro', 'enter');
@@ -194,7 +194,7 @@ export class TileMap extends Container {
         dialog.tell(tile.info, nextCoordPos.add(offset));
     }
 
-    public move(name: string, direction: Point): boolean {
+    public async move(name: string, direction: Point): Promise<boolean> {
         if (this.moving) return false;
 
         const actor = name === 'player' ? this.player : this.objects.find((object) => object.name === name);
@@ -210,20 +210,14 @@ export class TileMap extends Container {
         if (target === undefined) target = this.tile(targetCoord);
         if (target === undefined) return false;
 
-        const queue = async (): Promise<void> => {
-            await target?.act(actor);
-            await origin?.leave(actor);
-            // this.updateOthers();
-            this.updateVision();
-        };
-        
         this.moving = true;
-        queue().then(() => {
-            this.moving = false;
-        }).catch((message) => {
-            console.error(message);
-        });
         
+        await target?.act(actor);
+        await origin?.leave(actor);
+        // this.updateOthers();
+        this.updateVision();
+        this.moving = false;
+                
         return true;
     }
 
