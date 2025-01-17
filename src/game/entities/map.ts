@@ -220,7 +220,6 @@ export class TileMap extends Container {
         this.moving = true;
         queue().then(() => {
             this.moving = false;
-            actor.graphic.sprite.zIndex = targetCoord.y;
         }).catch((message) => {
             console.error(message);
         });

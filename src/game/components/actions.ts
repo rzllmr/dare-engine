@@ -34,8 +34,6 @@ export class Move extends Action {
         const subjectPos = subject.getComponent(Graphic).realPos;
         const objectPos =  this.object.getComponent(Graphic).realPos;
 
-        if (this.pass) this.object.graphic.sprite.zIndex -= 1;
-
         const tween = this.pass ? this.step(subjectPos, objectPos) : this.bounce(subjectPos, objectPos);
         tween.onUpdate(() => {
             subject.getComponent(Graphic).realPos = subjectPos.clone();
@@ -43,11 +41,9 @@ export class Move extends Action {
         tween.start();
 
         animation.add(tween.update, tween);
-        await new Promise((resolve) => tween.onComplete(resolve));
-    }
-
-    public override async leave(subject: Tile): Promise<void> {
-        this.object.graphic.sprite.zIndex += 1;
+        await new Promise((resolve) => tween.onComplete(resolve)).then(() => {
+            if (this.pass) subject.graphic.sprite.zIndex = this.object.graphic.position.y + 0.5;
+        });
     }
 
     private step(start: Point, end: Point): Tween<any> {
