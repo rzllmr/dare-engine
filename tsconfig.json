@@ -3,8 +3,8 @@
         // Settings for the compiler
         "outDir": "./dist/",
         "sourceMap": true,
-        "target": "es2015",
-        "module": "ESNext",
+        "target": "es2023",
+        "module": "esnext",
     
         // Rules for your code
         "strict": true,
