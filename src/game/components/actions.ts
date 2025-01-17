@@ -5,7 +5,7 @@ import { Inventory, Item } from './inventory';
 import { Graphic } from './graphic';
 import log from '../proxies/log';
 import { Tween, Easing } from '@tweenjs/tween.js';
-import animation from '../../engine/animation';
+import { Animation } from '../../engine/animation';
 
 export abstract class Action extends Component {
     public get object(): Tile {
@@ -35,27 +35,22 @@ export class Move extends Action {
         const objectPos =  this.object.getComponent(Graphic).realPos;
 
         const tween = this.pass ? this.step(subjectPos, objectPos) : this.bounce(subjectPos, objectPos);
-        tween.onUpdate(() => {
-            subject.getComponent(Graphic).realPos = subjectPos.clone();
-        });
-        tween.start();
+        tween.onUpdate((current) => { subject.getComponent(Graphic).realPos = current; });
+        await new Animation(tween).run();
 
-        animation.add(tween.update, tween);
-        await new Promise((resolve) => tween.onComplete(resolve)).then(() => {
-            if (this.pass) subject.graphic.sprite.zIndex = this.object.graphic.position.y + 0.5;
-        });
+        if (this.pass) subject.graphic.sprite.zIndex = this.object.graphic.position.y + 0.5;
     }
 
     private step(start: Point, end: Point): Tween<any> {
-        return new Tween(start).to(end, this.speed).easing(Easing.Sinusoidal.InOut);
+        return new Tween(start).to(end).duration(this.speed).easing(Easing.Sinusoidal.InOut);
     }
 
     private bounce(start: Point, end: Point): Tween<any> {
-        const target = {
-            x: start.x + ( end.x - start.x ) / 3,
-            y: start.y + ( end.y - start.y ) / 3
-        };
-        return new Tween(start).to(target, this.speed).easing(Easing.Sinusoidal.InOut).repeat(1).yoyo(true);
+        const target = new Point(
+            start.x + ( end.x - start.x ) / 3,
+            start.y + ( end.y - start.y ) / 3
+        );
+        return new Tween(start).to(target).duration(this.speed).easing(Easing.Sinusoidal.InOut).repeat(1).yoyo(true);
     }
 
     public static direction(direction: string): Point {
