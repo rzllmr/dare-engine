@@ -53,11 +53,22 @@ html, body {
   width: 0;
 }
 
-#desk {
+#view {
   transform: scale(1.0);
   transform-origin: top left;
-  filter: brightness(1.15);
   font-family: 'CelticTime';
+  width: 1920px;
+  height: 1080px;
+}
+@media (orientation: portrait) {
+  #view {
+    width: 540px;
+    height: 960px;
+  }
+}
+
+#desk {
+  filter: brightness(1.15);
   background-image: url("../images/desk/desk.d.png");
   width: 1920px;
   height: 1080px;

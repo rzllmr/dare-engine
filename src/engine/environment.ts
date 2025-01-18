@@ -15,20 +15,20 @@ class Environment {
     };
     
     public register(): void {
-        const deskDiv = document.querySelector('#desk') as HTMLDivElement;
+        const view = document.querySelector('#view') as HTMLDivElement;
         window.onload = () => {
             window.dispatchEvent(new Event('resize'));
         };
         window.onresize = () => {
             const scale = Math.min( 
-                window.innerWidth / deskDiv.offsetWidth, 
-                window.innerHeight / deskDiv.offsetHeight
+                window.innerWidth / view.offsetWidth, 
+                window.innerHeight / view.offsetHeight
             );
             const offset = new Point(
-                Math.round((window.innerWidth - deskDiv.offsetWidth * scale) / 2),
-                Math.round((window.innerHeight - deskDiv.offsetHeight * scale) / 2)
+                Math.round((window.innerWidth - view.offsetWidth * scale) / 2),
+                Math.round((window.innerHeight - view.offsetHeight * scale) / 2)
             );
-            deskDiv.style.transform = `translate(${offset.x}px, ${offset.y}px) scale(${scale})`;
+            view.style.transform = `translate(${offset.x}px, ${offset.y}px) scale(${scale})`;
             this.viewTransform = {offset: offset, scale: scale};
         };
     }
