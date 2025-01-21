@@ -20,7 +20,7 @@ export default function unveilRoom(
                 current.x + direction.x,
                 current.y + direction.y
             );
-            if (insideCircle(child, origin, maxDistance) && !isVisible(child)) {
+            if (!isVisible(child) && insideCircle(child, origin, maxDistance)) {
                 markVisible(child);
                 if (!isBlocking(child)) queue.push(child);
             }
@@ -29,14 +29,19 @@ export default function unveilRoom(
 }
 
 function insideCircle(tile: Point, origin: Point, radius: number): boolean {
+    if (radius == Infinity) return true;
     return Math.pow(tile.x - origin.x, 2) + Math.pow(tile.y - origin.y, 2) <= Math.pow(radius + 0.5, 2);
 }
 
 function directions(): Point[] {
     return [
         new Point(0, 1),  // north
+        new Point(1, 1),  // north-east
         new Point(1, 0),  // east
+        new Point(1, -1),  // south-east
         new Point(0, -1), // south
-        new Point(-1, 0)  // west
+        new Point(-1, -1), // south-west
+        new Point(-1, 0),  // west
+        new Point(-1, 1)  // north-west
     ];
 }
