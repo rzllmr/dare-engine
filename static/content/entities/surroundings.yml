@@ -18,3 +18,11 @@ chest:
     image: "chest.c"
     kind: "container"
     info: "A mysterious chest with unknown content."
+crate:
+    image: "crate"
+    kind: "crate"
+    info: "Looks movable."
+sign:
+    image: "sign"
+    kind: "sign"
+    info: ""

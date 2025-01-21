@@ -42,6 +42,18 @@
 			"sourceSize": { "w": 16, "h": 32 },
 			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
 		},
+		"crate": {
+			"anchor": { "x": 0, "y": 16 },
+			"frame": { "x": 144, "y": 0, "w": 16, "h": 32 },
+			"sourceSize": { "w": 16, "h": 32 },
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
+		},
+		"sign": {
+			"anchor": { "x": 0, "y": 16 },
+			"frame": { "x": 160, "y": 0, "w": 16, "h": 32 },
+			"sourceSize": { "w": 16, "h": 32 },
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
+		},
 		"wall_grey.o": {
 			"anchor": { "x": 0, "y": 3 },
 			"frame": { "x": 208, "y": 45, "w": 16, "h": 19 },

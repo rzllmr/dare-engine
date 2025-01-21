@@ -173,6 +173,23 @@ export class Open extends Action {
     }
 }
 
+export class Push extends Action {
+    public override async act(subject: Tile): Promise<void> {
+        if (subject.name !== 'player') return;
+
+        const direction = this.object.graphic.position.subtract(subject.graphic.position);
+        await this.object.move(direction);
+    }
+}
+
+export class Tell extends Action {
+    public override async act(subject: Tile): Promise<void> {
+        if (subject.name !== 'player') return;
+
+        log.tell("You did it, awesome! 😊 This is the end of the game for now, until I find the time to add more...");
+    }
+}
+
 export class Fight extends Action {
     public override async act(subject: Tile): Promise<void> {
         log.tell(`You fight ${this.decapitalize(this.object.info)}`);
