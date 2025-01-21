@@ -15,7 +15,7 @@ parchment:
 torch:
     image: "sack.1"
     kind: "item"
-    info: "A torch lighting your surroundings as you raise it."
+    info: "A torch lighting your way as you raise it."
     specs: 
         part: "hand"
         equip:
@@ -24,7 +24,12 @@ torch:
 lantern:
     image: "sack.1"
     kind: "item"
-    info: "A lantern to light the surroundings from your belt."
+    info: "A lantern to light the way from your belt."
     specs:
         take:
             - ["vision-distance", 4]
+
+key:
+    image: "sack.1"
+    kind: "item"
+    info: "A key fit for doors."

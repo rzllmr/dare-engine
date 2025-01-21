@@ -7,7 +7,7 @@ import book from '../proxies/book';
 
 export class GameScene extends Container implements IScene {
     public gameName = 'Dare';
-    public startMap = 'map.test';
+    public startMap = 'map.demo';
 
     private readonly offset: Point;
     private tileMap!: TileMap;

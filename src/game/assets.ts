@@ -10,6 +10,7 @@ export const manifest: AssetsManifest = {
                 'entities.items': './content/entities/items.yml',
                 'entities.meta': './content/entities/meta.yml',
                 'entities.surroundings': './content/entities/surroundings.yml',
+                'map.demo': './content/maps/demo.yml',
                 'map.test': './content/maps/test.yml',
                 'sprites.beings': './images/world/beings.json',
                 'sprites.objects': './images/world/objects.json',

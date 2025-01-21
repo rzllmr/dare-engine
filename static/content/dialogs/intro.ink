@@ -1,7 +1,6 @@
 === enter ===
-You find yourself in a dank, dark place.
-The echoes of your footsteps bounce off solid walls.
-And everything fades to black beyond arm's reach.
+You find yourself in a dim place, crammed with crates always in the way.
+Time to get out...
 -> DONE
 
 === call ===
