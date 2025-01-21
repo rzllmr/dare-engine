@@ -49,6 +49,10 @@ export class Inventory extends Component {
         return true;
     }
 
+    public hasItem(name: string): boolean {
+        return this.items.has(name);
+    }
+
     private canEquip(item: Item): boolean {
         const part = this.equippedParts.get(item.part);
         if (part !== undefined && part.items.length < part.max) {

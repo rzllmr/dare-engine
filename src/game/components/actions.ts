@@ -19,6 +19,24 @@ export abstract class Action extends Component {
     protected decapitalize(line: string): string {
         return line.charAt(0).toLowerCase() + line.slice(1);
     }
+
+    private filter(details: string, pattern: RegExp): string[] {
+        const defines: string[] = [];
+        for (const detail of details.split(/,\s*/)) {
+            if (detail !== '' && detail.match(pattern)) {
+                defines.push(detail.replace('?', ''));
+            }
+        }
+        return defines;
+    }
+
+    protected requireds(details: string): string[] {
+        return this.filter(details, /.+\?$/);
+    }
+
+    protected defines(details: string): string[] {
+        return this.filter(details, /.+[^?]$/);
+    }
 }
 
 export class Move extends Action {
@@ -70,45 +88,80 @@ export class Move extends Action {
 }
 
 export class Pick extends Action {
-    private item: Item | undefined;
+    private readonly items: Item[] = [];
     private readonly destroyObject: boolean = true;
 
-    constructor(itemName = '') {
+    constructor(details = '') {
         super();
 
-        if (itemName !== '') {
-            const data = Tile.data.get(itemName);
-            if (data === undefined) throw new Error(`unknown item: ${itemName}`);
+        const itemNames = this.defines(details);
+        if (itemNames.length > 0) {
+            for (const itemName of itemNames) {
+                const data = Tile.data.get(itemName);
+                if (data === undefined) throw new Error(`unknown item: ${itemName}`);
 
-            this.item = new Item(itemName, data.info, data.specs);
-            this.destroyObject = false;
+                this.items.push(new Item(itemName, data.info, data.specs));
+                this.destroyObject = false;
+            }
         }
     }
 
     public override init(): void {
-        if (this.item === undefined) {
-            this.item = new Item(this.object.name, this.object.info, this.object.specs);
+        if (this.items.length == 0) {
+            this.items.push(new Item(this.object.name, this.object.info, this.object.specs));
         }
     }
 
     public override async act(subject: Tile): Promise<void> {
-        if (this.item === undefined) return;
+        if (this.items.length == 0) return;
+        if (!subject.hasComponent(Inventory)) return;
 
         const inventory = subject.getComponent(Inventory);
-        log.tell(`You found ${this.decapitalize(this.item.info)}`);
-        const couldBeAdded = inventory.addItem(this.item);
-        if (couldBeAdded) {
-            this.item = undefined;
-            if (this.destroyObject) this.object.markForDestruction();
+
+        for (let i = this.items.length - 1; i >= 0; i--) {
+            const item = this.items[i];
+            log.tell(`You found ${this.decapitalize(item.info)}`);
+            const couldBeAdded = inventory.addItem(item);
+            if (couldBeAdded) this.items.splice(i, 1);
         }
+        if (this.items.length == 0 && this.destroyObject) this.object.markForDestruction();
+
     }
 }
 
 export class Open extends Action {
+    private readonly requiredItems: string[] = [];
+
+    constructor(details = '') {
+        super();
+
+        const requiredItems = this.requireds(details);
+        if (requiredItems.length > 0) this.requiredItems = requiredItems;
+    }
+
+    public override init(): void {
+        if (this.requiredItems.length > 0) {
+            this.object.getComponent(Move).pass = false;
+        }
+    }
+
     public override async act(subject: Tile): Promise<void> {
         if (this.object.image.endsWith('c')) {
+            if (this.requiredItems.length > 0) {
+                if (!subject.hasComponent(Inventory)) return;
+                const inventory = subject.getComponent(Inventory);
+                if (this.requiredItems.every((item) => { return inventory.hasItem(item) })) {
+                    log.tell(`You unlocked the ${this.object.name} with the ${this.requiredItems.join(', ')}.`);
+                    this.requiredItems.length = 0;
+                } else {
+                    log.tell(`The ${this.object.name} seems locked and needs a ${this.requiredItems.join(', ')}.`);
+                    return;
+                }
+            }
+            
             const openSprite = this.object.image.replace(/c$/, 'o');
             this.object.graphic.changeSprite(openSprite);
+            this.object.getComponent(Move).pass = true;
         }
     }
 

@@ -63,7 +63,7 @@ export class Tile extends Entity {
                 this.addComponent(new Pick());
                 break;
             case 'container':
-                this.addComponent(new Open());
+                this.addComponent(new Open(details));
                 this.addComponent(new Pick(details));
                 break;
             case 'floor':
@@ -71,7 +71,7 @@ export class Tile extends Entity {
                 break;
             case 'door':
                 this.getComponent(Move).pass = true;
-                this.addComponent(new Open());
+                this.addComponent(new Open(details));
                 break;
             case 'chasm':
                 break;
