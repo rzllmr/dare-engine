@@ -15,6 +15,7 @@ class DialogProxy {
     private readonly dialogNode: HTMLDivElement;
     private readonly dialogText: HTMLDivElement;
     private story: Story | null;
+    private readonly lines: string[];
 
     private constructor() {
         this.dialogNode = document.querySelector('#dialog') as HTMLDivElement;
@@ -22,12 +23,15 @@ class DialogProxy {
 
         this.dialogNode.addEventListener('touchstart', this.continue.bind(this));
         this.story = null;
+        this.lines = [];
     }
 
     private continue(): void {
         if (this.story?.canContinue === true) {
             const line = this.story.Continue() ?? '';
-            this.tell(line);
+            this.tellLine(line);
+        } else if (this.lines.length > 0) {
+            this.tellLine(this.lines.shift());
         } else {
             this.show(false);
         }
@@ -36,8 +40,8 @@ class DialogProxy {
     public tell(line: string, position = new Point()): void {
         if (line === '') return;
 
-        this.dialogText.innerHTML = line;
-        this.show();
+        this.lines.push(line);
+        if (!this.showing) this.continue();
     }
 
     public tellStory(story: string, knot: string): void {
@@ -46,10 +50,20 @@ class DialogProxy {
         this.continue();
     }
 
-    public show(show = true): void {
+    private tellLine(line?: string): void {
+        if (line === undefined) return;
+        this.dialogText.innerHTML = line;
+        this.show();
+    }
+
+    private show(show = true): void {
         dpad.block(show);
         bookButton.disable(show);
         this.dialogNode.style.visibility = show ? 'visible' : 'hidden';
+    }
+
+    private get showing(): boolean {
+        return this.dialogNode.style.visibility == 'visible';
     }
 
     public text(): string | null {
