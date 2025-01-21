@@ -41,7 +41,7 @@ export class GameScene extends Container implements IScene {
 
         if (button.startsWith('Arrow')) {
             const direction = button.replace('Arrow', '');
-            this.tileMap.move('player', Move.direction(direction));
+            this.tileMap.move(Move.direction(direction));
         } else if (button.endsWith('Swipe')) {
             const direction = button.replace('Swipe', '');
             book.changeTab(direction);

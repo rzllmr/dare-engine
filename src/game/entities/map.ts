@@ -22,7 +22,6 @@ export class TileMap extends Container {
 
     public player: Tile | undefined;
     private _highlight: Tile | undefined;
-    private moving = false;
 
     constructor(name: string) {
         super();
@@ -68,6 +67,7 @@ export class TileMap extends Container {
 
         this.checkMapDimensions(layout);
         Tile.removeFromMap = this.remove.bind(this);
+        Tile.moveOnMap = this.move.bind(this);
 
         const currentPosition = new Point(0, 0);
         for (let idx = 0; idx < layout.length; idx++) {
@@ -126,7 +126,7 @@ export class TileMap extends Container {
 
         if (this.player !== undefined) {
             this.player.graphic.onMove = this.focusPos.bind(this);
-            await this.move('player', new Point());
+            await this.move(new Point());
         }
 
         dialog.tellStory('intro', 'enter');
@@ -194,11 +194,9 @@ export class TileMap extends Container {
         dialog.tell(tile.info, nextCoordPos.add(offset));
     }
 
-    public async move(name: string, direction: Point): Promise<boolean> {
-        if (this.moving) return false;
-
-        const actor = name === 'player' ? this.player : this.objects.find((object) => object.name === name);
+    public async move(direction: Point, actor = this.player): Promise<boolean> {
         if (actor === undefined) return false;
+        if (actor.moving) return false;
 
         const originCoord = actor.graphic.position;
         let origin = this.object(originCoord);
@@ -210,13 +208,13 @@ export class TileMap extends Container {
         if (target === undefined) target = this.tile(targetCoord);
         if (target === undefined) return false;
 
-        this.moving = true;
+        actor.moving = true;
         
         await target?.act(actor);
         await origin?.leave(actor);
         // this.updateOthers();
         this.updateVision();
-        this.moving = false;
+        actor.moving = false;
                 
         return true;
     }

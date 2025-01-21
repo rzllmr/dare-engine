@@ -24,6 +24,9 @@ export class Tile extends Entity {
     }
 
     public static removeFromMap: (tile: Tile) => void;
+    public static moveOnMap: (direction: Point, actor: Tile) => Promise<boolean>;
+
+    public moving = false;
 
     private readonly _name: string;
     private readonly data: EntityData;
@@ -84,6 +87,10 @@ export class Tile extends Entity {
     private destroy(): void {
         Tile.removeFromMap(this);
         this.components.length = 0;
+    }
+
+    public move(direction: Point): Promise<boolean> {
+        return Tile.moveOnMap(direction, this);
     }
 
     private toBeDestroyed = false;
