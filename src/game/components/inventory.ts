@@ -71,11 +71,11 @@ export class Item {
     }
 
     public isEquipment(): boolean {
-        return this.specs.has('equip');
+        return this.specs?.has('equip');
     }
 
     public get part(): string {
-        return this.specs.get('part');
+        return this.specs?.get('part');
     }
 
     public onTake(): void {
@@ -95,7 +95,7 @@ export class Item {
     }
 
     private onAdd(action: string): void {
-        const changes = this.specs.get(action) as string[][];
+        const changes = this.specs?.get(action) as string[][];
         if (changes !== undefined) {
             changes.forEach((change) => {
                 properties.set(change[0] as PropertyNames, change[1]);
