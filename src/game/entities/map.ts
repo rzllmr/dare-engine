@@ -60,12 +60,20 @@ export class TileMap extends Container {
         }
     }
 
+    private parseMapLayout(layoutData: string): string {
+        let layout = layoutData.replace(/^\n/, '').replace(/(.) /gm, '$1');
+        this.checkMapDimensions(layout);
+        layout = layout.split('\n').map(
+            (row) => row.padEnd(this.dimensions.x)
+        ).join('\n');
+        return layout;
+    }
+
     public async load(): Promise<void> {
         const data = readMap(Assets.get(this.label as string));
-        const layout = data.layout.replace(/(.) /gm, '$1').replace(/^\n/, '');
+        const layout = this.parseMapLayout(data.layout);
         const wallChar = this.getKey(data.key, 'wall');
 
-        this.checkMapDimensions(layout);
         Tile.removeFromMap = this.remove.bind(this);
         Tile.moveOnMap = this.move.bind(this);
 
@@ -84,16 +92,16 @@ export class TileMap extends Container {
             } else {
                 let tileName = data.key.get(char);
                 if (tileName === undefined) {
-                    console.error(`map symbol unknown: ${char}`);
+                    if (idx > 0) console.error(`map symbol unknown: ${char}`);
                     tileName = 'chasm';
                 }
 
                 if (tileName !== 'floor') {
-                    let subTile = '';
-                    if (tileName === 'wall') subTile = this.wallsAround(layout, idx, wallChar);
-                    else if (tileName === 'door') subTile = this.alignedDoor(this.wallsAround(layout, idx, wallChar));
+                    let variant = '';
+                    if (tileName.startsWith('wall')) variant = this.wallsAround(layout, idx, wallChar);
+                    else if (tileName.startsWith('door')) variant = this.alignedDoor(this.wallsAround(layout, idx, wallChar));
 
-                    const tile = new Tile(tileName, currentPosition, subTile);
+                    const tile = new Tile(tileName, currentPosition, variant);
 
                     if (['player', 'enemy', 'item'].includes(tile.kind)) {
                         if (tile.kind === 'player') {
@@ -104,16 +112,16 @@ export class TileMap extends Container {
                         tileName = 'floor';
                     } else {
                         this.objects.push(tile);
-                        tileName = 'floor';
+                        tileName = ['wall'].includes(tile.kind) ? 'chasm' : 'floor';
                     }
 
                     const child = this.layers[1].addChild(tile.graphic.sprite);
                     child.zIndex = currentPosition.y;
                 }
 
-                const floorTile = new Tile('floor', currentPosition, this.randomFloor());
-                if (tileName === 'floor') this.tiles.push(floorTile);
-                this.layers[0].addChild(floorTile.graphic.sprite);
+                const groundTile = new Tile('floor', currentPosition, this.randomFloor());
+                this.layers[0].addChild(groundTile.graphic.sprite);
+                this.tiles.push(groundTile);
 
                 currentPosition.x++;
             }
