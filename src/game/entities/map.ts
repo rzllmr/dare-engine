@@ -89,42 +89,44 @@ export class TileMap extends Container {
                 }
                 currentPosition.x = 0;
                 currentPosition.y++;
-            } else {
-                let tileName = data.key.get(char);
-                if (tileName === undefined) {
-                    if (idx > 0) console.error(`map symbol unknown: ${char}`);
-                    tileName = 'chasm';
-                }
+                continue;
+            }
 
-                if (tileName !== 'floor') {
-                    let variant = '';
-                    if (tileName.startsWith('wall')) variant = this.wallsAround(layout, idx, wallChar);
-                    else if (tileName.startsWith('door')) variant = this.alignedDoor(this.wallsAround(layout, idx, wallChar));
+            let tileName = data.key.get(char);
+            if (tileName === undefined) {
+                if (idx > 0) console.error(`map symbol unknown: ${char}`);
+                tileName = 'chasm';
+            }
 
-                    const tile = new Tile(tileName, currentPosition, variant);
+            if (tileName !== 'floor') {
+                let variant = '';
+                if (tileName.startsWith('wall')) variant = this.wallsAround(layout, idx, wallChar);
+                else if (tileName.startsWith('door')) variant = this.alignedDoor(this.wallsAround(layout, idx, wallChar));
 
-                    if (['player', 'enemy', 'item'].includes(tile.kind)) {
-                        if (tile.kind === 'player') {
-                            this.player = tile;
-                        } else {
-                            this.objects.push(tile);
-                        }
-                        tileName = 'floor';
+                const tile = new Tile(tileName, currentPosition, variant);
+
+                if (['player', 'enemy', 'item'].includes(tile.kind)) {
+                    if (tile.kind === 'player') {
+                        this.player = tile;
                     } else {
                         this.objects.push(tile);
-                        tileName = ['wall'].includes(tile.kind) ? 'chasm' : 'floor';
                     }
-
-                    const child = this.layers[1].addChild(tile.graphic.sprite);
-                    child.zIndex = currentPosition.y;
+                    tileName = 'floor';
+                } else {
+                    this.objects.push(tile);
+                    tileName = ['wall', 'chasm'].includes(tile.kind) ? 'chasm' : 'floor';
                 }
 
-                const groundTile = new Tile('floor', currentPosition, this.randomFloor());
-                this.layers[0].addChild(groundTile.graphic.sprite);
-                this.tiles.push(groundTile);
-
-                currentPosition.x++;
+                const child = this.layers[1].addChild(tile.graphic.sprite);
+                child.zIndex = currentPosition.y;
             }
+
+            const subtile = tileName == 'floor' ? this.randomFloor() : '';
+            const groundTile = new Tile(tileName, currentPosition, subtile);
+            this.layers[0].addChild(groundTile.graphic.sprite);
+            this.tiles.push(groundTile);
+
+            currentPosition.x++;
         }
 
         this._highlight = new Tile('frame', currentPosition);
