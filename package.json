@@ -1,18 +1,19 @@
 {
   "name": "pixi-engine",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Humble game engine in TypeScript using PixiJS",
   "author": "rzllmr",
   "license": "MIT",
   "scripts": {
     "version": "shx echo $npm_package_version-$(git rev-parse --short HEAD) > static/version.txt",
     "start": "webpack serve --mode=development",
-    "build": "run-s version clean build-only zip",
+    "build": "run-s version clean build-only zip tgz",
     "build-only": "webpack --mode=production",
     "clean": "rimraf dist",
     "test": "tsc; eslint .; jest",
     "format": "prettier --config .prettierrc.json 'src/**/*.ts' --write",
-    "zip": "cd dist; zip -qr dare_$(cat version.txt).zip *",
+    "zip": "cd dist; zip -qr dare_$(cat version.txt).zip *; mv *.zip ..",
+    "tgz": "cd dist; tar -czf dare_$(cat version.txt).tgz *; mv *.tgz ..",
     "docs": "cd docs; bundle exec jekyll serve"
   },
   "dependencies": {
