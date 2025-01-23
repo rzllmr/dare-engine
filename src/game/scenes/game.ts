@@ -7,7 +7,7 @@ import book from '../proxies/book';
 
 export class GameScene extends Container implements IScene {
     public gameName = 'Dare';
-    public startMap = 'map.demo';
+    public startingLevel = 'level.demo';
 
     private readonly offset: Point;
     private tileMap!: TileMap;
@@ -21,7 +21,7 @@ export class GameScene extends Container implements IScene {
 
     public async load(): Promise<void> {
         await book.load();
-        await this.changeMap(this.startMap);
+        await this.changeMap(this.startingLevel);
     }
 
     public async changeMap(mapName: string): Promise<void> {

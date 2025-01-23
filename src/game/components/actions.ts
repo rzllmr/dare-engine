@@ -186,7 +186,7 @@ export class Tell extends Action {
     public override async act(subject: Tile): Promise<void> {
         if (subject.name !== 'player') return;
 
-        log.tell("You did it, awesome! 😊 This is the end of the game for now, until I find the time to add more...");
+        log.tell("Awesome, you did it! 😊 This is the end of the game for now, until I find the time to add more...");
     }
 }
 
