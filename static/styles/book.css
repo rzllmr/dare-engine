@@ -55,18 +55,19 @@
     border-width: 0px 30px 12px 30px;
 }
 .label {
-    /* font-family: 'Old Fax';
-    font-size: 18px; */
+    font-family: 'CelticTime';
+    font-weight: bold;
+    font-size: 18px;
 
-    font-family: 'Letterstyle';
-    font-size: 12px;    
+    /* font-family: 'Letterstyle';
+    font-size: 12px;     */
 }
 .underline .label {
-    margin: 0 0 -7px -16px;
+    margin: 0 0 -6px -16px;
 }
 @media (orientation: portrait) {
     .label {
-        font-size: 14px;
+        font-size: 30px;
     }
 }
 
