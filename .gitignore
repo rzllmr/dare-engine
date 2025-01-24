@@ -7,5 +7,6 @@ node_modules
 archive
 design/old
 design/inspiration
+design/templates
 src/fast/wasm/target
 static/placeholder

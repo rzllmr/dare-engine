@@ -5,7 +5,7 @@
   "author": "rzllmr",
   "license": "MIT",
   "scripts": {
-    "version": "shx echo $npm_package_version-$(git rev-parse --short HEAD) > static/version.txt",
+    "version": "shx echo $npm_package_version-$(git rev-parse --short HEAD) > deploy/version.txt",
     "start": "webpack serve --mode=development",
     "build": "run-s version clean build-only zip tgz",
     "build-only": "webpack --mode=production",

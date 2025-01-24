@@ -1,0 +1,13 @@
+{
+  "name": "dare-template",
+  "version": "0.4.2",
+  "description": "A game template for you to fiddle with",
+  "author": "rzllmr",
+  "license": "MIT",
+  "scripts": {
+    "start": "serve --no-request-logging --no-clipboard"
+  },
+  "dependencies": {
+    "serve": "^14.2.4"
+  }
+}

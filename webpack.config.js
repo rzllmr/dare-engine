@@ -48,7 +48,6 @@ module.exports = (env, argv) => {
             })],
         },
 
-
         // Explain webpack how to do Typescript
         module: {
             rules: [
@@ -78,12 +77,16 @@ module.exports = (env, argv) => {
         plugins: [
             // Copy our static assets to the final build
             new CopyPlugin({
-                patterns: [{
-                    from: 'static/',
-                    globOptions: {
-                        ignore: ['**/placeholder/**']
+                patterns: [
+                    {
+                        from: 'static/',
+                        globOptions: {
+                            ignore: ['**/placeholder/**']
+                        }
+                    }, {
+                        from: 'deploy/'
                     }
-                }],
+                ],
             }),
 
             // Make an index.html from the template
