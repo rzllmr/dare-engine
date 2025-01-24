@@ -80,23 +80,26 @@ Obtained through Node.js package management (NPM):
 
 ## Licenses
 
+Due to the mix of very different files like code, graphical assets, fonts, content sheets, etc. there are different licenses applied. Those are specified below and provided as documents in the corresponding folders.
+
+<br>
+
 [![License: MIT][mit-license-badge]][mit-license]
 
-Most files in this repository with the exemptions below are licensed under [MIT License](https://github.com/rzllmr/pixi-engine/blob/main/LICENSE).
+Most files with the exemptions below are licensed under [MIT License][mit-license].
 
 <br>
 
 [![License: CC0 1.0][cc0-license-badge]][cc0-license]
 
-All fonts at the following path are not mine and licensed under [Creative Commons Zero 1.0 Universal License](https://creativecommons.org/publicdomain/zero/1.0/).
+All fonts at the following path are not mine and licensed under [Creative Commons Zero 1.0 Universal License][cc0-license].
 * *static/fonts/\*\*/\**
 
 <br>
 
-![License: All rights reserved][rights-reserved-license-badge]
+[![License: CC BY-NC-SA 4.0][cc-by-nc-sa-license-badge]][cc-by-nc-sa-license]
 
-All game content and asset files at the following paths and their sub-directories have all their rights reserved.
-* *design/\*\*/\**
+All game content and asset files at the following paths and their sub-directories are licensed under [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa-license].
 * *static/content/\*\*/\**
 * *static/images/\*\*/\**
 
@@ -106,4 +109,5 @@ All game content and asset files at the following paths and their sub-directorie
 [cc0-license]: https://creativecommons.org/publicdomain/zero/1.0/
 [cc0-license-badge]: https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg
 
-[rights-reserved-license-badge]: https://img.shields.io/badge/License-All_rights_reserved-red.svg
+[cc-by-nc-sa-license]: https://creativecommons.org/licenses/by-nc-sa/4.0/
+[cc-by-nc-sa-license-badge]: https://img.shields.io/badge/License-CC_BY--NC--SA_4.0-lightgrey.svg
