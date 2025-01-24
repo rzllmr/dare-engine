@@ -7,11 +7,12 @@
   "scripts": {
     "version": "shx echo $npm_package_version-$(git rev-parse --short HEAD) > deploy/version.txt",
     "start": "webpack serve --mode=development",
-    "build": "run-s version clean build-only zip tgz",
+    "build": "run-s version clean build-only fix-exe zip tgz",
     "build-only": "webpack --mode=production",
     "clean": "rimraf dist",
     "test": "tsc; eslint .; jest",
     "format": "prettier --config .prettierrc.json 'src/**/*.ts' --write",
+    "fix-exe": "cd dist; chmod 755 run.command",
     "zip": "cd dist; zip -qr dare_$(cat version.txt).zip *; mv *.zip ..",
     "tgz": "cd dist; tar -czf dare_$(cat version.txt).tgz *; mv *.tgz ..",
     "docs": "cd docs; bundle exec jekyll serve"
