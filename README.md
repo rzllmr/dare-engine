@@ -100,6 +100,7 @@ All fonts at the following path are not mine and licensed under [Creative Common
 [![License: CC BY-NC-SA 4.0][cc-by-nc-sa-license-badge]][cc-by-nc-sa-license]
 
 All game content and asset files at the following paths and their sub-directories are licensed under [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa-license].
+* *design/\*\*/\**
 * *static/content/\*\*/\**
 * *static/images/\*\*/\**
 
