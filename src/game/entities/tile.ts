@@ -9,11 +9,11 @@ export class Tile extends Entity {
     private static _data?: Map<string, EntityData>;
     public static get data(): Map<string, EntityData> {
         if (this._data === undefined) {
-            const creatures = Assets.get('entities.creatures');
-            const items = Assets.get('entities.items');
-            const meta = Assets.get('entities.meta');
-            const surroundings = Assets.get('entities.surroundings');
-            const aggregate = new Map<string, Map<string, string>>([...creatures, ...items, ...meta, ...surroundings]);
+            const creatures = Assets.get('elements.creatures');
+            const items = Assets.get('elements.items');
+            const meta = Assets.get('elements.meta');
+            const objects = Assets.get('elements.objects');
+            const aggregate = new Map<string, Map<string, string>>([...creatures, ...items, ...meta, ...objects]);
 
             this._data = new Map();
             aggregate.forEach((value, key) => {
