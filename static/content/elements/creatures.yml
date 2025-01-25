@@ -2,7 +2,9 @@ player:
     image: "player.1"
     kind: "player"
     info: "That's you!"
+
 rat:
     image: "rat.1"
-    kind: "enemy"
     info: "A ridiculously sized rat rummaging around."
+    actions:
+        fight: {}

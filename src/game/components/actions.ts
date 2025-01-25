@@ -7,9 +7,47 @@ import log from '../proxies/log';
 import { Tween, Easing } from '@tweenjs/tween.js';
 import { Animation } from '../../engine/animation';
 
+export class ActionSpecs {
+    private readonly specs: Map<string, any>;
+
+    constructor(specs = new Map<string, any>()) {
+        this.specs = specs;
+    }
+
+    public has<T>(name: string): boolean {
+        return this.specs.has(name);
+    }
+
+    public get<T>(name: string, defaultValue: T): T {
+        return this.specs.get(name) || defaultValue;
+    }
+
+    public fillIn(specifics: string) {
+        const list = specifics.split(/,\s*/);
+        for (const [key, value] of this.specs) {
+            if (!value.includes('*')) continue;
+
+            const pattern = value.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replaceAll('*', '(.+)');
+            const regex = new RegExp(`^${pattern}$`);
+            const values: string[] = [];
+            for (const specific of list) {
+                const match = specific.match(regex)?.[1];
+                if (match != null) values.push(match);
+            }
+            this.specs.set(key, values);
+        }
+    }
+}
+
 export abstract class Action extends Component {
     public get object(): Tile {
         return this.entity as Tile;
+    }
+
+    protected specs: ActionSpecs;
+    constructor(specs = new ActionSpecs()) {
+        super();
+        this.specs = specs;
     }
 
     public async act(subject: Tile): Promise<void> {}
@@ -91,24 +129,22 @@ export class Pick extends Action {
     private readonly items: Item[] = [];
     private readonly destroyObject: boolean = true;
 
-    constructor(details = '') {
-        super();
+    constructor(specs: ActionSpecs) {
+        super(specs);
 
-        const itemNames = this.defines(details);
-        if (itemNames.length > 0) {
-            for (const itemName of itemNames) {
-                const data = Tile.data.get(itemName);
-                if (data === undefined) throw new Error(`unknown item: ${itemName}`);
+        for (const itemName of this.item) {
+            const data = Tile.data.get(itemName);
+            if (data === undefined) throw new Error(`unknown item: ${itemName}`);
 
-                this.items.push(new Item(itemName, data.info, data.specs));
-                this.destroyObject = false;
-            }
+            const itemSpecs = new ActionSpecs(data.actions.get('pick'));
+            this.items.push(new Item(itemName, data.info, itemSpecs));
+            this.destroyObject = false;
         }
     }
 
     public override init(): void {
         if (this.items.length == 0) {
-            this.items.push(new Item(this.object.name, this.object.info, this.object.specs));
+            this.items.push(new Item(this.object.name, this.object.info, this.specs));
         }
     }
 
@@ -125,18 +161,32 @@ export class Pick extends Action {
             if (couldBeAdded) this.items.splice(i, 1);
         }
         if (this.items.length == 0 && this.destroyObject) this.object.markForDestruction();
+    }
 
+    public get item(): string[] {
+        return this.specs.get('item', []);
+    }
+
+    public get take(): string[] {
+        return this.specs.get('take', []);
+    }
+
+    public get equip(): string[] {
+        return this.specs.get('equip', []);
+    }
+
+    public get part(): string {
+        return this.specs.get('part', '');
     }
 }
 
 export class Open extends Action {
     private readonly requiredItems: string[] = [];
 
-    constructor(details = '') {
-        super();
+    constructor(specs: ActionSpecs) {
+        super(specs);
 
-        const requiredItems = this.requireds(details);
-        if (requiredItems.length > 0) this.requiredItems = requiredItems;
+        if (this.need.length > 0) this.requiredItems = this.need;
     }
 
     public override init(): void {
@@ -171,6 +221,10 @@ export class Open extends Action {
             this.object.graphic.changeSprite(openSprite);
         }
     }
+
+    public get need(): string[] {
+        return this.specs.get('need', []);
+    }
 }
 
 export class Push extends Action {
@@ -186,7 +240,11 @@ export class Tell extends Action {
     public override async act(subject: Tile): Promise<void> {
         if (subject.name !== 'player') return;
 
-        log.tell("Awesome, you did it! 😊 This is the end of the game for now, until I find the time to add more...");
+        log.tell(this.text);
+    }
+
+    public get text(): string {
+        return this.specs.get('text', '');
     }
 }
 

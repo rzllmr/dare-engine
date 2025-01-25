@@ -1,35 +1,36 @@
 map:
-    image: "sack.1"
-    kind: "item"
-    info: "A detailed map of the vicinity."
-    specs:
-        take:
-            - ["reveal-tiles", true]
+  image: "sack"
+  info: "A detailed map of the vicinity."
+  actions:
+    pick: 
+      take:
+        - ["reveal-tiles", true]
+
 parchment:
-    image: "sack.1"
-    kind: "item"
-    info: "Some parchment for mapping your findings."
-    specs:
-        take:
-            - ["map-tiles", true]
+  image: "sack"
+  info: "Some parchment for mapping your findings."
+  actions:
+    pick: 
+      take:
+        - ["map-tiles", true]
+
 torch:
-    image: "sack.1"
-    kind: "item"
-    info: "A torch lighting your way as you raise it."
-    specs: 
-        part: "hand"
-        equip:
-            - ["vision-distance", 4]
+  image: "sack"
+  info: "A torch lighting your way as you raise it."
+  actions:
+    pick: 
+      part: "hand"
+      equip:
+        - ["vision-distance", 4]
 
 lantern:
-    image: "sack.1"
-    kind: "item"
-    info: "A lantern to light the way from your belt."
-    specs:
-        take:
-            - ["vision-distance", 4]
+  image: "sack"
+  info: "A lantern to light the way from your belt."
+  actions:
+    pick: 
+      take:
+        - ["vision-distance", 4]
 
 key:
-    image: "sack.1"
-    kind: "item"
-    info: "A key fit for doors."
+  image: "sack"
+  info: "A key fit for doors."

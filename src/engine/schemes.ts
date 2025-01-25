@@ -7,9 +7,11 @@ class Scheme<T> {
         this.map = map;
     }
 
-    read(key: string, optional = false): T | undefined {
+    read(key: string, defaultValue?: T): T | undefined {
         if (!this.map.has(key)) {
-            if (!optional) console.error(`Missing "${key}" in "${this.name}"`);
+            if (defaultValue != undefined) return defaultValue;
+            
+            console.error(`Missing "${key}" in "${this.name}"`);
             return undefined;
         }
         return this.map.get(key);
@@ -30,18 +32,18 @@ export function readMap(yaml: Map<string, any>): MapData {
 }
 
 export interface EntityData {
-    kind: string;
     image: string;
     info: string;
-    specs: any;
+    actions: Map<string, Map<string, any>>;
+    pass: boolean
 }
 
 export function readEntity(yaml: Map<string, any>): EntityData {
     const data = new Scheme('Entity', yaml);
     return {
-        kind: data.read('kind'),
-        image: data.read('image'),
-        info: data.read('info'),
-        specs: data.read('specs', true)
+        image: data.read('image', 'empty'),
+        info: data.read('info', ''),
+        actions: data.read('actions', new Map<string, any>()),
+        pass: data.read('pass', false)
     };
 }

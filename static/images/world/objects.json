@@ -1,6 +1,6 @@
 {
 	"frames": {
-		"sack.1": {
+		"sack": {
 			"anchor": { "x": 0, "y": 16 },
 			"frame": { "x": 0, "y": 0, "w": 16, "h": 32 },
 			"sourceSize": { "w": 16, "h": 32 },

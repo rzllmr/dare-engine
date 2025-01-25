@@ -1,6 +1,6 @@
 import { Point, Assets } from 'pixi.js';
 import { Entity } from '../../engine/entity';
-import { Action, Move, Pick, Open, Push, Tell, Fight } from '../components/actions';
+import { Action, Move, Pick, Open, Push, Tell, Fight, ActionSpecs } from '../components/actions';
 import { Inventory } from '../components/inventory';
 import { Graphic } from '../components/graphic';
 import { EntityData, readEntity } from '../../engine/schemes';
@@ -34,60 +34,55 @@ export class Tile extends Entity {
     constructor(name: string, position: Point, subtile = '') {
         super();
 
-        const details = name.match(/\s\((.+)\)$/)?.at(1) ?? '';
-        if (details !== null) name = name.replace(` (${details})`, '');
+        const specifics = name.match(/\s\((.+)\)$/)?.at(1) ?? '';
+        if (specifics !== null) name = name.replace(` (${specifics})`, '');
 
         const tileData = Tile.data.get(name);
         if (tileData === undefined) throw new Error(`unknown entity: ${name}`);
 
         this._name = name;
         this.data = tileData;
+        this.data.image ||= 'empty';
         this.addComponent(new Graphic(this.data.image.replace('*', subtile), position));
-        this.addComponent(new Move());
-        this.initKind(this.kind, details);
+        this.addComponent(new Move(this.data.pass));
+        this.graphic.hideInDark = false;
+
+        if (name == 'player') this.initPlayer();
+        else this.init(specifics);
     }
 
-    private initKind(kind: string, details: string): void {
-        switch (kind) {
-            case 'player':
-                this.graphic.show();
-                this.addComponent(new Inventory());
-                break;
-            case 'enemy':
-                this.graphic.hideInDark = true;
-                this.addComponent(new Fight());
-                break;
-            case 'item':
-                this.graphic.hideInDark = true;
-                this.getComponent(Move).pass = true;
-                this.addComponent(new Pick());
-                break;
-            case 'container':
-                this.addComponent(new Open(details));
-                this.addComponent(new Pick(details));
-                break;
-            case 'floor':
-                this.getComponent(Move).pass = true;
-                break;
-            case 'door':
-                this.getComponent(Move).pass = true;
-                this.addComponent(new Open(details));
-                break;
-            case 'crate':
-                this.addComponent(new Push());
-                break;
-            case 'sign':
-                this.addComponent(new Tell());
-                break;
-            case 'chasm':
-                break;
-            case 'wall':
-                break;
-            case 'meta':
-                break;
-            default:
-                console.error(`unknown kind: ${kind}`);
+    private init(specifics: string): void {
+        for (const [action, specs] of this.data.actions) {
+            const actionSpecs = new ActionSpecs(specs);
+            actionSpecs.fillIn(specifics);
+            let component;
+            switch(action) {
+                case 'pick':
+                    component = new Pick(actionSpecs);
+                    break;
+                case 'open':
+                    component = new Open(actionSpecs);
+                    break;
+                case 'push':
+                    component = new Push(actionSpecs);
+                    break;
+                case 'tell':
+                    component = new Tell(actionSpecs);
+                    break;
+                case 'fight':
+                    component = new Fight(actionSpecs);
+                    break;
+                default:
+                    console.error(`unknown action: ${action}`);
+                    continue;
+            }
+            this.addComponent(component);
         }
+    }
+
+    private initPlayer(): void {
+        this.graphic.show();
+        this.addComponent(new Inventory());
     }
 
     private destroy(): void {
@@ -139,14 +134,10 @@ export class Tile extends Entity {
     }
 
     public get kind(): string {
-        return this.data.kind;
+        return this.name;
     }
 
     public get info(): string {
         return this.data.info;
-    }
-
-    public get specs(): any {
-        return this.data.specs;
     }
 }

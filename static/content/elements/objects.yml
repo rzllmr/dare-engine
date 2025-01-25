@@ -1,28 +1,36 @@
 chasm:
-    image: "empty"
-    kind: "chasm"
-    info: ""
+  image: "empty"
+
 floor:
-    image: "dirt_grey.*"
-    kind: "floor"
-    info: ""
+  image: "dirt_grey.*"
+  pass: true
+
 wall:
-    image: "wall_grey.*"
-    kind: "wall"
-    info: ""
+  image: "wall_grey.*"
+
 door:
-    image: "door.*"
-    kind: "door"
-    info: ""
+  image: "door.*"
+  actions:
+    open:
+      need: "*?"
+
 chest:
-    image: "chest.c"
-    kind: "container"
-    info: "A mysterious chest with unknown content."
+  image: "chest.c"
+  info: "A mysterious chest with unknown content."
+  actions:
+    open:
+      need: "*?"
+    pick:
+      item: "*"
+
 crate:
-    image: "crate"
-    kind: "crate"
-    info: "Looks movable."
+  image: "crate"
+  info: "Looks movable."
+  actions:
+    push: {}
+  
 sign:
-    image: "sign"
-    kind: "sign"
-    info: ""
+  image: "sign"
+  actions:
+    tell:
+      text: "Awesome, you did it! 😊 This is the end of the game for now, until I find the time to add more..."
