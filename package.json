@@ -5,7 +5,9 @@
   "author": "rzllmr",
   "license": "MIT",
   "scripts": {
-    "version": "cd deploy; shx echo $npm_package_version-$(git rev-parse --short HEAD) > version.txt; npm version $npm_package_version",
+    "engine-version": "shx echo $npm_package_version-$(git rev-parse --short HEAD) > deploy/version.txt",
+    "template-version": "cd deploy; npm version $npm_package_version --allow-same-version",
+    "version": "run-s engine-version template-version",
     "start": "webpack serve --mode=development",
     "build": "run-s version clean build-only fix-exe zip tgz",
     "build-only": "webpack --mode=production",
