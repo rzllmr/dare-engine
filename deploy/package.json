@@ -5,9 +5,9 @@
   "author": "rzllmr",
   "license": "MIT",
   "scripts": {
-    "start": "serve --no-request-logging --no-clipboard"
+    "start": "live-server"
   },
   "dependencies": {
-    "serve": "^14.2.4"
+    "live-server": "^1.2.2"
   }
 }
