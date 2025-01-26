@@ -5,6 +5,7 @@ import unveilRoom from '../../fast/fill';
 import properties from '../../engine/properties';
 import { readMap } from '../../engine/schemes';
 import dialog from '../proxies/dialog';
+import storage from '../../engine/storage';
 
 export type PropertyNames = 'vision-distance' | 'map-tiles' | 'reveal-tiles';
 properties.register('vision-distance', 1, 'radius around player where tiles are revealed'); // only high number to prevent infinite recursion
@@ -108,6 +109,7 @@ export class TileMap extends Container {
                 if (['player', 'enemy', 'item'].includes(tile.kind)) {
                     if (tile.kind === 'player') {
                         this.player = tile;
+                        this.player.graphic.position = storage.load('player-position', currentPosition) as Point;
                     } else {
                         this.objects.push(tile);
                     }
@@ -224,6 +226,9 @@ export class TileMap extends Container {
         await origin?.leave(actor);
         // this.updateOthers();
         this.updateVision();
+
+        if (actor == this.player) storage.save('player-position', actor.graphic.position);
+
         actor.moving = false;
                 
         return true;

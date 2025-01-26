@@ -57,7 +57,7 @@ export default tseslint.config(
 
         "settings": {
             "node": {
-                "version": ">=22.0.0",
+                "version": ">=22.4.0",
             }
         }
     }
