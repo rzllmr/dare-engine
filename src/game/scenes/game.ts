@@ -1,7 +1,7 @@
 import { Container, Point } from 'pixi.js';
 import { IScene } from '../../engine/manager';
 import { TileMap } from '../entities/map';
-import { Move } from '../components/actions';
+import { Move } from '../components/move';
 import utils from '../../engine/utils';
 import book from '../proxies/book';
 

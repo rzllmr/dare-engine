@@ -28,11 +28,11 @@ export class EntitySpecs {
     }
 
     public static get(name: string): EntitySpecs {
-        let elementData = EntitySpecs.data.get(name);
-        if (elementData == undefined) throw new Error(`unknown element: ${name}`);
+        let entityData = EntitySpecs.data.get(name);
+        if (entityData == undefined) throw new Error(`unknown element: ${name}`);
 
-        elementData = EntitySpecs.addDefaults(elementData);
-        return new EntitySpecs(name, elementData);
+        entityData = EntitySpecs.addDefaults(entityData);
+        return new EntitySpecs(name, entityData);
     }
     
     private readonly _name: string;

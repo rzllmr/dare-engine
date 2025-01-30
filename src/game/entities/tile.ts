@@ -1,6 +1,7 @@
 import { Point } from 'pixi.js';
 import { Entity } from '../../engine/entity';
-import { Action, Info } from '../components/actions';
+import { Action } from '../components/action';
+import { Info } from '../components/info';
 import { getComponent } from '../components/registry';
 import { Graphic } from '../components/graphic';
 import { EntitySpecs } from '../../engine/specs';
