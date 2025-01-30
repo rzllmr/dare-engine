@@ -1,21 +1,23 @@
-import { Component } from '../../engine/component';
+import { SpecdComponent } from '../../engine/component';
 import { ListProxy } from '../proxies/list';
 import properties from '../../engine/properties';
 import { PropertyNames } from '../entities/map';
+import { ComponentSpecs } from 'engine/specs';
+import { addComponent } from './registry';
 
 interface BodyPart {
     max: number;
     items: string[];
 }
 
-export class Inventory extends Component {
+export class Inventory extends SpecdComponent {
     private readonly items = new Map<string, Item>();
     private readonly equippedList: ListProxy;
     private readonly packedList: ListProxy;
     private readonly equippedParts = new Map<string, BodyPart>();
 
-    constructor() {
-        super();
+    constructor(specs: ComponentSpecs) {
+        super(specs);
         
         this.equippedList = new ListProxy('#equipped');
         this.packedList = new ListProxy('#packed');
@@ -116,3 +118,5 @@ export class Item {
         }
     }
 }
+
+addComponent('inventory', Inventory);

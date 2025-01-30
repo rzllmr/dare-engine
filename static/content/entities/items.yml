@@ -1,0 +1,32 @@
+map:
+  sprite: "sack"
+  info: "A detailed map of the vicinity."
+  pick: 
+    take:
+      - ["reveal-tiles", true]
+
+parchment:
+  sprite: "sack"
+  info: "Some parchment for mapping your findings."
+  pick: 
+    take:
+      - ["map-tiles", true]
+
+torch:
+  sprite: "sack"
+  info: "A torch lighting your way as you raise it."
+  pick:
+    where: "hand"
+    equip:
+      - ["vision-distance", 4]
+
+lantern:
+  sprite: "sack"
+  info: "A lantern to light the way from your belt."
+  pick: 
+    take:
+      - ["vision-distance", 4]
+
+key:
+  sprite: "sack"
+  info: "A key fit for doors."

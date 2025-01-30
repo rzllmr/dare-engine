@@ -1,10 +1,9 @@
 player:
-    image: "player.1"
-    kind: "player"
+    sprite: "player"
     info: "That's you!"
+    inventory: ~
 
 rat:
-    image: "rat.1"
+    sprite: "rat"
     info: "A ridiculously sized rat rummaging around."
-    actions:
-        fight: {}
+    fight: ~

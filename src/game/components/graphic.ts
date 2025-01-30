@@ -1,10 +1,11 @@
-import { Component } from '../../engine/component';
-import { Point, Sprite, Texture, SCALE_MODES } from 'pixi.js';
+import { SpecdComponent } from '../../engine/component';
+import { Point, Sprite, Texture } from 'pixi.js';
 import { TileMap } from '../entities/map';
+import { ComponentSpecs } from 'engine/specs';
+import { addComponent } from './registry';
 
-export class Graphic extends Component {
+export class Graphic extends SpecdComponent {
     public onMove = (position: Point): void => {};
-    public hideInDark = false;
 
     public readonly sprite!: Sprite;
     public image = '';
@@ -17,13 +18,29 @@ export class Graphic extends Component {
         this.sprite.alpha = alpha;
     }
 
-    constructor(image: string, position: Point) {
-        super();
+    constructor(specs: ComponentSpecs) {
+        super(specs, 'idle');
 
-        this.sprite = this.loadSprite(image);
-        this.position = position;
+        const spriteName = this.idle + this.subtile;
+        this.sprite = this.loadSprite(spriteName);
+        this.position = this.initialPosition;
+    }
 
-        return this;
+    public get idle(): string {
+        return this.specs.get('idle', 'empty');
+    }
+
+    public get initialPosition(): Point {
+        return this.specs.get('position', new Point(0, 0));
+    }
+
+    public get subtile(): string {
+        const subtile = this.specs.get('subtile', '');
+        return subtile == '' ? '' : '.' + subtile;
+    }
+
+    public get hideInDark(): boolean {
+        return this.specs.get('hide-in-dark', false);
     }
 
     public show(): void {
@@ -98,3 +115,5 @@ export class Graphic extends Component {
         return texture;
     }
 }
+
+addComponent('sprite', Graphic, true);

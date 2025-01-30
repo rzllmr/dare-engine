@@ -30,20 +30,3 @@ export function readMap(yaml: Map<string, any>): MapData {
         key: data.read('key')
     };
 }
-
-export interface EntityData {
-    image: string;
-    info: string;
-    actions: Map<string, Map<string, any>>;
-    pass: boolean
-}
-
-export function readEntity(yaml: Map<string, any>): EntityData {
-    const data = new Scheme('Entity', yaml);
-    return {
-        image: data.read('image', 'empty'),
-        info: data.read('info', ''),
-        actions: data.read('actions', new Map<string, any>()),
-        pass: data.read('pass', false)
-    };
-}

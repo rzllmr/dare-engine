@@ -103,6 +103,7 @@ export class TileMap extends Container {
                 let variant = '';
                 if (tileName.startsWith('wall')) variant = this.wallsAround(layout, idx, wallChar);
                 else if (tileName.startsWith('door')) variant = this.alignedDoor(this.wallsAround(layout, idx, wallChar));
+                else if (tileName.startsWith('chest')) variant = 'c';
 
                 const tile = new Tile(tileName, currentPosition, variant);
 
@@ -170,8 +171,8 @@ export class TileMap extends Container {
 
     private alignedDoor(walls: string): string {
         let alignment = '';
-        if (walls.includes('n') || walls.includes('s')) alignment = 'vc';
-        else if (walls.includes('e') || walls.includes('w')) alignment = 'hc';
+        if (walls.includes('n') || walls.includes('s')) alignment = 'v.c';
+        else if (walls.includes('e') || walls.includes('w')) alignment = 'h.c';
         return alignment;
     }
 

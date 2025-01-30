@@ -1,88 +1,43 @@
-import { Point, Assets } from 'pixi.js';
+import { Point } from 'pixi.js';
 import { Entity } from '../../engine/entity';
-import { Action, Move, Pick, Open, Push, Tell, Fight, ActionSpecs } from '../components/actions';
-import { Inventory } from '../components/inventory';
+import { Action, Info } from '../components/actions';
+import { getComponent } from '../components/registry';
 import { Graphic } from '../components/graphic';
-import { EntityData, readEntity } from '../../engine/schemes';
+import { EntitySpecs } from '../../engine/specs';
 
 export class Tile extends Entity {
-    private static _data?: Map<string, EntityData>;
-    public static get data(): Map<string, EntityData> {
-        if (this._data === undefined) {
-            const creatures = Assets.get('elements.creatures');
-            const items = Assets.get('elements.items');
-            const meta = Assets.get('elements.meta');
-            const objects = Assets.get('elements.objects');
-            const aggregate = new Map<string, Map<string, string>>([...creatures, ...items, ...meta, ...objects]);
-
-            this._data = new Map();
-            aggregate.forEach((value, key) => {
-                this._data?.set(key, readEntity(value));
-            });
-        }
-        return this._data;
-    }
-
     public static removeFromMap: (tile: Tile) => void;
     public static moveOnMap: (direction: Point, actor: Tile) => Promise<boolean>;
 
     public moving = false;
 
-    private readonly _name: string;
-    private readonly data: EntityData;
+    private readonly specs: EntitySpecs;
 
     constructor(name: string, position: Point, subtile = '') {
         super();
 
-        const specifics = name.match(/\s\((.+)\)$/)?.at(1) ?? '';
-        if (specifics !== null) name = name.replace(` (${specifics})`, '');
+        const mapDetails = name.match(/\s\((.+)\)$/)?.at(1) ?? '';
+        if (mapDetails !== null) name = name.replace(` (${mapDetails})`, '');
 
-        const tileData = Tile.data.get(name);
-        if (tileData === undefined) throw new Error(`unknown entity: ${name}`);
+        this.specs = EntitySpecs.get(name);
+        this.specs.fillIn(mapDetails);
 
-        this._name = name;
-        this.data = tileData;
-        this.data.image ||= 'empty';
-        this.addComponent(new Graphic(this.data.image.replace('*', subtile), position));
-        this.addComponent(new Move(this.data.pass));
-        this.graphic.hideInDark = false;
+        this.specs.component('sprite')?.set('position', position);
+        this.specs.component('sprite')?.set('subtile', subtile);
 
-        if (name == 'player') this.initPlayer();
-        else this.init(specifics);
+        this.attachComponents();
+        if (name == 'player') this.graphic.show();
     }
 
-    private init(specifics: string): void {
-        for (const [action, specs] of this.data.actions) {
-            const actionSpecs = new ActionSpecs(specs);
-            actionSpecs.fillIn(specifics);
-            let component;
-            switch(action) {
-                case 'pick':
-                    component = new Pick(actionSpecs);
-                    break;
-                case 'open':
-                    component = new Open(actionSpecs);
-                    break;
-                case 'push':
-                    component = new Push(actionSpecs);
-                    break;
-                case 'tell':
-                    component = new Tell(actionSpecs);
-                    break;
-                case 'fight':
-                    component = new Fight(actionSpecs);
-                    break;
-                default:
-                    console.error(`unknown action: ${action}`);
-                    continue;
+    private attachComponents(): void {
+        for (const [name, componentSpecs] of this.specs.components) {
+            const component = getComponent(name, componentSpecs);
+            if (component == undefined) {
+                console.error(`unknown action: ${name} (on ${this.name})`);
+                continue;
             }
             this.addComponent(component);
         }
-    }
-
-    private initPlayer(): void {
-        this.graphic.show();
-        this.addComponent(new Inventory());
     }
 
     private destroy(): void {
@@ -126,7 +81,7 @@ export class Tile extends Entity {
     }
 
     public get name(): string {
-        return this._name;
+        return this.specs.name;
     }
 
     public get image(): string {
@@ -137,7 +92,7 @@ export class Tile extends Entity {
         return this.name;
     }
 
-    public get info(): string {
-        return this.data.info;
+    public get info(): string { 
+        return this.hasComponent(Info) ? this.getComponent(Info).text : '';
     }
 }

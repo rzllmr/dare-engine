@@ -1,0 +1,30 @@
+chasm:
+  sprite: "empty"
+
+floor:
+  sprite: "dirt_grey"
+  move:
+    pass: true
+
+wall:
+  sprite: "wall_grey"
+
+door:
+  sprite: "door"
+  open:
+    need: "*?"
+
+chest:
+  sprite: "chest"
+  info: "A mysterious chest with unknown content."
+  pick:
+    item: "*"
+
+crate:
+  sprite: "crate"
+  info: "Looks movable."
+  push: ~
+  
+sign:
+  sprite: "sign"
+  tell: "Awesome, you did it! 😊 This is the end of the game for now, until I find the time to add more..."

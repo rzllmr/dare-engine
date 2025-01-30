@@ -1,12 +1,12 @@
 {
 	"frames": {
-		"player.1": {
+		"player": {
 			"anchor": { "x": 0, "y": 16 },
 			"frame": { "x": 0, "y": 0, "w": 16, "h": 32 },
 			"sourceSize": { "w": 16, "h": 32 },
 			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
 		},
-		"rat.1": {
+		"rat": {
 			"anchor": { "x": 0, "y": 16 },
 			"frame": { "x": 0, "y": 32, "w": 16, "h": 32 },
 			"sourceSize": { "w": 16, "h": 32 },
