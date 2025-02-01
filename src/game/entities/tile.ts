@@ -1,10 +1,9 @@
 import { Point } from 'pixi.js';
 import { Entity } from '../../engine/entity';
-import { Action } from '../components/action';
-import { Info } from '../components/info';
-import { getComponent } from '../components/registry';
-import { Graphic } from '../components/graphic';
 import { EntitySpecs } from '../../engine/specs';
+import { Action } from '../components/action';
+import { Graphic, Info } from '../components';
+import { createComponent } from '../components/registry';
 
 export class Tile extends Entity {
     public static removeFromMap: (tile: Tile) => void;
