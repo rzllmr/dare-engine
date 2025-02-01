@@ -1,6 +1,6 @@
 import { ComponentSpecs, SpecdComponent } from '../../engine/specs';
+import { properties } from 'engine/properties';
 import { ListProxy } from '../proxies/list';
-import properties from '../../engine/properties';
 import { PropertyNames } from '../entities/map';
 import { addComponent } from './registry';
 

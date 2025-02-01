@@ -1,7 +1,8 @@
 import { Assets, Point } from 'pixi.js';
 import { Story } from 'inkjs';
-import dpad from './dpad';
+
 import { bookButton } from './button';
+import { dpad } from './dpad';
 
 class DialogProxy {
     private static _instance: DialogProxy;
@@ -70,5 +71,4 @@ class DialogProxy {
         return this.dialogText.textContent;
     }
 }
-const dialog = DialogProxy.instance();
-export default dialog;
+export const dialog = DialogProxy.instance();

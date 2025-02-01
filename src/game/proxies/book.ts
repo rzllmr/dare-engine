@@ -1,4 +1,4 @@
-import env from "../../engine/environment";
+import { env } from "../../engine/environment";
 import { Page } from "./page";
 
 class BookProxy {
@@ -104,5 +104,4 @@ class BookProxy {
     }
 
 }
-const book = BookProxy.instance();
-export default book;
+export const book = BookProxy.instance();

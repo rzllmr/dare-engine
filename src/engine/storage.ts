@@ -72,5 +72,4 @@ class Storage {
     return JSON.parse(value);
   }
 }
-const storage = Storage.instance();
-export default storage;
+export const storage = Storage.instance();

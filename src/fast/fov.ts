@@ -9,7 +9,7 @@
 
 import { Point } from 'pixi.js';
 
-export default function computeFov(
+export function computeFov(
     origin: Point,
     isBlocking: (tile: Point) => boolean,
     markVisible: (tile: Point) => void,

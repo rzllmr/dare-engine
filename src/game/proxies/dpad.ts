@@ -1,5 +1,7 @@
-import env from '../../engine/environment';
 import { Point } from 'pixi.js';
+
+import { env } from '../../engine/environment';
+
 
 class Dpad {
     private static _instance: Dpad;
@@ -86,5 +88,4 @@ class Dpad {
         this.dPad.addEventListener('touchend', dropDPad);
     }    
 }
-const dpad = Dpad.instance();
-export default dpad;
+export const dpad = Dpad.instance();

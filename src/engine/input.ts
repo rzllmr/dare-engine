@@ -1,9 +1,9 @@
-import env from './environment';
+import { env } from './environment';
 import { Point } from 'pixi.js';
 import { IScene } from './manager';
-import dpad from '../game/proxies/dpad';
-import book from '../game/proxies/book';
+import { book } from '../game/proxies/book';
 import { bookButton } from '../game/proxies/button';
+import { dpad } from '../game/proxies/dpad';
 
 class Input {
     private static _instance: Input;
@@ -104,5 +104,4 @@ class Input {
         });
     }
 }
-const input = Input.instance();
-export default input;
+export const input = Input.instance();

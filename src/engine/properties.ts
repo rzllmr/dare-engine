@@ -128,5 +128,4 @@ class Properties {
         property.callbacks.push(callback);
     }
 }
-const properties = Properties.instance();
-export default properties;
+export const properties = Properties.instance();

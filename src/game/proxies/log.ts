@@ -1,5 +1,5 @@
 import { Proxy } from './proxy';
-import dialog from './dialog';
+import { dialog } from './dialog'
 
 class LogProxy extends Proxy {
     private static _instance: LogProxy;
@@ -30,5 +30,4 @@ class LogProxy extends Proxy {
         dialog.tell(line);
     }
 }
-const log = LogProxy.instance();
-export default log;
+export const log = LogProxy.instance();

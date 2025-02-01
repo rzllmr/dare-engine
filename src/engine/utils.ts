@@ -18,5 +18,4 @@ class Utils {
         return offset;
     }
 }
-const utils = Utils.instance();
-export default utils;
+export const utils = Utils.instance();

@@ -43,5 +43,4 @@ class TooltipProxy {
         return this.tooltipNode.textContent;
     }
 }
-const tooltip = TooltipProxy.instance();
-export default tooltip;
+export const tooltip = TooltipProxy.instance();

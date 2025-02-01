@@ -1,5 +1,5 @@
 import { ComponentSpecs } from 'engine/specs';
-import dialog from 'game/proxies/dialog';
+import { dialog } from 'game/proxies/dialog';
 
 import { Action } from './action';
 import { addComponent } from './registry';

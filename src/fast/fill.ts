@@ -3,7 +3,7 @@
 
 import { Point } from 'pixi.js';
 
-export default function unveilRoom(
+export function unveilRoom(
     origin: Point,
     isBlocking: (tile: Point) => boolean,
     markVisible: (tile: Point) => void,

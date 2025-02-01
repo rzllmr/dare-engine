@@ -57,5 +57,4 @@ class Environment {
     }
 
 }
-const env = Environment.instance();
-export default env;
+export const env = Environment.instance();
