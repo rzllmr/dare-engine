@@ -12,11 +12,14 @@ wall:
 door:
   sprite: "door"
   open:
+    pass: true
     need: "*?"
 
 chest:
   sprite: "chest"
   info: "A mysterious chest with unknown content."
+  open:
+    need: "*?"
   pick:
     item: "*"
 

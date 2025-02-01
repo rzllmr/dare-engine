@@ -39,7 +39,7 @@ export class Open extends Action {
             
             const openSprite = this.object.image.replace(/c$/, 'o');
             this.object.graphic.changeSprite(openSprite);
-            this.object.getComponent(Move).pass = true;
+            if (this.pass) this.object.getComponent(Move).pass = true;
         }
     }
 
@@ -48,6 +48,10 @@ export class Open extends Action {
             const openSprite = this.object.image.replace(/o$/, 'c');
             this.object.graphic.changeSprite(openSprite);
         }
+    }
+
+    public get pass(): boolean {
+        return this.specs.get('pass', false);
     }
 
     public get need(): string[] {
