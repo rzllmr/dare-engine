@@ -1,7 +1,6 @@
-import { SpecdComponent } from '../../engine/component';
+import { ComponentSpecs, SpecdComponent } from '../../engine/specs';
 import { Point, Sprite, Texture } from 'pixi.js';
 import { TileMap } from '../entities/map';
-import { ComponentSpecs } from 'engine/specs';
 import { addComponent } from './registry';
 
 export class Graphic extends SpecdComponent {

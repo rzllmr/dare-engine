@@ -1,5 +1,5 @@
 import { Tile } from '../entities/tile';
-import { SpecdComponent } from '../../engine/component';
+import { SpecdComponent } from '../../engine/specs';
 
 export abstract class Action extends SpecdComponent {
     public get object(): Tile {

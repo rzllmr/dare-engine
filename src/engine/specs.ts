@@ -1,5 +1,6 @@
 import { Assets } from 'pixi.js';
 import { defaultComponents } from 'game/components/registry';
+import { Component } from './component';
 
 type Specs = Map<string, any>;
 
@@ -111,5 +112,14 @@ export class ComponentSpecs {
         if (briefValue != undefined) {
             this.specs.set(spec, briefValue);
         }
+    }
+}
+
+export class SpecdComponent extends Component {
+    protected specs: ComponentSpecs;
+    constructor(specs = new ComponentSpecs(), briefSpec = 'brief') {
+        super();
+        this.specs = specs;
+        this.specs.assignBrief(briefSpec);
     }
 }

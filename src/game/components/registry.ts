@@ -1,5 +1,4 @@
-import { SpecdComponent } from "engine/component";
-import { ComponentSpecs } from "engine/specs";
+import { ComponentSpecs, SpecdComponent } from "engine/specs";
 
 const _components: Record<string, typeof SpecdComponent> = {};
 const _defaultComponents: string[] = [];
