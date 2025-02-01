@@ -32,7 +32,7 @@ export class Tile extends Entity {
 
     private attachComponents(): void {
         for (const [name, componentSpecs] of this.specs.components) {
-            const component = getComponent(name, componentSpecs);
+            const component = createComponent(name, componentSpecs);
             if (component == undefined) {
                 console.error(`unknown action: ${name} (on ${this.name})`);
                 continue;

@@ -4,7 +4,7 @@ import { ComponentSpecs } from "engine/specs";
 const _components: Record<string, typeof SpecdComponent> = {};
 const _defaultComponents: string[] = [];
 
-export function getComponent(name: string, specs: ComponentSpecs): SpecdComponent | undefined {
+export function createComponent(name: string, specs: ComponentSpecs): SpecdComponent | undefined {
     if (!Object.hasOwn(_components, name)) return undefined;
     return new _components[name](specs);
 }
