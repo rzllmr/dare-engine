@@ -1,4 +1,3 @@
-
 export class Proxy {
     protected waitForElement(selector: string, callback: (element: HTMLElement) => void): void {
         const parentSelector = selector.replace(/\s*[^\s]+$/, '');

@@ -1,9 +1,8 @@
 import { Application, Container, Point, Ticker } from 'pixi.js';
 import 'pixi.js/math-extras';
 import 'extensions/point';
-
-import { input } from './input';
 import { env } from './environment';
+import { input } from './input';
 
 class Manager {
     private static _instance: Manager;

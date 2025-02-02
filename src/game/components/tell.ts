@@ -1,10 +1,8 @@
 import { ComponentSpecs } from 'engine/specs';
 import { Tile } from 'game/entities/tile';
 import { log } from 'game/proxies/log';
-
 import { Action } from './action';
 import { addComponent } from './registry';
-
 
 export class Tell extends Action {
     constructor(specs: ComponentSpecs) {

@@ -1,6 +1,5 @@
-import { Assets, Point } from 'pixi.js';
 import { Story } from 'inkjs';
-
+import { Assets, Point } from 'pixi.js';
 import { bookButton } from './button';
 import { dpad } from './dpad';
 

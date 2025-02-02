@@ -1,7 +1,5 @@
 import { Point } from 'pixi.js';
-
-import { env } from '../../engine/environment';
-
+import { env } from 'engine/environment';
 
 class Dpad {
     private static _instance: Dpad;

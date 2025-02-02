@@ -1,4 +1,4 @@
-import { env } from "../../engine/environment";
+import { env } from "engine/environment";
 
 export class ButtonProxy {
     private readonly buttonNode: HTMLButtonElement;

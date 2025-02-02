@@ -1,5 +1,5 @@
-import { Tile } from '../entities/tile';
-import { SpecdComponent } from '../../engine/specs';
+import { SpecdComponent } from 'engine/specs';
+import { Tile } from 'game/entities/tile';
 
 export abstract class Action extends SpecdComponent {
     public get object(): Tile {

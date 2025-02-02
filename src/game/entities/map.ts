@@ -1,11 +1,11 @@
 import { Container, Assets, Point } from 'pixi.js';
-import { computeFov } from 'fast/fov';
+import { properties } from 'engine/properties';
+import { readMap } from 'engine/schemes';
+import { storage } from 'engine/storage';
 import { unveilRoom } from 'fast/fill';
+import { computeFov } from 'fast/fov';
+import { dialog } from 'game/proxies/dialog';
 import { Tile } from './tile';
-import { properties } from '../../engine/properties';
-import { readMap } from '../../engine/schemes';
-import { storage } from '../../engine/storage';
-import { dialog } from '../proxies/dialog';
 
 export type PropertyNames = 'vision-distance' | 'map-tiles' | 'reveal-tiles';
 properties.register('vision-distance', 1, 'radius around player where tiles are revealed'); // only high number to prevent infinite recursion

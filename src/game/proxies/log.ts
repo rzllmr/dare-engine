@@ -1,5 +1,5 @@
+import { dialog } from './dialog';
 import { Proxy } from './proxy';
-import { dialog } from './dialog'
 
 class LogProxy extends Proxy {
     private static _instance: LogProxy;

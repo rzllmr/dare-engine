@@ -1,11 +1,11 @@
 import { Container, Assets, Point } from 'pixi.js';
-import { manifest } from '../assets';
-import { Animation } from '../../engine/animation';
-import { IScene, manager } from '../../engine/manager';
+import { Animation } from 'engine/animation';
+import { IScene, manager } from 'engine/manager';
+import { htmlParser } from 'extensions/htmlParser';
+import { inkParser } from 'extensions/inkParser';
+import { yamlParser } from 'extensions/yamlParser';
+import { manifest } from 'game/assets';
 import { GameScene } from './game';
-import { yamlParser } from '../../extensions/yamlParser';
-import { htmlParser } from '../../extensions/htmlParser';
-import { inkParser } from '../../extensions/inkParser';
 
 export class LoaderScene extends Container implements IScene {
     private readonly splashScreen: HTMLDivElement;

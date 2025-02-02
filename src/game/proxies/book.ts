@@ -1,4 +1,4 @@
-import { env } from "../../engine/environment";
+import { env } from "engine/environment";
 import { Page } from "./page";
 
 class BookProxy {

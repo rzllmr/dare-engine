@@ -1,7 +1,7 @@
-import diaryTemplate from "../../templates/diary.hbs";
-import infoTemplate from "../../templates/info.hbs";
-import itemsTemplate from "../../templates/items.hbs";
-import optionsTemplate from "../../templates/options.hbs";
+import diaryTemplate from "templates/diary.hbs";
+import infoTemplate from "templates/info.hbs";
+import itemsTemplate from "templates/items.hbs";
+import optionsTemplate from "templates/options.hbs";
 
 export class Page {
   private readonly _html = '';

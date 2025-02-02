@@ -1,7 +1,7 @@
-import { ComponentSpecs, SpecdComponent } from '../../engine/specs';
 import { properties } from 'engine/properties';
-import { ListProxy } from '../proxies/list';
-import { PropertyNames } from '../entities/map';
+import { ComponentSpecs, SpecdComponent } from 'engine/specs';
+import { ListProxy } from 'game/proxies/list';
+import { PropertyNames } from 'game/entities/map';
 import { addComponent } from './registry';
 
 interface BodyPart {

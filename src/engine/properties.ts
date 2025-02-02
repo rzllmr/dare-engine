@@ -1,4 +1,4 @@
-import { PropertyNames as mapProperties } from '../game/entities/map';
+import { PropertyNames as mapProperties } from 'game/entities/map';
 
 type PropertyName = mapProperties;
 
