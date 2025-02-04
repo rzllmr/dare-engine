@@ -15,7 +15,7 @@ key:
   "#": wall
   "+": door
   "*": door (key?)
-  "κ": chest (key)
+  "κ": mysterious chest (key)
   "□": crate
   "μ": map
   "T": sign

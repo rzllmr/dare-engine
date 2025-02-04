@@ -101,9 +101,9 @@ export class TileMap extends Container {
 
             if (tileName !== 'floor') {
                 let variant = '';
-                if (tileName.startsWith('wall')) variant = this.wallsAround(layout, idx, wallChar);
-                else if (tileName.startsWith('door')) variant = this.alignedDoor(this.wallsAround(layout, idx, wallChar));
-                else if (tileName.startsWith('chest')) variant = 'c';
+                if (tileName.includes('wall')) variant = this.wallsAround(layout, idx, wallChar);
+                else if (tileName.includes('door')) variant = this.alignedDoor(this.wallsAround(layout, idx, wallChar));
+                else if (tileName.includes('chest')) variant = 'c';
 
                 const tile = new Tile(tileName, currentPosition, variant);
 

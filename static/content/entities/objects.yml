@@ -17,11 +17,15 @@ door:
 
 chest:
   sprite: "chest"
-  info: "A mysterious chest with unknown content."
+  info: "A simple chest."
   open:
     need: "*?"
   pick:
     item: "*"
+
+mysterious chest:
+  like: "chest"
+  info: "A mysterious chest with unknown content."
 
 crate:
   sprite: "crate"

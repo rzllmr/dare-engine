@@ -4,6 +4,7 @@
 
 ### Todo
 
+- [ ] Require sprite suffixes in specs #system
 - [ ] Structure elements and styling #cleanup
 - [ ] Use synthesizers for music and sounds #system
 - [ ] Animate player character #art
@@ -15,6 +16,7 @@
 
 ### Done ✓
 
+- [x] Use inheritance in entity specs #system
 - [x] Hot reload changed files #system
 - [x] Attach actions to elements in yaml #system
 - [x] Make sokoban demo level #content

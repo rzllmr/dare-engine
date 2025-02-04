@@ -22,16 +22,42 @@ export class EntitySpecs {
         return this._data;
     }
 
+    private static getData(name: string): Specs {
+        const entityData = EntitySpecs.data.get(name);
+        if (entityData == undefined) throw new Error(`unknown element: ${name}`);
+
+        return entityData;
+    }
+
+    private static addInherits(name: string, specs: Specs, likeChain: string[] = []): Specs {
+        likeChain.push(name);
+        if (!specs.has('like')) return specs;
+
+        let likes = specs.get('like');
+        if (typeof likes == 'string') likes = [likes];
+        for (const like of likes.reverse()) {
+            if (likeChain.includes(like)) {
+                console.warn(`cyclic like in "${likeChain.at(-1)}" back to "${like}"`);
+                continue;
+            }
+    
+            let likeSpecs = EntitySpecs.getData(like);
+            likeSpecs = EntitySpecs.addInherits(like, likeSpecs, likeChain);
+            specs = new Map<string, Specs>([...likeSpecs, ...specs])
+        }
+        specs.delete('like');
+        return specs;
+    }
+
     private static addDefaults(specs: Specs): Specs {
-        const defaultActions = new Map<string, any>();
-        defaultComponents().forEach((name) => defaultActions.set(name, null));
-        return new Map<string, any>([...defaultActions, ...specs]);
+        const defaultComps = new Map<string, any>();
+        defaultComponents().forEach((name) => defaultComps.set(name, null));
+        return new Map<string, any>([...defaultComps, ...specs]);
     }
 
     public static get(name: string): EntitySpecs {
-        let entityData = EntitySpecs.data.get(name);
-        if (entityData == undefined) throw new Error(`unknown element: ${name}`);
-
+        let entityData = EntitySpecs.getData(name);
+        entityData = EntitySpecs.addInherits(name, entityData);
         entityData = EntitySpecs.addDefaults(entityData);
         return new EntitySpecs(name, entityData);
     }
@@ -39,9 +65,9 @@ export class EntitySpecs {
     private readonly _name: string;
     private readonly _components = new Map<string, ComponentSpecs>();
 
-    private constructor(name: string, actions: Specs) {
+    private constructor(name: string, components: Specs) {
         this._name = name;
-        for (const [key, value] of actions) {
+        for (const [key, value] of components) {
             this._components.set(key, new ComponentSpecs(value));
         }
     }
