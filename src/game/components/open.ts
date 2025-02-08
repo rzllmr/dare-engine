@@ -1,10 +1,10 @@
 import { ComponentSpecs } from 'engine/specs';
 import { Tile } from 'game/entities/tile';
 import { log } from 'game/proxies/log';
-import { Action } from './action';
 import { Inventory } from './inventory';
 import { Move } from './move';
 import { addComponent } from './registry';
+import { Action } from './types';
 
 export class Open extends Action {
     private readonly requiredItems: string[] = [];

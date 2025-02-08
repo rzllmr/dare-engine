@@ -1,9 +1,9 @@
 import { EntitySpecs, ComponentSpecs } from 'engine/specs';
 import { Tile } from 'game/entities/tile';
 import { log } from 'game/proxies/log';
-import { Action } from './action';
 import { Inventory, Item } from './inventory';
 import { addComponent } from './registry';
+import { Action } from './types';
 
 export class Pick extends Action {
     private readonly items: Item[] = [];

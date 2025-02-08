@@ -3,9 +3,9 @@ import { Tween, Easing } from '@tweenjs/tween.js';
 import { Animation } from 'engine/animation';
 import { ComponentSpecs } from 'engine/specs';
 import { Tile } from 'game/entities/tile';
-import { Action } from './action';
 import { Graphic } from './graphic';
 import { addComponent } from './registry';
+import { Action } from './types';
 
 export class Move extends Action {
     private readonly speed = 200; // in seconds

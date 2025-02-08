@@ -1,8 +1,9 @@
 import { properties } from 'engine/properties';
-import { ComponentSpecs, SpecdComponent } from 'engine/specs';
+import { ComponentSpecs } from 'engine/specs';
 import { ListProxy } from 'game/proxies/list';
 import { PropertyNames } from 'game/entities/map';
 import { addComponent } from './registry';
+import { SpecdComponent } from './types';
 
 interface BodyPart {
     max: number;

@@ -1,6 +1,6 @@
 import { Tile } from 'game/entities/tile';
-import { Action } from './action';
 import { addComponent } from './registry';
+import { Action } from './types';
 
 export class Push extends Action {
     public override async act(subject: Tile): Promise<void> {

@@ -1,7 +1,7 @@
 import { ComponentSpecs } from 'engine/specs';
 import { dialog } from 'game/proxies/dialog';
-import { Action } from './action';
 import { addComponent } from './registry';
+import { Action } from './types';
 
 export class Info extends Action {
     private _text: string;

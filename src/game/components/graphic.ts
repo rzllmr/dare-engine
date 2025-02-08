@@ -1,8 +1,9 @@
 import { Point, Sprite, Texture } from 'pixi.js';
-import { ComponentSpecs, EntitySpecs, SpecdComponent } from 'engine/specs';
+import { ComponentSpecs } from 'engine/specs';
 import { TileMap } from 'game/entities/map';
 import { Tile } from 'game/entities/tile';
 import { addComponent } from './registry';
+import { SpecdComponent } from './types';
 
 export class Graphic extends SpecdComponent {
     public onMove = (position: Point): void => {};
