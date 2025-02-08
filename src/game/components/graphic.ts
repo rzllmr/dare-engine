@@ -29,6 +29,10 @@ export class Graphic extends SpecdComponent {
         return this.specs.get('idle', 'empty');
     }
 
+    public get block(): boolean {
+        return this.specs.get('block', false);
+    }
+
     public get initialPosition(): Point {
         return this.specs.get('position', new Point(0, 0));
     }

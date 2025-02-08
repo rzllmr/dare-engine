@@ -304,7 +304,7 @@ export class TileMap extends Container {
         const tile = this.object(coord);
         if (tile === undefined) return false;
 
-        return tile.blocksView;
+        return tile.graphic.block;
     }
 
     private outOfBounds(coord: Point): boolean {

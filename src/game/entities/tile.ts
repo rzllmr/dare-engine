@@ -77,10 +77,6 @@ export class Tile extends Entity {
         return this.getComponent(Graphic);
     }
 
-    public get blocksView(): boolean {
-        return ['wall', 'door'].includes(this.kind);
-    }
-
     public get name(): string {
         return this.specs.name;
     }
