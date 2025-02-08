@@ -1,2 +1,7 @@
+none:
+  sprite:
+    idle: "empty"
+    layer: "ground"
+
 frame:
     sprite: "frame"

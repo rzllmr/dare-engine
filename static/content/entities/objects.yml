@@ -2,6 +2,7 @@ floor:
   sprite:
     idle: "dirt_grey"
     variant: "random"
+    layer: "ground"
   move:
     pass: true
 

@@ -10,6 +10,7 @@ layout: |
 
 key:
   "@": player
+  " ": none
   ".": floor
   "#": wall
   "+": door

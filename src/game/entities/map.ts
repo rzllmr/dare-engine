@@ -33,6 +33,9 @@ export class TileMap extends Container {
         this.layers[1] = this.addChild(new Container()); // for objects
         this.layers[1].sortableChildren = true;
 
+        Tile.removeFromMap = this.remove.bind(this);
+        Tile.moveOnMap = this.move.bind(this);
+
         this.registerChanges();
     }
 
@@ -73,10 +76,6 @@ export class TileMap extends Container {
     public async load(): Promise<void> {
         const data = readMap(Assets.get(this.label as string));
         const layout = this.parseMapLayout(data.layout);
-        data.key.set(' ', 'none');
-
-        Tile.removeFromMap = this.remove.bind(this);
-        Tile.moveOnMap = this.move.bind(this);
 
         const currentPosition = new Point(0, 0);
         for (let idx = 0; idx < layout.length; idx++) {
@@ -100,9 +99,9 @@ export class TileMap extends Container {
             }
 
             const surrounding = this.surrounding(idx, layout, data);
-            if (tileName !== 'floor') {
-                const tile = new Tile(tileName, currentPosition, surrounding);
+            const tile = new Tile(tileName, currentPosition, surrounding);
 
+            if (tile.graphic.layer > 0) {
                 if (tile.kind === 'player') {
                     this.player = tile;
                     this.player.graphic.position = storage.load('player-position', currentPosition) as Point;
@@ -110,14 +109,14 @@ export class TileMap extends Container {
                     this.objects.push(tile);
                 }
 
-                tileName = 'floor';
-
-                const child = this.layers[1].addChild(tile.graphic.sprite);
+                const child = this.layers[tile.graphic.layer].addChild(tile.graphic.sprite);
                 child.zIndex = currentPosition.y;
-            }
 
+                tileName = 'floor';
+            }
+            
             const groundTile = new Tile(tileName, currentPosition, surrounding);
-            this.layers[0].addChild(groundTile.graphic.sprite);
+            this.layers[groundTile.graphic.layer].addChild(groundTile.graphic.sprite);
             this.tiles.push(groundTile);
 
             currentPosition.x++;

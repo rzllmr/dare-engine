@@ -41,6 +41,10 @@ export class Graphic extends SpecdComponent {
         return this.specs.get('suffix', '');
     }
 
+    public get layer(): 0 | 1 {
+        return this.specs.get('layer', 'object') as string == 'ground' ? 0 : 1;
+    }
+
     public static determSuffix(specs: EntitySpecs, surrounding: string[]): string {
         const sprite = specs.component('sprite');
         if (sprite == undefined) return '';
