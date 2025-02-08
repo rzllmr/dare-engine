@@ -1,19 +1,24 @@
-map:
+item:
   sprite: "sack"
+  move:
+    pass: true
+
+map:
+  like: "item"
   info: "A detailed map of the vicinity."
   pick: 
     take:
       - ["reveal-tiles", true]
 
 parchment:
-  sprite: "sack"
+  like: "item"
   info: "Some parchment for mapping your findings."
   pick: 
     take:
       - ["map-tiles", true]
 
 torch:
-  sprite: "sack"
+  like: "item"
   info: "A torch lighting your way as you raise it."
   pick:
     where: "hand"
@@ -21,12 +26,12 @@ torch:
       - ["vision-distance", 4]
 
 lantern:
-  sprite: "sack"
+  like: "item"
   info: "A lantern to light the way from your belt."
   pick: 
     take:
       - ["vision-distance", 4]
 
 key:
-  sprite: "sack"
+  like: "item"
   info: "A key fit for doors."
