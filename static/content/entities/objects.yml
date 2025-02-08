@@ -2,21 +2,31 @@ chasm:
   sprite: "empty"
 
 floor:
-  sprite: "dirt_grey"
+  sprite:
+    idle: "dirt_grey"
+    variant: "random"
   move:
     pass: true
 
 wall:
-  sprite: "wall_grey"
+  sprite:
+    idle: "wall_grey"
+    variant: "align"
+    block: true
 
 door:
-  sprite: "door"
+  sprite:
+    idle: "door"
+    variant: ["align:wall", "openable"]
+    block: true
   open:
     pass: true
     need: "*?"
 
 chest:
-  sprite: "chest"
+  sprite:
+    idle: "chest"
+    variant: "openable"
   info: "A simple chest."
   open:
     need: "*?"

@@ -1,5 +1,5 @@
 import { Point, Sprite, Texture } from 'pixi.js';
-import { ComponentSpecs, SpecdComponent } from 'engine/specs';
+import { ComponentSpecs, EntitySpecs, SpecdComponent } from 'engine/specs';
 import { TileMap } from 'game/entities/map';
 import { addComponent } from './registry';
 
@@ -20,7 +20,7 @@ export class Graphic extends SpecdComponent {
     constructor(specs: ComponentSpecs) {
         super(specs, 'idle');
 
-        const spriteName = this.idle + this.subtile;
+        const spriteName = this.idle + this.suffix;
         this.sprite = this.loadSprite(spriteName);
         this.position = this.initialPosition;
     }
@@ -33,9 +33,50 @@ export class Graphic extends SpecdComponent {
         return this.specs.get('position', new Point(0, 0));
     }
 
-    public get subtile(): string {
-        const subtile = this.specs.get('subtile', '');
-        return subtile == '' ? '' : '.' + subtile;
+    public get suffix(): string {
+        return this.specs.get('suffix', '');
+    }
+
+    public static determSuffix(specs: EntitySpecs, surrounding: string[]): string {
+        const sprite = specs.component('sprite');
+        if (sprite == undefined) return '';
+
+        let suffix = '';
+        let variants = sprite.get('variant', [] as string[]);
+        if (typeof variants == 'string') variants = [variants];
+        for (const variant of variants) {
+            if (variant.startsWith('random')) {
+                suffix += '.' + Graphic.randomSuffix();
+            } else if (variant.startsWith('align')) {
+                const name = variant.split(':')[1] || specs.name;
+                suffix += '.' + Graphic.alignedSuffix(name, surrounding);
+            } else if (variant.startsWith('openable')) {
+                suffix += '.c';
+            } else {
+                console.warn(`unknown sprite variant: ${variant}`);
+            }
+        }
+        return suffix;
+    }
+
+    private static randomSuffix(): string {
+        const randomNumber = Math.random();
+        let suffix = 1;
+        if (randomNumber < 0.7) suffix = 1;
+        else if (randomNumber < 0.8) suffix = 2;
+        else if (randomNumber < 0.9) suffix = 3;
+        else suffix = 4;
+        return suffix.toString();
+    }
+
+    private static alignedSuffix(name: string, surrounding: string[]): string {
+        let suffix = '';
+        if (surrounding[1] == name) suffix += 'n';
+        if (surrounding[5] == name) suffix += 'e';
+        if (surrounding[7] == name) suffix += 's';
+        if (surrounding[3] == name) suffix += 'w';
+        if (suffix === '') suffix += 'o';
+        return suffix;
     }
 
     public get hideInDark(): boolean {

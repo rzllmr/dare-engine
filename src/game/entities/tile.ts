@@ -13,7 +13,7 @@ export class Tile extends Entity {
 
     private readonly specs: EntitySpecs;
 
-    constructor(name: string, position: Point, subtile = '') {
+    constructor(name: string, position: Point, surrounding: string[] = []) {
         super();
 
         const mapDetails = name.match(/\s\((.+)\)$/)?.at(1) ?? '';
@@ -22,8 +22,9 @@ export class Tile extends Entity {
         this.specs = EntitySpecs.get(name);
         this.specs.fillIn(mapDetails);
 
+        const suffix = Graphic.determSuffix(this.specs, surrounding);
         this.specs.component('sprite')?.set('position', position);
-        this.specs.component('sprite')?.set('subtile', subtile);
+        this.specs.component('sprite')?.set('suffix', suffix);
 
         this.attachComponents();
         if (name == 'player') this.graphic.show();

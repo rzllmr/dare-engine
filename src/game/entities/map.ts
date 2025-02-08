@@ -1,6 +1,6 @@
 import { Container, Assets, Point } from 'pixi.js';
 import { properties } from 'engine/properties';
-import { readMap } from 'engine/schemes';
+import { MapData, readMap } from 'engine/schemes';
 import { storage } from 'engine/storage';
 import { unveilRoom } from 'fast/fill';
 import { computeFov } from 'fast/fov';
@@ -99,33 +99,24 @@ export class TileMap extends Container {
                 tileName = 'chasm';
             }
 
+            const surrounding = this.surrounding(idx, layout, data);
             if (tileName !== 'floor') {
-                let variant = '';
-                if (tileName.includes('wall')) variant = this.wallsAround(layout, idx, wallChar);
-                else if (tileName.includes('door')) variant = this.alignedDoor(this.wallsAround(layout, idx, wallChar));
-                else if (tileName.includes('chest')) variant = 'c';
+                const tile = new Tile(tileName, currentPosition, surrounding);
 
-                const tile = new Tile(tileName, currentPosition, variant);
-
-                if (['player', 'enemy', 'item'].includes(tile.kind)) {
-                    if (tile.kind === 'player') {
-                        this.player = tile;
-                        this.player.graphic.position = storage.load('player-position', currentPosition) as Point;
-                    } else {
-                        this.objects.push(tile);
-                    }
-                    tileName = 'floor';
+                if (tile.kind === 'player') {
+                    this.player = tile;
+                    this.player.graphic.position = storage.load('player-position', currentPosition) as Point;
                 } else {
                     this.objects.push(tile);
-                    tileName = ['wall', 'chasm'].includes(tile.kind) ? 'chasm' : 'floor';
                 }
+
+                tileName = 'floor';
 
                 const child = this.layers[1].addChild(tile.graphic.sprite);
                 child.zIndex = currentPosition.y;
             }
 
-            const subtile = tileName == 'floor' ? this.randomFloor() : '';
-            const groundTile = new Tile(tileName, currentPosition, subtile);
+            const groundTile = new Tile(tileName, currentPosition, surrounding);
             this.layers[0].addChild(groundTile.graphic.sprite);
             this.tiles.push(groundTile);
 
@@ -137,10 +128,8 @@ export class TileMap extends Container {
 
         if (this.player === undefined) return;
 
-        if (this.player !== undefined) {
-            this.player.graphic.onMove = this.focusPos.bind(this);
-            await this.move(new Point());
-        }
+        this.player.graphic.onMove = this.focusPos.bind(this);
+        await this.move(new Point());
 
         dialog.tellStory('intro', 'enter');
     }
@@ -149,31 +138,16 @@ export class TileMap extends Container {
         return [...map].find(([k, v]) => v === value)?.at(0);
     }
 
-    private wallsAround(layout: string, idx: number, wallChar: string): string {
-        let subtile = '';
-        if (layout[idx - this.dimensions.x - 1] === wallChar) subtile += 'n';
-        if (layout[idx + 1] === wallChar) subtile += 'e';
-        if (layout[idx + this.dimensions.x + 1] === wallChar) subtile += 's';
-        if (layout[idx - 1] === wallChar) subtile += 'w';
-        if (subtile === '') subtile += 'o';
-        return subtile;
-    }
-
-    private randomFloor(): string {
-        const randomNumber = Math.random();
-        let floorVariant = 1;
-        if (randomNumber < 0.7) floorVariant = 1;
-        else if (randomNumber < 0.8) floorVariant = 2;
-        else if (randomNumber < 0.9) floorVariant = 3;
-        else floorVariant = 4;
-        return floorVariant.toString();
-    }
-
-    private alignedDoor(walls: string): string {
-        let alignment = '';
-        if (walls.includes('n') || walls.includes('s')) alignment = 'v.c';
-        else if (walls.includes('e') || walls.includes('w')) alignment = 'h.c';
-        return alignment;
+    private surrounding(idx: number, layout: string, data: MapData): string[] {
+        const surrounding: string[] = [];
+        for (let y = -1; y <= 1; y++) {
+            for (let x = -1; x <= 1; x++) {
+                const char = layout[idx + ((this.dimensions.x + 1) * y) + x];
+                const name = data.key.get(char) || '';
+                surrounding.push(name);
+            }
+        }
+        return surrounding;
     }
 
     private posToCoord(position: Point): Point {
