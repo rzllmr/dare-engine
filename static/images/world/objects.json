@@ -6,25 +6,25 @@
 			"sourceSize": { "w": 16, "h": 32 },
 			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
 		},
-		"door.h.c": {
+		"door.ew.c": {
 			"anchor": { "x": 0, "y": 16 },
 			"frame": { "x": 32, "y": 0, "w": 16, "h": 32 },
 			"sourceSize": { "w": 16, "h": 32 },
 			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
 		},
-		"door.h.o": {
+		"door.ew.o": {
 			"anchor": { "x": 0, "y": 16 },
 			"frame": { "x": 48, "y": 0, "w": 16, "h": 32 },
 			"sourceSize": { "w": 16, "h": 32 },
 			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
 		},
-		"door.v.c": {
+		"door.ns.c": {
 			"anchor": { "x": 0, "y": 16 },
 			"frame": { "x": 64, "y": 0, "w": 16, "h": 32 },
 			"sourceSize": { "w": 16, "h": 32 },
 			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
 		},
-		"door.v.o": {
+		"door.ns.o": {
 			"anchor": { "x": 0, "y": 16 },
 			"frame": { "x": 80, "y": 0, "w": 16, "h": 32 },
 			"sourceSize": { "w": 16, "h": 32 },

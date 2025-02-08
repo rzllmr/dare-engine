@@ -10,7 +10,6 @@ layout: |
 
 key:
   "@": player
-  " ": chasm
   ".": floor
   "#": wall
   "+": door

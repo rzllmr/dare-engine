@@ -73,7 +73,7 @@ export class TileMap extends Container {
     public async load(): Promise<void> {
         const data = readMap(Assets.get(this.label as string));
         const layout = this.parseMapLayout(data.layout);
-        const wallChar = this.getKey(data.key, 'wall');
+        data.key.set(' ', 'none');
 
         Tile.removeFromMap = this.remove.bind(this);
         Tile.moveOnMap = this.move.bind(this);
@@ -83,9 +83,9 @@ export class TileMap extends Container {
             const char = layout[idx];
             if (char === '\n') {
                 while (currentPosition.x < this.dimensions.x) {
-                    const tile = new Tile('chasm', currentPosition);
-                    this.tiles.push(tile);
+                    const tile = new Tile('none', currentPosition);
                     this.layers[0].addChild(tile.graphic.sprite);
+                    this.tiles.push(tile);
                     currentPosition.x++;
                 }
                 currentPosition.x = 0;
@@ -96,7 +96,7 @@ export class TileMap extends Container {
             let tileName = data.key.get(char);
             if (tileName === undefined) {
                 if (idx > 0) console.error(`map symbol unknown: ${char}`);
-                tileName = 'chasm';
+                tileName = 'none';
             }
 
             const surrounding = this.surrounding(idx, layout, data);

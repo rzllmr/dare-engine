@@ -1,6 +1,3 @@
-chasm:
-  sprite: "empty"
-
 floor:
   sprite:
     idle: "dirt_grey"
