@@ -13,6 +13,7 @@ properties.register('map-tiles', false, 'revealed tiles stay visible on map');
 properties.register('reveal-tiles', false, 'all tiles are revealed on map');
 
 export class TileMap extends Container {
+    private data!: MapData;
     private readonly tiles = new Array<Tile>();
     private readonly objects = new Array<Tile>();
     private readonly layers = new Array<Container>(2);
@@ -33,8 +34,7 @@ export class TileMap extends Container {
         this.layers[1] = this.addChild(new Container()); // for objects
         this.layers[1].sortableChildren = true;
 
-        Tile.removeFromMap = this.remove.bind(this);
-        Tile.moveOnMap = this.move.bind(this);
+        Tile.map = this;
 
         this.registerChanges();
     }
@@ -74,12 +74,12 @@ export class TileMap extends Container {
     }
 
     public async load(): Promise<void> {
-        const data = readMap(Assets.get(this.label as string));
-        const layout = this.parseMapLayout(data.layout);
+        this.data = readMap(Assets.get(this.label as string));
+        this.data.layout = this.parseMapLayout(this.data.layout);
 
         const currentPosition = new Point(0, 0);
-        for (let idx = 0; idx < layout.length; idx++) {
-            const char = layout[idx];
+        for (let idx = 0; idx < this.data.layout.length; idx++) {
+            const char = this.data.layout[idx];
             if (char === '\n') {
                 while (currentPosition.x < this.dimensions.x) {
                     const tile = new Tile('none', currentPosition);
@@ -92,14 +92,13 @@ export class TileMap extends Container {
                 continue;
             }
 
-            let tileName = data.key.get(char);
+            let tileName = this.data.key.get(char);
             if (tileName === undefined) {
                 if (idx > 0) console.error(`map symbol unknown: ${char}`);
                 tileName = 'none';
             }
 
-            const surrounding = this.surrounding(idx, layout, data);
-            const tile = new Tile(tileName, currentPosition, surrounding);
+            const tile = new Tile(tileName, currentPosition);
 
             if (tile.graphic.layer > 0) {
                 if (tile.kind === 'player') {
@@ -115,7 +114,7 @@ export class TileMap extends Container {
                 tileName = 'floor';
             }
             
-            const groundTile = new Tile(tileName, currentPosition, surrounding);
+            const groundTile = new Tile(tileName, currentPosition);
             this.layers[groundTile.graphic.layer].addChild(groundTile.graphic.sprite);
             this.tiles.push(groundTile);
 
@@ -133,20 +132,21 @@ export class TileMap extends Container {
         dialog.tellStory('intro', 'enter');
     }
 
-    private getKey(map: Map<any, any>, value: any): string {
-        return [...map].find(([k, v]) => v === value)?.at(0);
-    }
-
-    private surrounding(idx: number, layout: string, data: MapData): string[] {
+    public surrounding(coord: Point): string[] {
+        const idx = this.coordToIdx(coord);
         const surrounding: string[] = [];
         for (let y = -1; y <= 1; y++) {
             for (let x = -1; x <= 1; x++) {
-                const char = layout[idx + ((this.dimensions.x + 1) * y) + x];
-                const name = data.key.get(char) || '';
+                const char = this.data.layout[idx + ((this.dimensions.x + 1) * y) + x];
+                const name = this.data.key.get(char) || '';
                 surrounding.push(name);
             }
         }
         return surrounding;
+    }
+
+    private coordToIdx(coord: Point): number {
+        return coord.x + coord.y * (this.dimensions.x + 1);
     }
 
     private posToCoord(position: Point): Point {

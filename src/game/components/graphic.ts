@@ -1,12 +1,13 @@
 import { Point, Sprite, Texture } from 'pixi.js';
 import { ComponentSpecs, EntitySpecs, SpecdComponent } from 'engine/specs';
 import { TileMap } from 'game/entities/map';
+import { Tile } from 'game/entities/tile';
 import { addComponent } from './registry';
 
 export class Graphic extends SpecdComponent {
     public onMove = (position: Point): void => {};
 
-    public readonly sprite!: Sprite;
+    public sprite!: Sprite;
     public image = '';
 
     public get alpha(): number {
@@ -19,8 +20,10 @@ export class Graphic extends SpecdComponent {
 
     constructor(specs: ComponentSpecs) {
         super(specs, 'idle');
+    }
 
-        const spriteName = this.idle + this.suffix;
+    public override init(): void {
+        const spriteName = this.idle + this.determSuffix();
         this.sprite = this.loadSprite(spriteName);
         this.position = this.initialPosition;
     }
@@ -37,27 +40,24 @@ export class Graphic extends SpecdComponent {
         return this.specs.get('position', new Point(0, 0));
     }
 
-    public get suffix(): string {
-        return this.specs.get('suffix', '');
+    public get variant(): string[] {
+        let variant = this.specs.get('variant', [] as string[]);
+        if (typeof variant == 'string') variant = [variant];
+        return variant;
     }
 
     public get layer(): 0 | 1 {
         return this.specs.get('layer', 'object') as string == 'ground' ? 0 : 1;
     }
 
-    public static determSuffix(specs: EntitySpecs, surrounding: string[]): string {
-        const sprite = specs.component('sprite');
-        if (sprite == undefined) return '';
-
+    private determSuffix(): string {
         let suffix = '';
-        let variants = sprite.get('variant', [] as string[]);
-        if (typeof variants == 'string') variants = [variants];
-        for (const variant of variants) {
+        for (const variant of this.variant) {
             if (variant.startsWith('random')) {
-                suffix += '.' + Graphic.randomSuffix();
+                suffix += '.' + this.randomSuffix();
             } else if (variant.startsWith('align')) {
-                const name = variant.split(':')[1] || specs.name;
-                suffix += '.' + Graphic.alignedSuffix(name, surrounding);
+                const name = variant.split(':')[1] || this.object.name;
+                suffix += '.' + this.alignedSuffix(name);
             } else if (variant.startsWith('openable')) {
                 suffix += '.c';
             } else {
@@ -67,7 +67,7 @@ export class Graphic extends SpecdComponent {
         return suffix;
     }
 
-    private static randomSuffix(): string {
+    private randomSuffix(): string {
         const randomNumber = Math.random();
         let suffix = 1;
         if (randomNumber < 0.7) suffix = 1;
@@ -77,7 +77,8 @@ export class Graphic extends SpecdComponent {
         return suffix.toString();
     }
 
-    private static alignedSuffix(name: string, surrounding: string[]): string {
+    private alignedSuffix(name: string): string {
+        const surrounding = Tile.map.surrounding(this.initialPosition);
         let suffix = '';
         if (surrounding[1] == name) suffix += 'n';
         if (surrounding[5] == name) suffix += 'e';

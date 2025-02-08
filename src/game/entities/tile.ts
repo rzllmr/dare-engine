@@ -4,10 +4,10 @@ import { EntitySpecs } from 'engine/specs';
 import { Action } from 'game/components/action';
 import { Graphic, Info } from 'game/components';
 import { createComponent } from 'game/components/registry';
+import { TileMap } from './map';
 
 export class Tile extends Entity {
-    public static removeFromMap: (tile: Tile) => void;
-    public static moveOnMap: (direction: Point, actor: Tile) => Promise<boolean>;
+    public static map: TileMap;
 
     public moving = false;
 
@@ -22,9 +22,7 @@ export class Tile extends Entity {
         this.specs = EntitySpecs.get(name);
         this.specs.fillIn(mapDetails);
 
-        const suffix = Graphic.determSuffix(this.specs, surrounding);
         this.specs.component('sprite')?.set('position', position);
-        this.specs.component('sprite')?.set('suffix', suffix);
 
         this.attachComponents();
         if (name == 'player') this.graphic.show();
@@ -42,12 +40,12 @@ export class Tile extends Entity {
     }
 
     private destroy(): void {
-        Tile.removeFromMap(this);
+        Tile.map.remove(this);
         this.components.length = 0;
     }
 
     public move(direction: Point): Promise<boolean> {
-        return Tile.moveOnMap(direction, this);
+        return Tile.map.move(direction, this);
     }
 
     private toBeDestroyed = false;
