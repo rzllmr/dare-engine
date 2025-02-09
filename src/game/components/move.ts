@@ -22,14 +22,14 @@ export class Move extends Action {
     }
 
     public override async act(subject: Tile): Promise<void> {
-        const subjectPos = subject.getComponent(Graphic).realPos;
-        const objectPos =  this.object.getComponent(Graphic).realPos;
+        const subjectPos = subject.getComponent(Graphic).position;
+        const objectPos =  this.object.getComponent(Graphic).position;
 
         const tween = this.pass ? this.step(subjectPos, objectPos) : this.bounce(subjectPos, objectPos);
-        tween.onUpdate((current) => { subject.getComponent(Graphic).realPos = current; });
+        tween.onUpdate((current) => { subject.getComponent(Graphic).position = current; });
         await new Animation(tween).run();
 
-        if (this.pass) subject.graphic.sprite.zIndex = this.object.graphic.position.y + 0.5;
+        if (this.pass) subject.graphic.sprite.zIndex = this.object.graphic.coord.y + 0.5;
     }
 
     private step(start: Point, end: Point): Tween<any> {

@@ -23,11 +23,11 @@ class TooltipProxy {
         const htmlBody = document.querySelector('body') as HTMLBodyElement;
         htmlBody.addEventListener('mousemove', (event: MouseEvent) => {
             this.mousePos = new Point(event.pageX + 12, event.pageY);
-            this.setPosition(this.mousePos);
+            this.position = this.mousePos;
         });
     }
 
-    private setPosition(position: Point): void {
+    private set position(position: Point) {
         this.tooltipNode.style.left = String(position.x);
         this.tooltipNode.style.top = String(position.y);
     }
@@ -36,7 +36,7 @@ class TooltipProxy {
         this.tooltipNode.innerHTML = line;
         if (line === '') this.tooltipNode.style.visibility = 'hidden';
         else this.tooltipNode.style.visibility = 'visible';
-        this.setPosition(position);
+        this.position = position;
     }
 
     public text(): string | null {

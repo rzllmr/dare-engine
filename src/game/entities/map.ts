@@ -44,7 +44,7 @@ export class TileMap extends Container {
             this.visibles.length = 0;
             if (revealTiles) {
                 this.tiles.forEach((tile) => {
-                    this.visibles.push(tile.graphic.position);
+                    this.visibles.push(tile.graphic.coord);
                 });
             }
             this.updateVision();
@@ -77,18 +77,18 @@ export class TileMap extends Container {
         this.data = readMap(Assets.get(this.label as string));
         this.data.layout = this.parseMapLayout(this.data.layout);
 
-        const currentPosition = new Point(0, 0);
+        const currentCoord = new Point(0, 0);
         for (let idx = 0; idx < this.data.layout.length; idx++) {
             const char = this.data.layout[idx];
             if (char === '\n') {
-                while (currentPosition.x < this.dimensions.x) {
-                    const tile = new Tile('none', currentPosition);
+                while (currentCoord.x < this.dimensions.x) {
+                    const tile = new Tile('none', currentCoord);
                     this.layers[0].addChild(tile.graphic.sprite);
                     this.tiles.push(tile);
-                    currentPosition.x++;
+                    currentCoord.x++;
                 }
-                currentPosition.x = 0;
-                currentPosition.y++;
+                currentCoord.x = 0;
+                currentCoord.y++;
                 continue;
             }
 
@@ -98,30 +98,30 @@ export class TileMap extends Container {
                 tileName = 'none';
             }
 
-            const tile = new Tile(tileName, currentPosition);
+            const tile = new Tile(tileName, currentCoord);
 
             if (tile.graphic.layer > 0) {
                 if (tile.kind === 'player') {
                     this.player = tile;
-                    this.player.graphic.position = storage.load('player-position', currentPosition) as Point;
+                    this.player.graphic.coord = storage.load('player-coord', currentCoord) as Point;
                 } else {
                     this.objects.push(tile);
                 }
 
                 const child = this.layers[tile.graphic.layer].addChild(tile.graphic.sprite);
-                child.zIndex = currentPosition.y;
+                child.zIndex = currentCoord.y;
 
                 tileName = 'floor';
             }
             
-            const groundTile = new Tile(tileName, currentPosition);
+            const groundTile = new Tile(tileName, currentCoord);
             this.layers[groundTile.graphic.layer].addChild(groundTile.graphic.sprite);
             this.tiles.push(groundTile);
 
-            currentPosition.x++;
+            currentCoord.x++;
         }
 
-        this._highlight = new Tile('frame', currentPosition);
+        this._highlight = new Tile('frame', currentCoord);
         this.layers[1].addChild(this._highlight.graphic.sprite);
 
         if (this.player === undefined) return;
@@ -149,12 +149,12 @@ export class TileMap extends Container {
         return coord.x + coord.y * (this.dimensions.x + 1);
     }
 
-    private posToCoord(position: Point): Point {
+    public static posToCoord(position: Point): Point {
         position = new Point(position.x - TileMap.tileDim / 2, position.y - TileMap.tileDim / 2);
         return position.multiplyScalar(1 / TileMap.tileDim).round();
     }
 
-    private coordToPos(coord: Point): Point {
+    public static coordToPos(coord: Point): Point {
         return coord.multiplyScalar(TileMap.tileDim);
     }
 
@@ -162,9 +162,9 @@ export class TileMap extends Container {
         position = position.subtract(offset).add(this.pivot);
         if (this._highlight === undefined) return;
 
-        const coord = this.posToCoord(position);
-        if (this._highlight.graphic.position.equals(coord)) return;
-        this._highlight.graphic.position = coord;
+        const coord = TileMap.posToCoord(position);
+        if (this._highlight.graphic.coord.equals(coord)) return;
+        this._highlight.graphic.coord = coord;
 
         const tile = this.entity(coord);
         if (tile === undefined || !tile.graphic.visible) {
@@ -176,7 +176,7 @@ export class TileMap extends Container {
 
         if (!this._highlight.graphic.visible) this._highlight.graphic.show();
 
-        const nextCoordPos = this.coordToPos(new Point(coord.x + 1, coord.y));
+        const nextCoordPos = TileMap.coordToPos(new Point(coord.x + 1, coord.y));
         dialog.tell(tile.info, nextCoordPos.add(offset));
     }
 
@@ -184,12 +184,12 @@ export class TileMap extends Container {
         if (actor === undefined) return false;
         if (actor.moving) return false;
 
-        const originCoord = actor.graphic.position;
+        const originCoord = actor.graphic.coord;
         let origin = this.object(originCoord);
         if (origin === undefined) origin = this.tile(originCoord);
         if (origin === undefined) return false;
 
-        const targetCoord = actor.graphic.position.add(direction);
+        const targetCoord = actor.graphic.coord.add(direction);
         let target = this.object(targetCoord);
         if (target === undefined) target = this.tile(targetCoord);
         if (target === undefined) return false;
@@ -201,7 +201,7 @@ export class TileMap extends Container {
         // this.updateOthers();
         this.updateVision();
 
-        if (actor == this.player) storage.save('player-position', actor.graphic.position);
+        if (actor == this.player) storage.save('player-coord', actor.graphic.coord);
 
         actor.moving = false;
                 
@@ -231,14 +231,14 @@ export class TileMap extends Container {
 
     private object(coord: Point): Tile | undefined {
         for (const object of this.objects.values()) {
-            if (object.graphic.position.equals(coord)) return object;
+            if (object.graphic.coord.equals(coord)) return object;
         }
         return undefined;
     }
 
     private entity(coord: Point): Tile | undefined {
         let tile = this.object(coord);
-        if (tile === undefined && this.player !== undefined && this.player.graphic.position.equals(coord))
+        if (tile === undefined && this.player !== undefined && this.player.graphic.coord.equals(coord))
             tile = this.player;
         if (tile === undefined) tile = this.tile(coord);
         return tile;
@@ -255,7 +255,7 @@ export class TileMap extends Container {
         if (!properties.getBool('reveal-tiles')) {
             if (!properties.getBool('map-tiles')) this.visibles.length = 0;
             unveilRoom(
-                this.player.graphic.position,
+                this.player.graphic.coord,
                 this.isBlocking.bind(this),
                 this.markVisible.bind(this),
                 this.isVisible.bind(this),
@@ -269,7 +269,7 @@ export class TileMap extends Container {
 
         this.lits.length = 0;
         computeFov(
-            this.player.graphic.position,
+            this.player.graphic.coord,
             this.isBlocking.bind(this),
             this.markLit.bind(this),
             properties.getNumber('vision-distance')

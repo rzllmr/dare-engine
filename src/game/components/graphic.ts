@@ -26,7 +26,7 @@ export class Graphic extends SpecdComponent {
     public override init(): void {
         const spriteName = this.idle + this.determSuffix();
         this.sprite = this.loadSprite(spriteName);
-        this.position = this.initialPosition;
+        this.coord = this.initialCoord;
     }
 
     public get idle(): string {
@@ -37,8 +37,8 @@ export class Graphic extends SpecdComponent {
         return this.specs.get('block', false);
     }
 
-    public get initialPosition(): Point {
-        return this.specs.get('position', new Point(0, 0));
+    public get initialCoord(): Point {
+        return this.specs.get('coord', new Point(0, 0));
     }
 
     public get variant(): string[] {
@@ -79,7 +79,7 @@ export class Graphic extends SpecdComponent {
     }
 
     private alignedSuffix(name: string): string {
-        const surrounding = Tile.map.surrounding(this.initialPosition);
+        const surrounding = Tile.map.surrounding(this.initialCoord);
         let suffix = '';
         if (surrounding[1] == name) suffix += 'n';
         if (surrounding[5] == name) suffix += 'e';
@@ -117,20 +117,20 @@ export class Graphic extends SpecdComponent {
         return visible;
     }
 
-    public get position(): Point {
-        return this.sprite.position.multiplyScalar(1 / TileMap.tileDim).round();
+    public get coord(): Point {
+        return TileMap.posToCoord(this.sprite.position);
     }
 
-    public set position(value: Point) {
-        this.sprite.position.copyFrom(value.multiplyScalar(TileMap.tileDim));
+    public set coord(value: Point) {
+        this.sprite.position.copyFrom(TileMap.coordToPos(value));
         this.onMove(this.sprite.position);
     }
 
-    public get realPos(): Point {
+    public get position(): Point {
         return this.sprite.position.clonePoint();
     }
 
-    public set realPos(value: Point) {
+    public set position(value: Point) {
         this.sprite.position.copyFrom(value);
         this.onMove(this.sprite.position);
     }

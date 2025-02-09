@@ -6,7 +6,7 @@ export class Push extends Action {
     public override async act(subject: Tile): Promise<void> {
         if (subject.name !== 'player') return;
 
-        const direction = this.object.graphic.position.subtract(subject.graphic.position);
+        const direction = this.object.graphic.coord.subtract(subject.graphic.coord);
         await this.object.move(direction);
     }
 }
