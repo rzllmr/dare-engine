@@ -1,5 +1,5 @@
 import { Point, Sprite, Texture } from 'pixi.js';
-import { ComponentSpecs } from 'engine/specs';
+import { ComponentSpecs, EntitySpecs } from 'engine/specs';
 import { TileMap } from 'game/entities/map';
 import { Tile } from 'game/entities/tile';
 import { addComponent } from './registry';
@@ -24,7 +24,7 @@ export class Graphic extends SpecdComponent {
     }
 
     public override init(): void {
-        const spriteName = this.idle + this.determSuffix();
+        const spriteName = this.idle + this.suffix();
         this.sprite = this.loadSprite(spriteName);
         this.coord = this.initialCoord;
     }
@@ -48,10 +48,16 @@ export class Graphic extends SpecdComponent {
     }
 
     public get layer(): 0 | 1 {
-        return this.specs.get('layer', 'object') as string == 'ground' ? 0 : 1;
+        return this.specs.get('ground', false) ? 0 : 1;
     }
 
-    private determSuffix(): string {
+    public static getLayer(name: string): 0 | 1 {
+        const specs = EntitySpecs.get(name)?.component('sprite');
+        if (specs == undefined) return 1;
+        return specs.get('ground', false) ? 0 : 1;
+    }
+
+    private suffix(): string {
         let suffix = '';
         for (const variant of this.variant) {
             if (variant.startsWith('random')) {

@@ -1,7 +1,7 @@
 none:
   sprite:
     idle: "empty"
-    layer: "ground"
+    ground: true
 
 frame:
     sprite: "frame"

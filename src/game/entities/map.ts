@@ -3,7 +3,9 @@ import { properties } from 'engine/properties';
 import { MapData, readMap } from 'engine/schemes';
 import { storage } from 'engine/storage';
 import { unveilRoom } from 'fast/fill';
+import { findNext } from 'fast/find';
 import { computeFov } from 'fast/fov';
+import { Graphic } from 'game/components';
 import { dialog } from 'game/proxies/dialog';
 import { Tile } from './tile';
 
@@ -111,7 +113,7 @@ export class TileMap extends Container {
                 const child = this.layers[tile.graphic.layer].addChild(tile.graphic.sprite);
                 child.zIndex = currentCoord.y;
 
-                tileName = 'floor';
+                tileName = this.nextGround(currentCoord);
             }
             
             const groundTile = new Tile(tileName, currentCoord);
@@ -143,6 +145,27 @@ export class TileMap extends Container {
             }
         }
         return surrounding;
+    }
+
+    private nextGround(coord: Point): string {
+        let ground = 'none';
+        const match = (coord: Point): boolean => {
+            const char = this.data.layout.at(this.coordToIdx(coord));
+            if (char == undefined) return false;
+            const name = this.data.key.get(char)?.entity;
+            if (name == undefined) return false;
+            const layer = Graphic.getLayer(name);
+            if (layer == 0) {
+                ground = name;
+                return true;
+            }
+            return false;
+        };
+        const ignore = (coord: Point): boolean => {
+            return this.outOfBounds(coord);
+        }
+        findNext(coord, match, ignore);
+        return ground;
     }
 
     private coordToIdx(coord: Point): number {
