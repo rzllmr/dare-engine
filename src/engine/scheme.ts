@@ -1,4 +1,4 @@
-class Scheme<T> {
+export class Scheme<T> {
     private readonly name: string;
     private readonly map: Map<string, T>;
 
@@ -16,17 +16,4 @@ class Scheme<T> {
         }
         return this.map.get(key);
     }
-}
-
-export interface MapData {
-    layout: string;
-    key: Map<string, string>;
-}
-
-export function readMap(yaml: Map<string, any>): MapData {
-    const data = new Scheme('Map', yaml);
-    return {
-        layout: data.read('layout'),
-        key: data.read('key')
-    };
 }

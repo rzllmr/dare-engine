@@ -1,12 +1,12 @@
 import { Container, Assets, Point } from 'pixi.js';
 import { properties } from 'engine/properties';
-import { MapData, readMap } from 'engine/schemes';
 import { storage } from 'engine/storage';
 import { unveilRoom } from 'fast/fill';
 import { findNext } from 'fast/find';
 import { computeFov } from 'fast/fov';
 import { Graphic } from 'game/components';
 import { dialog } from 'game/proxies/dialog';
+import { MapData } from './mapdata';
 import { Tile } from './tile';
 
 export type PropertyNames = 'vision-distance' | 'map-tiles' | 'reveal-tiles';
@@ -19,7 +19,6 @@ export class TileMap extends Container {
     private readonly tiles = new Array<Tile>();
     private readonly objects = new Array<Tile>();
     private readonly layers = new Array<Container>(2);
-    private readonly dimensions = new Point(0, 0);
 
     public static readonly scale: number = 3.0;
     public static readonly tileDim: number = TileMap.scale * 16;
@@ -53,31 +52,12 @@ export class TileMap extends Container {
         });
     }
 
-    private checkMapDimensions(mapData: string): void {
-        let width = 0;
-        for (const char of mapData) {
-            if (char === '\n') {
-                if (width > this.dimensions.x) this.dimensions.x = width;
-                this.dimensions.y++;
-                width = 0;
-            } else {
-                width++;
-            }
-        }
-    }
-
-    private parseMapLayout(layoutData: string): string {
-        let layout = layoutData.replace(/^\n/, '').replace(/(.) /gm, '$1');
-        this.checkMapDimensions(layout);
-        layout = layout.split('\n').map(
-            (row) => row.padEnd(this.dimensions.x)
-        ).join('\n');
-        return layout;
+    public get dimensions(): Point {
+        return this.data.dimensions;
     }
 
     public async load(): Promise<void> {
-        this.data = readMap(Assets.get(this.label as string));
-        this.data.layout = this.parseMapLayout(this.data.layout);
+        this.data = new MapData(Assets.get(this.label as string));
 
         const currentCoord = new Point(0, 0);
         for (let idx = 0; idx < this.data.layout.length; idx++) {
@@ -94,13 +74,15 @@ export class TileMap extends Container {
                 continue;
             }
 
-            let tileName = this.data.key.get(char);
-            if (tileName === undefined) {
+            let tileName = 'none';
+            const keyEntry = this.data.key.get(char);
+            if (keyEntry === undefined) {
                 if (idx > 0) console.error(`map symbol unknown: ${char}`);
-                tileName = 'none';
+            } else {
+                tileName = keyEntry.entity;
             }
 
-            const tile = new Tile(tileName, currentCoord);
+            const tile = new Tile(tileName, currentCoord, keyEntry?.details);
 
             if (tile.graphic.layer > 0) {
                 if (tile.kind === 'player') {
@@ -140,7 +122,7 @@ export class TileMap extends Container {
         for (let y = -1; y <= 1; y++) {
             for (let x = -1; x <= 1; x++) {
                 const char = this.data.layout[idx + ((this.dimensions.x + 1) * y) + x];
-                const name = this.data.key.get(char) || '';
+                const name = this.data.key.get(char)?.entity || '';
                 surrounding.push(name);
             }
         }
