@@ -7,38 +7,37 @@ import { addComponent } from './registry';
 import { Action } from './types';
 
 export class Open extends Action {
-    private readonly requiredItems: string[] = [];
-
-    constructor(specs: ComponentSpecs) {
-        super(specs);
-
-        if (this.need.length > 0) this.requiredItems = this.need;
-    }
+    private requiredItems: string[] = [];
+    private closed!: boolean;
 
     public override init(): void {
+        this.closed = this.load('closed', true);
+        if (this.closed && this.need.length > 0) this.requiredItems = this.need;
         if (this.requiredItems.length > 0) {
             this.object.getComponent(Move).pass = false;
         }
     }
 
     public override async act(subject: Tile): Promise<void> {
-        if (this.object.image.endsWith('c')) {
-            if (this.requiredItems.length > 0) {
-                if (!subject.hasComponent(Inventory)) return;
-                const inventory = subject.getComponent(Inventory);
-                if (this.requiredItems.every((item) => { return inventory.hasItem(item) })) {
-                    log.tell(`You unlocked the ${this.object.name} with the ${this.requiredItems.join(', ')}.`);
-                    this.requiredItems.length = 0;
-                } else {
-                    log.tell(`The ${this.object.name} seems locked and needs a ${this.requiredItems.join(', ')}.`);
-                    return;
-                }
+        if (this.closed && this.requiredItems.length > 0) {
+            if (!subject.hasComponent(Inventory)) return;
+            const inventory = subject.getComponent(Inventory);
+            if (this.requiredItems.every((item) => { return inventory.hasItem(item) })) {
+                log.tell(`You unlocked the ${this.object.name} with the ${this.requiredItems.join(', ')}.`);
+                this.requiredItems.length = 0;
+            } else {
+                log.tell(`The ${this.object.name} seems locked and needs a ${this.requiredItems.join(', ')}.`);
+                return;
             }
-            
-            const openSprite = this.object.image.replace(/c$/, 'o');
-            this.object.graphic.changeSprite(openSprite);
-            if (this.pass) this.object.getComponent(Move).pass = true;
         }
+        
+        const openSprite = this.object.image.replace(/c$/, 'o');
+        this.object.graphic.changeSprite(openSprite);
+
+        if (this.pass) this.object.getComponent(Move).pass = true;
+
+        this.closed = false;
+        this.save('closed', this.closed);
     }
 
     public override async leave(subject: Tile): Promise<void> {

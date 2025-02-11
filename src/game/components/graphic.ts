@@ -24,9 +24,9 @@ export class Graphic extends SpecdComponent {
     }
 
     public override init(): void {
-        const spriteName = this.idle + this.suffix();
+        const spriteName = this.load('image', this.idle + this.suffix());
         this.sprite = this.loadSprite(spriteName);
-        this.coord = this.initialCoord;
+        this.coord = this.load('coord', this.initialCoord);
     }
 
     public get idle(): string {
@@ -141,6 +141,10 @@ export class Graphic extends SpecdComponent {
         this.onMove(this.sprite.position);
     }
 
+    public afterMove(): void {
+        this.save('coord', this.coord);
+    }
+
     private loadSprite(image: string): Sprite {
         const texture = Graphic.loadTexture(image);
         texture.source.scaleMode = 'nearest';
@@ -159,6 +163,7 @@ export class Graphic extends SpecdComponent {
     public changeSprite(image: string): void {
         this.sprite.texture = Graphic.loadTexture(image);
         this.image = image;
+        this.save('image', this.image);
     }
 
     private static readonly textures = new Map<string, Texture>();

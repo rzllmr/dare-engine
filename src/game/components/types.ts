@@ -1,10 +1,23 @@
 import { Component } from 'engine/component';
 import { ComponentSpecs } from 'engine/specs';
+import { storage } from 'engine/storage';
 import { Tile } from 'game/entities/tile';
 
 export class SpecdComponent extends Component {
     public get object(): Tile {
         return this.entity as Tile;
+    }
+
+    public get id(): string {
+        return (this.object.id + '/' + this.constructor.name).toLowerCase();
+    }
+
+    protected load(name: string, defaultValue?: any): any {
+        return storage.load(`${this.id}/${name}`, defaultValue);
+    }
+
+    protected save<T>(name: string, value: T): void {
+        return storage.save(`${this.id}/${name}`, value);
     }
 
     protected specs: ComponentSpecs;

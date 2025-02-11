@@ -1,6 +1,5 @@
 import { Container, Assets, Point } from 'pixi.js';
 import { properties } from 'engine/properties';
-import { storage } from 'engine/storage';
 import { unveilRoom } from 'fast/fill';
 import { findNext } from 'fast/find';
 import { computeFov } from 'fast/fov';
@@ -85,15 +84,16 @@ export class TileMap extends Container {
             const tile = new Tile(tileName, currentCoord, keyEntry?.details);
 
             if (tile.graphic.layer > 0) {
-                if (tile.kind === 'player') {
-                    this.player = tile;
-                    this.player.graphic.coord = storage.load('player-coord', currentCoord) as Point;
-                } else {
-                    this.objects.push(tile);
-                }
+                if (!tile.destroyed) {
+                    if (tile.kind === 'player') {
+                        this.player = tile;
+                    } else {
+                        this.objects.push(tile);
+                    }
 
-                const child = this.layers[tile.graphic.layer].addChild(tile.graphic.sprite);
-                child.zIndex = currentCoord.y;
+                    const child = this.layers[tile.graphic.layer].addChild(tile.graphic.sprite);
+                    child.zIndex = currentCoord.y;
+                }
 
                 tileName = this.nextGround(currentCoord);
             }
@@ -205,8 +205,6 @@ export class TileMap extends Container {
         await origin?.leave(actor);
         // this.updateOthers();
         this.updateVision();
-
-        if (actor == this.player) storage.save('player-coord', actor.graphic.coord);
 
         actor.moving = false;
                 

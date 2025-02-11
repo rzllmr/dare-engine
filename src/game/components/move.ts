@@ -14,11 +14,17 @@ export class Move extends Action {
         super(specs, 'pass');
     }
 
+    public override init(): void {
+        const pass = this.load('pass');
+        if (pass != undefined) this.pass = pass;
+    }
+
     public get pass(): boolean {
         return this.specs.get('pass', false);
     }
     public set pass(value: boolean) {
         this.specs.set('pass', value);
+        this.save('pass', value);
     }
 
     public override async act(subject: Tile): Promise<void> {
@@ -28,6 +34,7 @@ export class Move extends Action {
         const tween = this.pass ? this.step(subjectPos, objectPos) : this.bounce(subjectPos, objectPos);
         tween.onUpdate((current) => { subject.getComponent(Graphic).position = current; });
         await new Animation(tween).run();
+        subject.getComponent(Graphic).afterMove();
 
         if (this.pass) subject.graphic.sprite.zIndex = this.object.graphic.coord.y + 0.5;
     }

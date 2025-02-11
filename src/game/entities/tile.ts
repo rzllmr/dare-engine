@@ -1,6 +1,7 @@
 import { Point } from 'pixi.js';
 import { Entity } from 'engine/entity';
 import { EntitySpecs } from 'engine/specs';
+import { storage } from 'engine/storage';
 import { Graphic, Info } from 'game/components';
 import { createComponent } from 'game/components/registry';
 import { Action } from 'game/components/types';
@@ -12,9 +13,12 @@ export class Tile extends Entity {
     public moving = false;
 
     private readonly specs: EntitySpecs;
+    public readonly id: string;
 
     constructor(name: string, coord: Point, details: string = '') {
         super();
+
+        this.id = `${name}[${coord.x},${coord.y}]`;
 
         this.specs = EntitySpecs.get(name);
         this.specs.fillIn(details);
@@ -36,9 +40,22 @@ export class Tile extends Entity {
         }
     }
 
+    protected load(name: string, defaultValue?: any): any {
+        return storage.load(`${this.id}/${name}`, defaultValue);
+    }
+
+    protected save<T>(name: string, value: T): void {
+        return storage.save(`${this.id}/${name}`, value);
+    }
+
     private destroy(): void {
         Tile.map.remove(this);
         this.components.length = 0;
+        this.save('destroyed', true);
+    }
+
+    public get destroyed(): boolean {
+        return this.load('destroyed', false);
     }
 
     public move(direction: Point): Promise<boolean> {
