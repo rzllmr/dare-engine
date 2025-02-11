@@ -44,6 +44,15 @@ class Storage {
     public clear(): void {
         this.storage.clear();
     }
+
+    public keys(): Set<string> {
+        const keys = new Set<string>();
+        for (let i = 0; i < this.storage.length; i++) {
+            const key = this.storage.key(i);
+            if (key != null) keys.add(key);
+        }
+        return keys;
+    }
     
     public save(key: string, value: storageTypes): void {
         if (!this._available) return;

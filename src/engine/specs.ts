@@ -108,7 +108,7 @@ export class ComponentSpecs {
         return this.specs.has(name);
     }
 
-    public get<T>(name: string, defaultValue: T): T {
+    public get<T>(name: string, defaultValue?: T): T {
         return this.specs.get(name) || defaultValue;
     }
 

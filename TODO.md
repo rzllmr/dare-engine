@@ -4,7 +4,7 @@
 
 ### Todo
 
-- [ ] Require sprite suffixes in specs #system
+- [ ] Change level through portal #system
 - [ ] Structure elements and styling #cleanup
 - [ ] Use synthesizers for music and sounds #system
 - [ ] Animate player character #art
@@ -12,10 +12,11 @@
 ### In Progress
 
 - [ ] Explain how to modify the game template on the webpage #docs
-- [ ] Store level state in browser #system
 
 ### Done ✓
 
+- [x] Save all object state changes #system
+- [x] Require sprite suffixes in specs #system
 - [x] Use inheritance in entity specs #system
 - [x] Hot reload changed files #system
 - [x] Attach actions to elements in yaml #system
