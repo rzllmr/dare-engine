@@ -7,22 +7,13 @@ import { Action } from './types';
 
 export class Pick extends Action {
     private readonly items: Item[] = [];
-    private readonly destroyObject: boolean = true;
-
-    constructor(specs: ComponentSpecs) {
-        super(specs);
-
-        for (const itemName of this.item) {
-            const itemSpecs = EntitySpecs.get(itemName);
-
-            const infoText = itemSpecs.component('info')?.get('brief', '') || '';
-            const pickSpecs = itemSpecs.component('pick');
-            this.items.push(new Item(itemName, infoText, pickSpecs));
-            this.destroyObject = false;
-        }
-    }
+    private destroyObject: boolean = true;
 
     public override init(): void {
+        for (const itemName of this.item) {
+            this.items.push(Item.create(itemName));
+            this.destroyObject = false;
+        }
         if (this.items.length == 0) {
             this.items.push(new Item(this.object.name, this.object.info, this.specs));
         }

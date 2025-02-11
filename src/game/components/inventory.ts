@@ -1,5 +1,5 @@
 import { properties } from 'engine/properties';
-import { ComponentSpecs } from 'engine/specs';
+import { ComponentSpecs, EntitySpecs } from 'engine/specs';
 import { ListProxy } from 'game/proxies/list';
 import { PropertyNames } from 'game/entities/map';
 import { addComponent } from './registry';
@@ -11,14 +11,15 @@ interface BodyPart {
 }
 
 export class Inventory extends SpecdComponent {
-    private readonly items = new Map<string, Item>();
+    private readonly items: Map<string, Item>;
     private readonly equippedList: ListProxy;
     private readonly packedList: ListProxy;
-    private readonly equippedParts = new Map<string, BodyPart>();
+    private readonly equippedParts: Map<string, BodyPart>;
 
     constructor(specs: ComponentSpecs) {
         super(specs);
         
+        this.items = new Map<string, Item>();
         this.equippedList = new ListProxy('#equipped');
         this.packedList = new ListProxy('#packed');
         this.equippedParts = new Map([
@@ -28,8 +29,17 @@ export class Inventory extends SpecdComponent {
         ]);
     }
 
+    public override init(): void {
+        const savedItems = this.load('items', [] as string[]);
+        for (const name of savedItems) {
+            const item = Item.create(name);
+            this.addItem(item);
+        }
+    }
+
     public addItem(item: Item): boolean {
         this.items.set(item.name, item);
+        this.save('items', Array.from(this.items.keys()));
 
         if (item.isEquipment() && this.canEquip(item)) {
             item.onEquip();
@@ -48,6 +58,7 @@ export class Inventory extends SpecdComponent {
 
         item.onDrop();
         this.items.delete(name);
+        this.save('items', Array.from(this.items.keys()));
         return true;
     }
 
@@ -69,6 +80,13 @@ export class Item {
     public readonly name: string;
     public readonly info: string;
     private readonly specs: any;
+
+    public static create(name: string): Item {
+        const itemSpecs = EntitySpecs.get(name);
+        const infoText = itemSpecs.component('info')?.get('brief', '') || '';
+        const pickSpecs = itemSpecs.component('pick');
+        return new Item(name, infoText, pickSpecs);
+    }
 
     constructor(name: string, info: string, specs: any) {
         this.name = name;
