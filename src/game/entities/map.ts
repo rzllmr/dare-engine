@@ -25,6 +25,9 @@ export class TileMap extends Container {
     public player: Tile | undefined;
     private _highlight: Tile | undefined;
 
+    private readonly afterLoadCallbacks = new Array<() => void>();
+    private loaded = false;
+
     constructor(name: string) {
         super();
 
@@ -39,15 +42,28 @@ export class TileMap extends Container {
         this.registerChanges();
     }
 
+    private afterLoad(callback?: () => void): void {
+        if (callback == undefined) {
+            this.afterLoadCallbacks.forEach((cb) => {cb()});
+            this.loaded = true;
+        } else if (this.loaded) {
+            callback();
+        } else {
+            this.afterLoadCallbacks.push(callback);
+        }
+    }
+
     private registerChanges(): void {
         properties.onChange('reveal-tiles', (revealTiles: boolean) => {
-            this.visibles.length = 0;
-            if (revealTiles) {
-                this.tiles.forEach((tile) => {
-                    this.visibles.push(tile.graphic.coord);
-                });
-            }
-            this.updateVision();
+            this.afterLoad(() => {
+                this.visibles.length = 0;
+                if (revealTiles) {
+                    this.tiles.forEach((tile) => {
+                        this.visibles.push(tile.graphic.coord);
+                    });
+                }
+                this.updateVision();
+            });
         });
     }
 
@@ -107,6 +123,8 @@ export class TileMap extends Container {
 
         this._highlight = new Tile('frame', currentCoord);
         this.layers[1].addChild(this._highlight.graphic.sprite);
+
+        this.afterLoad();
 
         if (this.player === undefined) return;
 
