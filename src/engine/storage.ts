@@ -1,6 +1,6 @@
 import { Point } from 'pixi.js';
 
-type loadTypes = string | number | boolean | Point;
+export type storageTypes = string | number | boolean | Point | any[];
 
 class Storage {
     private static _instance: Storage;
@@ -45,7 +45,7 @@ class Storage {
         this.storage.clear();
     }
     
-    public save<T>(key: string, value: T): void {
+    public save(key: string, value: storageTypes): void {
         if (!this._available) return;
         
         this.storage.setItem(key, this.serialize(value));
@@ -55,7 +55,8 @@ class Storage {
     public load(key: string, defaultValue: number): number;
     public load(key: string, defaultValue: boolean): boolean;
     public load(key: string, defaultValue: Point): Point;
-    public load(key: string, defaultValue: loadTypes): loadTypes {
+    public load(key: string, defaultValue: any[]): any[];
+    public load(key: string, defaultValue: storageTypes): storageTypes {
         const json = this.storage.getItem(key);
         if (json == null) return defaultValue;
         

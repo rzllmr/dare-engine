@@ -1,7 +1,7 @@
 import { Point } from 'pixi.js';
 import { Entity } from 'engine/entity';
 import { EntitySpecs } from 'engine/specs';
-import { storage } from 'engine/storage';
+import { storage, storageTypes } from 'engine/storage';
 import { Graphic, Info } from 'game/components';
 import { createComponent } from 'game/components/registry';
 import { Action } from 'game/components/types';
@@ -44,7 +44,7 @@ export class Tile extends Entity {
         return storage.load(`${this.id}/${name}`, defaultValue);
     }
 
-    protected save<T>(name: string, value: T): void {
+    protected save(name: string, value: storageTypes): void {
         return storage.save(`${this.id}/${name}`, value);
     }
 

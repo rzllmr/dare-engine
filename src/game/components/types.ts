@@ -1,6 +1,6 @@
 import { Component } from 'engine/component';
 import { ComponentSpecs } from 'engine/specs';
-import { storage } from 'engine/storage';
+import { storage, storageTypes } from 'engine/storage';
 import { Tile } from 'game/entities/tile';
 
 export class SpecdComponent extends Component {
@@ -16,7 +16,7 @@ export class SpecdComponent extends Component {
         return storage.load(`${this.id}/${name}`, defaultValue);
     }
 
-    protected save<T>(name: string, value: T): void {
+    protected save(name: string, value: storageTypes): void {
         return storage.save(`${this.id}/${name}`, value);
     }
 
