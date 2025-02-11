@@ -18,7 +18,7 @@ export class Tile extends Entity {
     constructor(name: string, coord: Point, details: string = '') {
         super();
 
-        this.id = `${name}[${coord.x},${coord.y}]`;
+        this.id = `${Tile.map.label}/${name}[${coord.x},${coord.y}]`;
 
         this.specs = EntitySpecs.get(name);
         this.specs.fillIn(details);
