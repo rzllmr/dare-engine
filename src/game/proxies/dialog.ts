@@ -1,5 +1,6 @@
 import { Story } from 'inkjs';
 import { Assets, Point } from 'pixi.js';
+import { storage } from 'engine/storage';
 import { bookButton } from './button';
 import { dpad } from './dpad';
 
@@ -45,6 +46,10 @@ class DialogProxy {
     }
 
     public tellStory(story: string, knot: string): void {
+        const storageEntry = `dialog/told/${story}.${knot}`;
+        if (storage.load(storageEntry, false)) return;
+        else storage.save(storageEntry, true);
+
         this.story = Assets.get<Story>(`dialog.${story}`);
         this.story.ChoosePathString(knot);
         this.continue();
