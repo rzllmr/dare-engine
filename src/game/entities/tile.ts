@@ -38,6 +38,7 @@ export class Tile extends Entity {
             }
             this.addComponent(component);
         }
+        this.components.forEach((component) => {component.init()});
     }
 
     protected load(name: string, defaultValue?: any): any {

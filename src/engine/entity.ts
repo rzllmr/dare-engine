@@ -12,7 +12,6 @@ export abstract class Entity {
     public addComponent(component: Component): void {
         this._components.push(component);
         component.entity = this;
-        component.init();
     }
 
     public getComponent<C extends Component>(constr: constr<C>): C {
