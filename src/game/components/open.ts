@@ -13,9 +13,6 @@ export class Open extends Action {
     public override init(): void {
         this.closed = this.load('closed', true);
         if (this.closed && this.need.length > 0) this.requiredItems = this.need;
-        if (this.requiredItems.length > 0) {
-            this.object.getComponent(Move).pass = false;
-        }
     }
 
     public override async act(subject: Tile): Promise<void> {
