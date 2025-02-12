@@ -4,4 +4,4 @@ none:
     ground: true
 
 frame:
-    sprite: "frame"
+  sprite: "frame"

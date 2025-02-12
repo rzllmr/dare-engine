@@ -1,6 +1,6 @@
 {
   "name": "dare-engine",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Humble game engine in TypeScript using PixiJS",
   "author": "rzllmr",
   "license": "MIT",

@@ -1,7 +1,7 @@
 # Dare
 > A humble game engine in TypeScript using PixiJS.
 
-The intention of this project is to experiment with game development for the web and on mobile. Although the most basic tasks should be handled by frameworks like [PixiJS](https://pixijs.com/) for rendering, I want to create the rest of the engine making it run a game on my own. Details about how to make a game with it you can find on its [homepage](https://rzllmr.github.io/pixi-engine/).
+The intention of this project is to experiment with game development for the web and on mobile. Although the most basic tasks should be handled by frameworks like [PixiJS](https://pixijs.com/) for rendering, I want to create the rest of the engine making it run a game on my own. Details about how to make a game with it you can find on its [homepage](https://rzllmr.github.io/dare-engine/).
 
 ## Build instructions
 
@@ -72,7 +72,7 @@ Obtained through Node.js package management (NPM):
 
 ## Contribution
 
-1. Fork it (<https://github.com/rzllmr/pixi-engine/fork>)
+1. Fork it (<https://github.com/rzllmr/dare-engine/fork>)
 2. Create your feature branch (`git checkout -b feature/example`)
 3. Commit your changes (`git commit -am 'Change something'`)
 4. Push to the branch (`git push origin feature/example`)
