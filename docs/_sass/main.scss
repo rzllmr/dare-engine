@@ -17,16 +17,24 @@ nav {
 		li {
 			padding: 5px 0px;
 			background: none;
+			font-style: italic;
 
 			&.tag-h1 {
 				a {
-					text-decoration: underline double;
+					text-decoration: underline;
+					font-weight: bold;
 				}
 			}
 
 			&.tag-h2 {
 				a {
 					text-decoration: underline;
+				}
+			}
+
+			&.tag-h3 {
+				a {
+					font-style: italic;
 				}
 			}
 		}

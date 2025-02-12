@@ -1,0 +1,11 @@
+---
+layout: post
+title:  "Dare v0.4.4-prototype"
+date:   2025-02-11 12:00:00 +0100
+categories: releases
+---
+This is the first package I assembled now with a very simple demo level. But it can be deployed as it is to itch.io or any other server hosting it as a webpage. And while the code is bundled to a tight package, the content files relevant to the game are still open and editable. So you can just go ahead and fiddle around with it. Have fun!
+
+📦 [dare_template.zip](https://github.com/rzllmr/dare-engine/releases/download/v0.4.4/dare_template.zip)<br>
+📦 [dare_template.tgz](https://github.com/rzllmr/dare-engine/releases/download/v0.4.4/dare_template.tgz)
+
