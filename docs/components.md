@@ -93,11 +93,11 @@ entity:
 |:-|:-|:-|
 | **equip** | property list | empty list |
 
-* [Property values](../properties) to change when this entity is equipped.
+* [Property values](properties) to change when this entity is equipped.
 
 | **take** | property list | empty list |
 
-* [Property values](../properties) to change when this entity is picked up.
+* [Property values](properties) to change when this entity is picked up.
 
 | **where** | `back`, `body`, `hand`, `head`, `feet` | `back` |
 
@@ -172,4 +172,4 @@ entity:
 
 * * *
 
-[Back to home page...](../index)
+[Back to home page...](index)

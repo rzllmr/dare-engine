@@ -40,4 +40,4 @@ The following list is updated regularly to reflect the latest state of the game 
 
 * * *
 
-[Back to home page...](../index)
+[Back to home page...](index)

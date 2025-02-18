@@ -125,7 +125,7 @@ You see it's trees of nested properties we want to go through now bit by bit. Th
 
 ### About the components
 
-The following list of components is only what is available now, but will be expanded further step by step. Some of them may take longer, because they involve a whole new game system, but I will keep you posted. Until then please go ahead, stick together what you want and explore everything you can already create with them. Details about the possible specs of each component you can find [here](../components).
+The following list of components is only what is available now, but will be expanded further step by step. Some of them may take longer, because they involve a whole new game system, but I will keep you posted. Until then please go ahead, stick together what you want and explore everything you can already create with them. Details about the possible specs of each component you can find [here](components).
 
 📋 **info** is the description you get of an entity in the game
 
