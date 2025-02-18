@@ -1,7 +1,8 @@
 floor:
   sprite:
     idle: "dirt_grey"
-    variant: "random"
+    variants:
+      random: true
     ground: true
   move:
     pass: true
@@ -9,13 +10,16 @@ floor:
 wall:
   sprite:
     idle: "wall_grey"
-    variant: "align"
+    variants:
+      align: "wall"
     block: true
 
 door:
   sprite:
     idle: "door"
-    variant: ["align:wall", "openable"]
+    variants:
+      align: "wall"
+      openable: true
     block: true
   open:
     pass: true
@@ -24,7 +28,8 @@ door:
 chest:
   sprite:
     idle: "chest"
-    variant: "openable"
+    variants:
+      openable: true
   info: "A simple chest."
   open:
     need: "*?"

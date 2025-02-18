@@ -41,10 +41,8 @@ export class Graphic extends SpecdComponent {
         return this.specs.get('coord', new Point(0, 0));
     }
 
-    public get variant(): string[] {
-        let variant = this.specs.get('variant', [] as string[]);
-        if (typeof variant == 'string') variant = [variant];
-        return variant;
+    public get variants(): Map<string, any> {
+        return this.specs.get('variants', new Map<string, any>());
     }
 
     public get layer(): 0 | 1 {
@@ -59,17 +57,16 @@ export class Graphic extends SpecdComponent {
 
     private suffix(): string {
         let suffix = '';
-        for (const variant of this.variant) {
-            if (variant.startsWith('random')) {
-                suffix += '.' + this.randomSuffix();
-            } else if (variant.startsWith('align')) {
-                const name = variant.split(':')[1] || this.object.name;
-                suffix += '.' + this.alignedSuffix(name);
-            } else if (variant.startsWith('openable')) {
-                suffix += '.c';
-            } else {
-                console.warn(`unknown sprite variant: ${variant}`);
-            }
+        const variants = this.variants;
+        if (variants.get('random') == true) {
+            suffix += '.' + this.randomSuffix();
+        }
+        if (variants.has('align')) {
+            const entityName = variants.get('align');
+            suffix += '.' + this.alignedSuffix(entityName);
+        }
+        if (variants.get('openable') == true) {
+            suffix += '.c';
         }
         return suffix;
     }
