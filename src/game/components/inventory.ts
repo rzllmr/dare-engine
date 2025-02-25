@@ -25,7 +25,9 @@ export class Inventory extends SpecdComponent {
         this.equippedParts = new Map([
             ['hand', { max: 2, items: [] }],
             ['head', { max: 1, items: [] }],
-            ['body', { max: 2, items: [] }]
+            ['body', { max: 2, items: [] }],
+            ['feet', { max: 1, items: [] }],
+            ['back', { max: 2, items: [] }]
         ]);
     }
 
@@ -43,7 +45,7 @@ export class Inventory extends SpecdComponent {
 
         if (item.isEquipment() && this.canEquip(item)) {
             item.onEquip();
-            this.equippedList.add(`${item.name} (${item.part})`);
+            this.equippedList.add(`${item.name} (${item.where})`);
         } else {
             item.onTake();
             this.packedList.add(item.name);
@@ -67,7 +69,7 @@ export class Inventory extends SpecdComponent {
     }
 
     private canEquip(item: Item): boolean {
-        const part = this.equippedParts.get(item.part);
+        const part = this.equippedParts.get(item.where);
         if (part !== undefined && part.items.length < part.max) {
             part.items.push(item.name);
             return true;
@@ -98,8 +100,8 @@ export class Item {
         return this.specs?.has('equip');
     }
 
-    public get part(): string {
-        return this.specs?.get('part');
+    public get where(): string {
+        return this.specs?.get('where');
     }
 
     public onTake(): void {

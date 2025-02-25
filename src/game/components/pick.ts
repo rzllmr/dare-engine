@@ -55,8 +55,8 @@ export class Pick extends Action {
         return this.specs.get('equip', []);
     }
 
-    public get part(): string {
-        return this.specs.get('part', '');
+    public get where(): string {
+        return this.specs.get('where', '');
     }
 }
 
