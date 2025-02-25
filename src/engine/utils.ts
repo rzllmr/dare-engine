@@ -17,5 +17,17 @@ class Utils {
         offset.y += element.offsetTop;
         return offset;
     }
+
+    public cloneMap(original: Map<any, any>): Map<any, any> {
+        const clone = new Map<any, any>();
+        for (const [key, value] of original) {
+            if (value instanceof Map) {
+                clone.set(key, this.cloneMap(value));
+            } else {
+                clone.set(key, value);
+            }
+        }
+        return clone;
+    }    
 }
 export const utils = Utils.instance();

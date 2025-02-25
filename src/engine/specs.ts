@@ -1,5 +1,6 @@
 import { Assets } from 'pixi.js';
 import { defaultComponents } from 'game/components/registry';
+import { utils } from './utils';
 
 type Specs = Map<string, any>;
 
@@ -25,7 +26,7 @@ export class EntitySpecs {
         const entityData = EntitySpecs.data.get(name);
         if (entityData == undefined) throw new Error(`unknown element: ${name}`);
 
-        return entityData;
+        return utils.cloneMap(entityData);
     }
 
     private static addInherits(name: string, specs: Specs, likeChain: string[] = []): Specs {
