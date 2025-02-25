@@ -54,6 +54,36 @@
 			"sourceSize": { "w": 16, "h": 32 },
 			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
 		},
+		"torch.e": {
+			"anchor": { "x": 0, "y": 16 },
+			"frame": { "x": 176, "y": 0, "w": 16, "h": 32 },
+			"sourceSize": { "w": 16, "h": 32 },
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
+		},
+		"torch.w": {
+			"anchor": { "x": 0, "y": 16 },
+			"frame": { "x": 192, "y": 0, "w": 16, "h": 32 },
+			"sourceSize": { "w": 16, "h": 32 },
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
+		},
+		"torch.s": {
+			"anchor": { "x": 0, "y": 16 },
+			"frame": { "x": 208, "y": 0, "w": 16, "h": 32 },
+			"sourceSize": { "w": 16, "h": 32 },
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
+		},
+		"torch.n": {
+			"anchor": { "x": 0, "y": 16 },
+			"frame": { "x": 224, "y": 0, "w": 16, "h": 32 },
+			"sourceSize": { "w": 16, "h": 32 },
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
+		},
+		"torch.o": {
+			"anchor": { "x": 0, "y": 16 },
+			"frame": { "x": 240, "y": 0, "w": 16, "h": 32 },
+			"sourceSize": { "w": 16, "h": 32 },
+			"spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 }
+		},
 		"wall_grey.o": {
 			"anchor": { "x": 0, "y": 3 },
 			"frame": { "x": 208, "y": 45, "w": 16, "h": 19 },

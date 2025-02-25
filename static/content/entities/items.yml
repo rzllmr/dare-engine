@@ -20,6 +20,10 @@ parchment:
 torch:
   like: "item"
   info: "A torch lighting your way as you raise it."
+  sprite:
+    idle: "torch"
+    variants:
+      align: "wall"
   pick:
     where: "hand"
     equip:
