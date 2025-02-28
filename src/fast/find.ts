@@ -2,8 +2,21 @@
 // explained at https://codeheir.com/2022/08/21/comparing-flood-fill-algorithms-in-javascript/
 
 import { Point } from 'pixi.js';
+import { find_next, point_struct } from 'fast/wasm/pkg/wasm';
 
-export function findNext(
+export { findNext_Wasm as findNext };
+
+function findNext_Wasm(origin: Point, ground: boolean[], boundaries: Point, maxDistance: number): number {
+    const index = find_next(
+        point_struct(origin.x, origin.y),
+        Uint8Array.from(ground),
+        point_struct(boundaries.x, boundaries.y),
+        maxDistance
+    );
+    return index;
+}
+
+function findNext_Native(
     origin: Point,
     ground: boolean[],
     boundaries: Point,

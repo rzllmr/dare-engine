@@ -4,6 +4,7 @@ import { utils } from 'engine/utils';
 import { Move } from 'game/components/move';
 import { TileMap } from 'game/entities/map';
 import { book } from 'game/proxies/book';
+import init_wasm from "fast/wasm/pkg/wasm";
 
 export class GameScene extends Container implements IScene {
     public gameName = 'Dare';
@@ -20,6 +21,7 @@ export class GameScene extends Container implements IScene {
     }
 
     public async load(): Promise<void> {
+        await init_wasm();
         await book.load();
         await this.changeMap(this.startingLevel);
     }

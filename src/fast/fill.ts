@@ -2,8 +2,21 @@
 // explained at https://codeheir.com/2022/08/21/comparing-flood-fill-algorithms-in-javascript/
 
 import { Point } from 'pixi.js';
+import { unveil_room, point_struct } from 'fast/wasm/pkg/wasm';
 
-export function unveilRoom(
+export { unveilRoom_Wasm as unveilRoom };
+
+function unveilRoom_Wasm(origin: Point, blocking: boolean[], boundaries: Point, maxDistance: number): boolean[] {
+    const unveiled = unveil_room(
+        point_struct(origin.x, origin.y),
+        Uint8Array.from(blocking),
+        point_struct(boundaries.x, boundaries.y),
+        maxDistance
+    );
+    return Array.from(unveiled).map((i) => { return i == 1; });
+}
+
+function unveilRoom_Native(
     origin: Point,
     blocking: boolean[],
     boundaries: Point,

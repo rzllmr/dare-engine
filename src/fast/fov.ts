@@ -8,8 +8,21 @@
 // symmetry, expansive walls, expanding pillar shadows, no blind corners, no artifacts, efficiency
 
 import { Point } from 'pixi.js';
+import { compute_fov, point_struct } from 'fast/wasm/pkg/wasm';
 
-export function computeFov(
+export { computeFov_Wasm as computeFov };
+
+function computeFov_Wasm(origin: Point, blocking: boolean[], boundaries: Point, maxDistance: number): number[] {
+    const visible = compute_fov(
+        point_struct(origin.x, origin.y),
+        Uint8Array.from(blocking),
+        point_struct(boundaries.x, boundaries.y),
+        maxDistance
+    );
+    return Array.from(visible);
+}
+
+function computeFov_Native(
     origin: Point,
     blocking: boolean[],
     boundaries: Point,

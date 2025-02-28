@@ -17,7 +17,8 @@
     "fix-exe": "cd dist; chmod 755 run.command",
     "zip": "cd dist; zip -qr dare_$(cat version.txt).zip *; mv *.zip ..",
     "tgz": "cd dist; tar -czf dare_$(cat version.txt).tgz *; mv *.tgz ..",
-    "docs": "cd docs; bundle exec jekyll serve"
+    "docs": "cd docs; bundle exec jekyll serve",
+    "wasm": "cd src/fast/wasm; wasm-pack build --target web"
   },
   "dependencies": {
     "@tweenjs/tween.js": "^25.0.0",
