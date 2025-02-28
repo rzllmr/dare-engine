@@ -5,30 +5,41 @@ import { Point } from 'pixi.js';
 
 export function findNext(
     origin: Point,
-    match: (coord: Point) => boolean,
-    ignore: (coord: Point) => boolean,
+    ground: boolean[],
+    boundaries: Point,
     maxDistance: number = Infinity
-): void {
+): number {
     // using queue fill for expansion from origin
-    const visited = new Set<string>();
+    const visited = Array(ground.length).fill(false);
+
     const queue = [origin];
     while (queue.length > 0) {
         const current = queue.shift() as Point;
         for (const direction of directions()) {
-            const child = new Point(
-                current.x + direction.x,
-                current.y + direction.y
-            );
-            const childString = `${child.x}:${child.y}`;
-            if (visited.has(childString)) continue;
-            visited.add(childString);
+            const child = addPoints(current, direction);
+            const index = child.x + child.y * boundaries.x;
 
-            if (!insideCircle(child, origin, maxDistance) || ignore(child)) continue;
+            if (visited[index]) continue;
+            visited[index] = true;
 
-            if (match(child)) return;
+            if (!insideBoundaries(child, boundaries)) continue;
+            if (!insideCircle(child, origin, maxDistance)) continue;
+
+            if (ground[index]) return index;
+
             queue.push(child);
         }
     }
+
+    return 0;
+}
+
+function addPoints(a: Point, b: Point): Point {
+    return new Point(a.x + b.x, a.y + b.y);
+}
+
+function insideBoundaries(coord: Point, boundaries: Point): boolean {
+    return coord.x <= boundaries.x && coord.y <= boundaries.y;
 }
 
 function insideCircle(tile: Point, origin: Point, radius: number): boolean {

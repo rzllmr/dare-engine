@@ -28,6 +28,8 @@ export class TileMap extends Container {
     private readonly afterLoadCallbacks = new Array<() => void>();
     private loaded = false;
 
+    private readonly flatMaps = new Map<string, any[]>();
+
     constructor(name: string) {
         super();
 
@@ -56,11 +58,9 @@ export class TileMap extends Container {
     private registerChanges(): void {
         properties.onChange('reveal-tiles', (revealTiles: boolean) => {
             this.afterLoad(() => {
-                this.visibles.length = 0;
+                const visibleMap = this.visibleMap(true);
                 if (revealTiles) {
-                    this.tiles.forEach((tile) => {
-                        this.visibles.push(tile.graphic.coord);
-                    });
+                    visibleMap.fill(true);
                 }
                 this.updateVision();
             });
@@ -149,27 +149,28 @@ export class TileMap extends Container {
 
     private nextGround(coord: Point): string {
         let ground = 'none';
-        const match = (coord: Point): boolean => {
-            const char = this.data.layout.at(this.coordToIdx(coord));
-            if (char == undefined) return false;
-            const name = this.data.key.get(char)?.entity;
-            if (name == undefined) return false;
-            const layer = Graphic.getLayer(name);
-            if (layer == 0) {
-                ground = name;
-                return true;
-            }
-            return false;
-        };
-        const ignore = (coord: Point): boolean => {
-            return this.outOfBounds(coord);
-        }
-        findNext(coord, match, ignore);
+        const groundIdx = findNext(
+            coord,
+            this.groundMap(),
+            this.dimensions,
+            Infinity
+        );
+        const char = this.data.layout.at(groundIdx);
+        if (char == undefined) return ground;
+        const name = this.data.key.get(char)?.entity;
+        if (name != undefined) ground = name;
         return ground;
     }
 
     private coordToIdx(coord: Point): number {
         return coord.x + coord.y * (this.dimensions.x + 1);
+    }
+
+    private idxToCoord(idx: number): Point {
+        return new Point(
+            idx % this.dimensions.x,
+            Math.floor(idx / this.dimensions.x)
+        );
     }
 
     public static posToCoord(position: Point): Point {
@@ -268,67 +269,101 @@ export class TileMap extends Container {
     private updateVision(): void {
         if (this.player === undefined) return;
 
-        this.visibles.forEach((coord) => {
-            this.object(coord)?.graphic.hide();
-            this.tile(coord)?.graphic.hide();
-        });
-
+        let visibleMap = this.visibleMap();
         if (!properties.getBool('reveal-tiles')) {
-            if (!properties.getBool('map-tiles')) this.visibles.length = 0;
-            unveilRoom(
+            if (!properties.getBool('map-tiles')) visibleMap = this.visibleMap(true);
+            const unveiledRoom = unveilRoom(
                 this.player.graphic.coord,
-                this.isBlocking.bind(this),
-                this.markVisible.bind(this),
-                this.isVisible.bind(this),
+                this.blockMap(),
+                this.dimensions,
                 Infinity
             );
+            visibleMap.forEach((_, idx) => {
+                visibleMap[idx] ||= unveiledRoom[idx];
+            });
         }
-        this.visibles.forEach((coord) => {
-            this.object(coord)?.graphic.fade();
-            this.tile(coord)?.graphic.fade();
+        visibleMap.forEach((visible, idx) => {
+            const coord = this.idxToCoord(idx);
+            if (visible) {
+                this.object(coord)?.graphic.fade();
+                this.tile(coord)?.graphic.fade();
+            } else {
+                this.object(coord)?.graphic.hide();
+                this.tile(coord)?.graphic.hide();
+            }
         });
 
-        this.lits.length = 0;
-        computeFov(
+        const lightMap = this.lightMap(true);
+        const light = computeFov(
             this.player.graphic.coord,
-            this.isBlocking.bind(this),
-            this.markLit.bind(this),
+            this.blockMap(),
+            this.dimensions,
             properties.getNumber('vision-distance')
         );
-        this.lits.forEach((coord) => {
-            this.object(coord)?.graphic.show();
-            this.tile(coord)?.graphic.show();
+        lightMap.forEach((level, idx) => {
+            if (light[idx] > 0 && light[idx] > level) lightMap[idx] = light[idx];
         });
-    }
-
-    private readonly visibles = new Array<Point>();
-    private readonly lits = new Array<Point>();
-
-    private markVisible(coord: Point): void {
-        this.visibles.push(coord);
-    }
-
-    private isVisible(coord: Point): boolean {
-        return this.visibles.find((c: Point) => {
-            return c.equals(coord);
-        }) !== undefined;
-    }
-
-    private markLit(coord: Point): void {
-        this.lits.push(coord);
-    }
-
-    private isBlocking(coord: Point): boolean {
-        if (this.outOfBounds(coord)) return true;
-
-        const tile = this.object(coord);
-        if (tile === undefined) return false;
-
-        return tile.graphic.block;
+        lightMap.forEach((lit, idx) => {
+            if (lit > 0.0) {
+                const coord = this.idxToCoord(idx);
+                this.object(coord)?.graphic.show(lit);
+                this.tile(coord)?.graphic.show(lit);
+            }
+        });
     }
 
     private outOfBounds(coord: Point): boolean {
         return coord.x < 0 || coord.x > this.dimensions.x
             || coord.y < 0 || coord.y > this.dimensions.y;
+    }
+
+    private visibleMap(clear: boolean = false): boolean[] {
+        if (!this.flatMaps.has('visible') || clear) {
+            this.flatMaps.set('visible', Array(this.data.layout.length).fill(false));
+        }
+        return this.flatMaps.get('visible') as boolean[];
+    }
+
+    private lightMap(clear: boolean = false): number[] {
+        if (!this.flatMaps.has('light') || clear) {
+            this.flatMaps.set('light', Array(this.data.layout.length).fill(0.0));
+        }
+        return this.flatMaps.get('light') as number[];
+    }
+
+    private groundMap(refresh: boolean = false): boolean[] {
+        if (refresh || !this.flatMaps.has('ground')) {
+            const groundMap = Array(this.data.layout.length).fill(false);
+            for (let idx = 0; idx < this.data.layout.length; idx++) {
+                const char = this.data.layout.at(idx);
+                if (char == undefined) continue;
+                const name = this.data.key.get(char)?.entity;
+                if (name == undefined || name == 'none') continue;
+                const layer = Graphic.getLayer(name);
+                if (layer == 0) groundMap[idx] = true;
+            }
+            this.flatMaps.set('ground', groundMap);
+        }
+        return this.flatMaps.get('ground') as boolean[];
+    }
+
+    private blockMap(refresh: boolean = false): boolean[] {
+        if (refresh || !this.flatMaps.has('block')) {
+            const nameMap = this.propertyMap(false, (tile: Tile) => {
+                return tile.graphic.block;
+            });
+            this.flatMaps.set('block', nameMap);
+        }
+        return this.flatMaps.get('block') as boolean[];
+    }
+
+    private propertyMap<T>(defaultValue: T, extract: (tile: Tile) => T): T[] {
+        const count = this.tiles.length;
+        const map: T[] = Array(count).fill(defaultValue);
+        for (const obj of this.objects) {
+            const coord = obj.graphic.coord;
+            map[coord.x + coord.y * this.dimensions.x] = extract(obj);
+        }
+        return map;
     }
 }

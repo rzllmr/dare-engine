@@ -11,32 +11,38 @@ import { Point } from 'pixi.js';
 
 export function computeFov(
     origin: Point,
-    isBlocking: (tile: Point) => boolean,
-    markVisible: (tile: Point) => void,
+    blocking: boolean[],
+    boundaries: Point,
     maxDistance: number = Infinity
-): void {
-    markVisible(origin);
+): number[] {
+    const toIdx = (coord: Point): number => {
+        return coord.x + coord.y * boundaries.x;
+    }
 
-    for (const transform of quadrantTransforms(origin)) {
-        function reveal(tile: Point): void {
-            const transformed = transform(tile);
-            if (insideCircle(transformed, origin, maxDistance)) markVisible(transformed);
+    const visibles = Array(blocking.length).fill(0.0);
+    visibles[toIdx(origin)] = 1.0;
+
+    for (const transform of quadrants(origin)) {
+        const isWall = (coord?: Point): boolean => {
+            if (coord == undefined) return false;
+            return blocking[toIdx(transform(coord))];
+        }
+        const isFloor = (coord?: Point): boolean => {
+            if (coord == undefined) return false;
+            return !blocking[toIdx(transform(coord))];
+        }
+        const reveal = (coord: Point): void => {
+            coord = transform(coord);
+            if (insideBoundaries(coord, boundaries) && insideCircle(coord, origin, maxDistance)) {
+                visibles[toIdx(coord)] = distance(coord, origin, maxDistance);
+            }
         }
 
-        function isWall(tile: Point | null): boolean {
-            if (tile === null) return false;
-            return isBlocking(transform(tile));
-        }
-
-        function isFloor(tile: Point | null): boolean {
-            if (tile === null) return false;
-            return !isBlocking(transform(tile));
-        }
-
-        function scan(row: Row): void {
-            if (row.depth > maxDistance) return;
-
-            let prevTile = null;
+        const firstRow = new Row(1, new Fraction(-1), new Fraction(1));
+        const rows = [firstRow];
+        while (rows.length > 0) {
+            const row = rows.pop() as Row;
+            let prevTile = undefined;
             for (const tile of row.tiles()) {
                 if (isWall(tile) || isSymmetric(row, tile)) {
                     reveal(tile);
@@ -47,39 +53,17 @@ export function computeFov(
                 if (isFloor(prevTile) && isWall(tile)) {
                     const nextRow = row.next();
                     nextRow.endSlope = slope(tile);
-                    scan(nextRow);
+                    rows.push(nextRow);
                 }
                 prevTile = tile;
             }
             if (isFloor(prevTile)) {
-                scan(row.next());
+                rows.push(row.next());
             }
         }
-
-        const firstRow = new Row(1, new Fraction(-1), new Fraction(1));
-        scan(firstRow);
     }
-}
 
-function* quadrantTransforms(origin: Point): Generator<(tile: Point) => Point> {
-    for (const quadrant of ['north', 'east', 'south', 'west']) {
-        if (quadrant === 'north')
-            yield (tile: Point): Point => {
-                return new Point(origin.x + tile.y, origin.y - tile.x);
-            };
-        else if (quadrant === 'south')
-            yield (tile: Point): Point => {
-                return new Point(origin.x + tile.y, origin.y + tile.x);
-            };
-        else if (quadrant === 'east')
-            yield (tile: Point): Point => {
-                return new Point(origin.x + tile.x, origin.y + tile.y);
-            };
-        else // quadrant === "west"
-            yield (tile: Point): Point => {
-                return new Point(origin.x - tile.x, origin.y + tile.y);
-            };
-    }
+    return visibles;
 }
 
 class Row {
@@ -93,17 +77,43 @@ class Row {
         this.endSlope = endSlope;
     }
 
-    public *tiles(): Generator<Point> {
+    public tiles(): Point[] {
         const minCol = roundTiesUp(this.startSlope.multiply(this.depth));
         const maxCol = roundTiesDown(this.endSlope.multiply(this.depth));
-        for (let col = minCol; col <= maxCol; col++) {
-            yield new Point(this.depth, col);
+        const tiles = new Array(maxCol + 1 - minCol);
+        for (let i = 0; i < tiles.length; i++) {
+            tiles[i] = new Point(this.depth, i + minCol);
         }
+        return tiles;
     }
 
     public next(): Row {
         return new Row(this.depth + 1, this.startSlope, this.endSlope);
     }
+}
+
+class Fraction {
+    private readonly numerator: number;
+    private readonly denominator: number;
+
+    constructor(numerator: number, denominator: number = 1) {
+        this.numerator = numerator;
+        this.denominator = denominator;
+    }
+
+    // avoids floating point inaccuracies
+    public multiply(multiplier: number): number {
+        return (multiplier * this.numerator) / this.denominator;
+    }
+}
+
+function quadrants(origin: Point): ((coord: Point) => Point)[] {
+    return [
+        (tile: Point): Point => new Point(origin.x + tile.y, origin.y - tile.x), // north
+        (tile: Point): Point => new Point(origin.x + tile.y, origin.y + tile.x), // south
+        (tile: Point): Point => new Point(origin.x + tile.x, origin.y + tile.y), // east 
+        (tile: Point): Point => new Point(origin.x - tile.x, origin.y + tile.y)  // west
+    ];
 }
 
 function slope(tile: Point): Fraction {
@@ -122,25 +132,16 @@ function roundTiesDown(n: number): number {
     return Math.ceil(n - 0.5);
 }
 
-function insideCircle(tile: Point, origin: Point, radius: number): boolean {
-    return Math.pow(tile.x - origin.x, 2) + Math.pow(tile.y - origin.y, 2) <= Math.pow(radius + 0.5, 2);
+function insideBoundaries(coord: Point, boundaries: Point): boolean {
+    return coord.x >= 0 && coord.y >= 0 && coord.x <= boundaries.x && coord.y <= boundaries.y;
 }
 
-class Fraction {
-    private readonly numerator: number;
-    private readonly denominator: number;
+function insideCircle(coord: Point, origin: Point, radius: number): boolean {
+    if (radius == Infinity) return true;
+    return Math.pow(coord.x - origin.x, 2) + Math.pow(coord.y - origin.y, 2) <= Math.pow(radius + 0.9, 2);
+}
 
-    constructor(numerator: number, denominator: number = 1) {
-        this.numerator = numerator;
-        this.denominator = denominator;
-    }
-
-    public get decim(): number {
-        return this.numerator / this.denominator;
-    }
-
-    // avoids floating point inaccuracies
-    public multiply(multiplier: number): number {
-        return (multiplier * this.numerator) / this.denominator;
-    }
+function distance(coord: Point, origin: Point, radius: number): number {
+    const distance = (Math.pow(coord.x - origin.x, 2) + Math.pow(coord.y - origin.y, 2)) / Math.pow(radius + 0.9, 2);
+    return Math.pow(1.0 - distance, 1);
 }
