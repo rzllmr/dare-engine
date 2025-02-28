@@ -1,4 +1,4 @@
-import { Point, Sprite, Texture } from 'pixi.js';
+import { ColorSource, Point, Sprite, Texture } from 'pixi.js';
 import { ComponentSpecs, EntitySpecs } from 'engine/specs';
 import { TileMap } from 'game/entities/map';
 import { Tile } from 'game/entities/tile';
@@ -96,16 +96,24 @@ export class Graphic extends SpecdComponent {
         return this.specs.get('hide-in-dark', false);
     }
 
-    public show(): void {
-        this.sprite.tint = 0xffffff;
+    private tint(value: number): ColorSource {
+        return [
+            value * (1 - 0.4) + 0.4, // red
+            value * (1 - 0.4) + 0.4, // green
+            value * (1 - 0.5) + 0.5  // blue
+        ];
+    }
+
+    public show(value: number = 1.0): void {
+        this.sprite.tint = this.tint(value); // rgb
         this.sprite.visible = true;
     }
 
-    public fade(): void {
+    public fade(value: number = 0.0): void {
         if (this.hideInDark) {
             this.sprite.visible = false;
         } else {
-            this.sprite.tint = 0x819796;
+            this.sprite.tint = this.tint(value); // 0x819796;
             this.sprite.visible = true;
         }
     }
