@@ -2,7 +2,7 @@
 // explained at https://codeheir.com/2022/08/21/comparing-flood-fill-algorithms-in-javascript/
 
 import { Point } from 'pixi.js';
-import { unveil_room, point_struct } from 'fast/wasm/pkg/wasm';
+import { unveil_room, point_struct } from 'fast/wasm/pkg/fast_functions';
 
 export { unveilRoom_Wasm as unveilRoom };
 

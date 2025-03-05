@@ -2,7 +2,7 @@
 // explained at https://codeheir.com/2022/08/21/comparing-flood-fill-algorithms-in-javascript/
 
 import { Point } from 'pixi.js';
-import { find_next, point_struct } from 'fast/wasm/pkg/wasm';
+import { find_next, point_struct } from 'fast/wasm/pkg/fast_functions';
 
 export { findNext_Wasm as findNext };
 

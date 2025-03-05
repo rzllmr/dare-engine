@@ -1,8 +1,9 @@
 [package]
-name = "wasm"
+name = "fast-functions"
 version = "0.1.0"
 authors = ["rzllmr"]
 description = "Wasm package of fast functions"
+repository = "https://github.com/rzllmr/dare-engine.git"
 license = "MIT"
 edition = "2018"
 
@@ -16,6 +17,3 @@ wasm-bindgen = "0.2"
 [dependencies.web-sys]
 version = "0.3"
 features = [ "console" ]
-
-[build]
-target-dir = "./result"

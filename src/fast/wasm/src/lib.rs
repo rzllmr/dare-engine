@@ -4,11 +4,11 @@ use std::collections::VecDeque;
 
 extern crate console_error_panic_hook;
 
-extern crate web_sys;
-// log(format!("test: {}", variable).as_str());
-pub fn log(message: &str) {
-    web_sys::console::log_1(&message.into());
-}
+// extern crate web_sys;
+// // log(format!("test: {}", variable).as_str());
+// fn log(message: &str) {
+//     web_sys::console::log_1(&message.into());
+// }
 
 #[wasm_bindgen]
 #[derive(Copy, Clone, Debug)]
@@ -22,8 +22,10 @@ pub fn point_struct(x: i32, y: i32) -> Point {
     return Point { x: x, y: y };
 }
 
+////////////////////////////////////////////////////////////////////////////////
 // Rust implementation of an iterative queue flood fill algorithm
 // explained at https://codeheir.com/2022/08/21/comparing-flood-fill-algorithms-in-javascript/
+////////////////////////////////////////////////////////////////////////////////
 
 #[wasm_bindgen]
 pub fn unveil_room(
@@ -97,22 +99,7 @@ pub fn find_next(
     return 0;
 }
 
-pub fn add_points(a: &Point, b: &Point) -> Point {
-    return point_struct(a.x + b.x, a.y + b.y);
-}
-
-pub fn inside_boundaries(coord: &Point, boundaries: &Point) -> bool {
-    return coord.x >= 0 && coord.y >= 0 && coord.x <= boundaries.x && coord.y <= boundaries.y;
-}
-
-pub fn inside_circle(coord: &Point, origin: &Point, radius: &i32) -> bool {
-    if *radius == 0 { return true; }
-    let distance = ((coord.x - origin.x).pow(2) + (coord.y - origin.y).pow(2)) as f32;
-    let extended_radius = (*radius as f32 + 0.5).powi(2);
-    return distance <= extended_radius;
-}
-
-pub fn directions() -> [Point; 8] {
+fn directions() -> [Point; 8] {
     return [
         Point { x: 0, y: 1 },   // north
         Point { x: 1, y: 1 },   // north-east
@@ -125,6 +112,25 @@ pub fn directions() -> [Point; 8] {
     ];
 }
 
+// helping functions ///////////////////////////////////////////////////////////
+
+fn add_points(a: &Point, b: &Point) -> Point {
+    return point_struct(a.x + b.x, a.y + b.y);
+}
+
+fn inside_boundaries(coord: &Point, boundaries: &Point) -> bool {
+    return coord.x >= 0 && coord.y >= 0 && coord.x <= boundaries.x && coord.y <= boundaries.y;
+}
+
+fn inside_circle(coord: &Point, origin: &Point, radius: &i32) -> bool {
+    if *radius == 0 { return true; }
+    let distance = ((coord.x - origin.x).pow(2) + (coord.y - origin.y).pow(2)) as f32;
+    let extended_radius = (*radius as f32 + 0.5).powi(2);
+    return distance <= extended_radius;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Rust implementation of the algorithm developed by Albert Ford
 // licensed under Creative Commons Zero v1.0 Universal
 // hosted at https://github.com/370417/symmetric-shadowcasting.git
@@ -133,6 +139,7 @@ pub fn directions() -> [Point; 8] {
 // It satisfies six desirable properties for field of view algorithms in rogue-likes
 // defined by Adam Milazzo at http://www.adammil.net/blog/v125_Roguelike_Vision_Algorithms.html:
 // symmetry, expansive walls, expanding pillar shadows, no blind corners, no artifacts, efficiency
+////////////////////////////////////////////////////////////////////////////////
 
 #[wasm_bindgen]
 pub fn compute_fov(
@@ -238,24 +245,26 @@ impl Fraction {
     }
 }
 
-fn round_ties_up(n: f32) -> i32 {
-    return (n + 0.5).floor() as i32;
-}
+// helping functions ///////////////////////////////////////////////////////////
 
-fn round_ties_down(n: f32) -> i32 {
-    return (n - 0.5).ceil() as i32;
-}
-
-fn slope(tile: &Point) -> Fraction {
-    return Fraction::new(2 * tile.y - 1, 2 * tile.x);
+fn distance(coord: &Point, origin: &Point, radius: &i32) -> f32 {
+    let distance = ((coord.x - origin.x).pow(2) + (coord.y - origin.y).pow(2)) as f32;
+    let extended_radius = (*radius as f32 + 0.9).powi(2);
+    return (1.0 - distance / extended_radius).powf(1.0);
 }
 
 fn is_symmetric(row: &Row, tile: &Point) -> bool {
     return tile.y as f32 >= row.start_slope.multiply(row.depth) && tile.y as f32 <= row.end_slope.multiply(row.depth);
 }
 
-fn distance(coord: &Point, origin: &Point, radius: &i32) -> f32 {
-    let distance = ((coord.x - origin.x).pow(2) + (coord.y - origin.y).pow(2)) as f32;
-    let extended_radius = (*radius as f32 + 0.9).powi(2);
-    return (1.0 - distance / extended_radius).powf(1.0);
+fn slope(tile: &Point) -> Fraction {
+    return Fraction::new(2 * tile.y - 1, 2 * tile.x);
+}
+
+fn round_ties_up(n: f32) -> i32 {
+    return (n + 0.5).floor() as i32;
+}
+
+fn round_ties_down(n: f32) -> i32 {
+    return (n - 0.5).ceil() as i32;
 }

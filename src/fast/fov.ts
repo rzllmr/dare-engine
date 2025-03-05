@@ -8,7 +8,7 @@
 // symmetry, expansive walls, expanding pillar shadows, no blind corners, no artifacts, efficiency
 
 import { Point } from 'pixi.js';
-import { compute_fov, point_struct } from 'fast/wasm/pkg/wasm';
+import { compute_fov, point_struct } from 'fast/wasm/pkg/fast_functions';
 
 export { computeFov_Wasm as computeFov };
 

@@ -4,7 +4,7 @@ import { utils } from 'engine/utils';
 import { Move } from 'game/components/move';
 import { TileMap } from 'game/entities/map';
 import { book } from 'game/proxies/book';
-import init_wasm from "fast/wasm/pkg/wasm";
+import init_wasm from "fast/wasm/pkg/fast_functions";
 
 export class GameScene extends Container implements IScene {
     public gameName = 'Dare';
