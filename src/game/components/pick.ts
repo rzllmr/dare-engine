@@ -1,4 +1,3 @@
-import { EntitySpecs, ComponentSpecs } from 'engine/specs';
 import { Tile } from 'game/entities/tile';
 import { log } from 'game/proxies/log';
 import { Inventory, Item } from './inventory';

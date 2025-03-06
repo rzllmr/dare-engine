@@ -3,7 +3,7 @@ import { properties } from 'engine/properties';
 import { unveilRoom } from 'fast/fill';
 import { findNext } from 'fast/find';
 import { computeFov } from 'fast/fov';
-import { Graphic } from 'game/components';
+import { Graphic, Light, LightSource } from 'game/components';
 import { dialog } from 'game/proxies/dialog';
 import { MapData } from './mapdata';
 import { Tile } from './tile';
@@ -224,6 +224,7 @@ export class TileMap extends Container {
         await origin?.leave(actor);
         // this.updateOthers();
         this.updateVision();
+        this.updateLights();
 
         actor.moving = false;
                 
@@ -285,30 +286,50 @@ export class TileMap extends Container {
         visibleMap.forEach((visible, idx) => {
             const coord = this.idxToCoord(idx);
             if (visible) {
-                this.object(coord)?.graphic.fade();
-                this.tile(coord)?.graphic.fade();
+                this.object(coord)?.graphic.show();
+                this.tile(coord)?.graphic.show();
             } else {
                 this.object(coord)?.graphic.hide();
                 this.tile(coord)?.graphic.hide();
             }
         });
-
-        const lightMap = this.lightMap(true);
-        const light = computeFov(
-            this.player.graphic.coord,
-            this.blockMap(),
-            this.dimensions,
-            properties.getNumber('vision-distance')
-        );
-        lightMap.forEach((level, idx) => {
-            if (light[idx] > 0 && light[idx] > level) lightMap[idx] = light[idx];
+    }
+    
+    private lightSources(): LightSource[] {
+        const lightObjects = this.objects.filter((object) => object.hasComponent(Light) && object.graphic.visible);
+        const lightSources = lightObjects.map((object) => {
+            const light = object.getComponent(Light);
+            return {
+                coord: object.graphic.coord,
+                radius: light.radius
+            };
         });
-        lightMap.forEach((lit, idx) => {
-            if (lit > 0.0) {
-                const coord = this.idxToCoord(idx);
-                this.object(coord)?.graphic.show(lit);
-                this.tile(coord)?.graphic.show(lit);
-            }
+        if (this.player != undefined) {
+            lightSources.push({
+                coord: this.player.graphic.coord,
+                radius: properties.getNumber('vision-distance')
+            })
+        }
+        return lightSources;
+    }
+
+    private updateLights(): void {
+        const lightMap = this.lightMap(true);
+        for (const source of this.lightSources()) {
+            const light = computeFov(
+                source.coord,
+                this.blockMap(),
+                this.dimensions,
+                source.radius
+            );
+            lightMap.forEach((level, idx, map) => {
+                if (light[idx] > 0 && light[idx] > level) map[idx] = light[idx];
+            });
+        }
+        lightMap.forEach((level, idx) => {
+            const coord = this.idxToCoord(idx);
+            this.object(coord)?.graphic.light(level);
+            this.tile(coord)?.graphic.light(level);
         });
     }
 

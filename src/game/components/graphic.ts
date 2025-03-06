@@ -11,14 +11,6 @@ export class Graphic extends SpecdComponent {
     public sprite!: Sprite;
     public image = '';
 
-    public get alpha(): number {
-        return this.sprite.alpha;
-    }
-
-    public set alpha(alpha: number) {
-        this.sprite.alpha = alpha;
-    }
-
     constructor(specs: ComponentSpecs) {
         super(specs, 'idle');
     }
@@ -96,7 +88,7 @@ export class Graphic extends SpecdComponent {
         return this.specs.get('hide-in-dark', false);
     }
 
-    private tint(value: number): ColorSource {
+    private levelToTint(value: number): ColorSource {
         return [
             value * (1 - 0.4) + 0.4, // red
             value * (1 - 0.4) + 0.4, // green
@@ -104,28 +96,21 @@ export class Graphic extends SpecdComponent {
         ];
     }
 
-    public show(value: number = 1.0): void {
-        this.sprite.tint = this.tint(value); // rgb
+    public show(): void {
         this.sprite.visible = true;
-    }
-
-    public fade(value: number = 0.0): void {
-        if (this.hideInDark) {
-            this.sprite.visible = false;
-        } else {
-            this.sprite.tint = this.tint(value); // 0x819796;
-            this.sprite.visible = true;
-        }
     }
 
     public hide(): void {
         this.sprite.visible = false;
     }
 
+    public light(level = 0.0): void {
+        if (this.hideInDark) this.sprite.visible = level > 0.0;
+        this.sprite.tint = this.levelToTint(level);
+    }
+
     public get visible(): boolean {
-        let visible = this.sprite.visible;
-        if (!this.hideInDark) visible &&= this.sprite.tint === 0xffffff;
-        return visible;
+        return this.sprite.visible;
     }
 
     public get coord(): Point {

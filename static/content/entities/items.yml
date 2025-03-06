@@ -28,6 +28,7 @@ torch:
     where: "hand"
     equip:
       - ["vision-distance", 4]
+  light: 4
 
 lantern:
   like: "item"
