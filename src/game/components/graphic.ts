@@ -64,7 +64,7 @@ export class Graphic extends SpecdComponent {
     }
 
     private randomSuffix(): string {
-        const randomNumber = Math.random();
+        const randomNumber = TileMap.random();
         let suffix = 1;
         if (randomNumber < 0.7) suffix = 1;
         else if (randomNumber < 0.8) suffix = 2;

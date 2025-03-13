@@ -1,5 +1,6 @@
 import { Container, Assets, Point } from 'pixi.js';
 import { properties } from 'engine/properties';
+import { utils } from 'engine/utils';
 import { unveilRoom } from 'fast/fill';
 import { findNext } from 'fast/find';
 import { computeFov } from 'fast/fov';
@@ -29,6 +30,8 @@ export class TileMap extends Container {
     private loaded = false;
 
     private readonly flatMaps = new Map<string, any[]>();
+    
+    public static random: () => number;
 
     constructor(name: string) {
         super();
@@ -40,6 +43,7 @@ export class TileMap extends Container {
         this.layers[1].sortableChildren = true;
 
         Tile.map = this;
+        TileMap.random = utils.randomGen(name);
 
         this.registerChanges();
     }

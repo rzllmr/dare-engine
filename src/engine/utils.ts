@@ -28,6 +28,18 @@ class Utils {
             }
         }
         return clone;
-    }    
+    }
+
+    public randomGen(seed: number | string) {
+        if (typeof seed == 'string') {
+            seed = parseInt(seed, 36);
+        }
+        const m = 2 ** 35 - 31;
+        const a = 185852;
+        let s = seed % m;
+        return function () {
+            return (s = (s * a) % m) / m;
+        };
+    }
 }
 export const utils = Utils.instance();
