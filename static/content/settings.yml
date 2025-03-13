@@ -1,0 +1,6 @@
+game:
+  name: Dare
+
+start:
+  level: level.demo
+  spawn: spawn

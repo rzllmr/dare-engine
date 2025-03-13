@@ -1,5 +1,6 @@
 import { Container, Point } from 'pixi.js';
 import { IScene } from 'engine/manager';
+import { settings } from 'engine/settings';
 import { utils } from 'engine/utils';
 import { Move } from 'game/components/move';
 import { TileMap } from 'game/entities/map';
@@ -7,14 +8,20 @@ import { book } from 'game/proxies/book';
 import init_wasm from "fast/wasm/pkg/fast_functions";
 
 export class GameScene extends Container implements IScene {
-    public gameName = 'Dare';
-    public startingLevel = 'level.demo';
+    public gameName: string;
+    public start: {level: string, spawn: string};
 
     private readonly offset: Point;
     private tileMap!: TileMap;
 
     constructor() {
         super();
+
+        this.gameName = settings.get('game.name');
+        this.start = {
+            level: settings.get('start.level'),
+            spawn: settings.get('start.spawn')
+        }
 
         const canvas = document.querySelector('#pixi-canvas') as HTMLCanvasElement;
         this.offset = utils.elementOffset(canvas);

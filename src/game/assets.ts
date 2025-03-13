@@ -12,6 +12,7 @@ export const manifest: AssetsManifest = {
                 'entities.objects': './content/entities/objects.yml',
                 'level.demo': './content/levels/demo.yml',
                 'level.test': './content/levels/test.yml',
+                'settings': './content/settings.yml',
                 'sprites.beings': './images/world/beings.json',
                 'sprites.objects': './images/world/objects.json',
                 'sprites.symbols': './images/world/symbols.json',
