@@ -4,18 +4,18 @@
 
 ### Todo
 
-- [ ] Change level through portal #system
-- [ ] Structure elements and styling #cleanup
 - [ ] Make use of the book #game
 - [ ] Use synthesizers for music and sounds #system
 - [ ] Animate player character #art
 
 ### In Progress
 
-- [ ] Light level from multiple sources #system
+- [ ] Structure elements and styling #cleanup
 
 ### Done ✓
 
+- [x] Change level through portal #system
+- [x] Light level from multiple sources #system
 - [x] Use WebAssembly for fast functions #system
 - [x] Explain how to modify the game template on the webpage #docs
 - [x] Save all object state changes #system

@@ -1,0 +1,16 @@
+layout: |
+
+   # # # # # # # # # #
+   # . . . . . . . S #
+   # . . . . . . . . #
+   # . . T . . . . . #
+   # . . . . . . . . #
+   # # # # # # # # # #
+
+key:
+  " ": none
+  ".": floor
+  "#": wall
+  "+": door
+  "T": sign
+  "S": stairs-down (demo.stairs-up)

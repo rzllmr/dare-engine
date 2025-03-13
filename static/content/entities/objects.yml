@@ -54,3 +54,15 @@ spawn:
   tell:
     story: "intro.enter"
     once: true
+
+stairs:
+  move: true
+  port: "*"
+
+stairs-up:
+  like: "stairs"
+  sprite: "stairs-up"
+
+stairs-down:
+  like: "stairs"
+  sprite: "stairs-down"

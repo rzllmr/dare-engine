@@ -4,7 +4,7 @@ import { utils } from 'engine/utils';
 import { unveilRoom } from 'fast/fill';
 import { findNext } from 'fast/find';
 import { computeFov } from 'fast/fov';
-import { Graphic, Light, LightSource } from 'game/components';
+import { Graphic, Light, LightSource, Port } from 'game/components';
 import { dialog } from 'game/proxies/dialog';
 import { MapData } from './mapdata';
 import { Tile } from './tile';
@@ -64,10 +64,6 @@ export class TileMap extends Container {
     private registerChanges(): void {
         properties.onChange('reveal-tiles', (revealTiles: boolean) => {
             this.afterLoad(() => {
-                const visibleMap = this.visibleMap(true);
-                if (revealTiles) {
-                    visibleMap.fill(true);
-                }
                 this.updateVision();
             });
         });
@@ -75,6 +71,16 @@ export class TileMap extends Container {
 
     public get dimensions(): Point {
         return this.data.dimensions;
+    }
+
+    public change(level: string, spawn: string): void {
+        if (!this.loaded) return;
+
+        if (!TileMap.available(level, spawn)) {
+            console.error(`cannot change to level: ${level} ${spawn}`);
+            return;
+        }
+        TileMap.changeMap(level, spawn);
     }
 
     public static available(level: string, spawn?: string): boolean {
@@ -293,7 +299,9 @@ export class TileMap extends Container {
         if (this.player === undefined) return;
 
         let visibleMap = this.visibleMap();
-        if (!properties.getBool('reveal-tiles')) {
+        if (properties.getBool('reveal-tiles')) {
+            visibleMap.fill(true);
+        } else {
             if (!properties.getBool('map-tiles')) visibleMap = this.visibleMap(true);
             const unveiledRoom = unveilRoom(
                 this.player.graphic.coord,
