@@ -48,3 +48,9 @@ crate:
 sign:
   sprite: "sign"
   tell: "Awesome, you did it! 😊 This is the end of the game for now, until I find the time to add more..."
+
+spawn:
+  move: true
+  tell:
+    story: "intro.enter"
+    once: true

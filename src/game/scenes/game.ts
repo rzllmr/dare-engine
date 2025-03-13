@@ -30,15 +30,19 @@ export class GameScene extends Container implements IScene {
     public async load(): Promise<void> {
         await init_wasm();
         await book.load();
-        await this.changeMap(this.startingLevel);
+        await this.changeMap(this.start.level, this.start.spawn);
     }
 
-    public async changeMap(mapName: string): Promise<void> {
-        if (this.tileMap !== undefined) {
-            this.removeChild(this.tileMap);
+    public async changeMap(level: string, spawn: string): Promise<void> {
+        const tileMap = new TileMap(level);
+        TileMap.changeMap = this.changeMap.bind(this);
+        if (!TileMap.available(level, spawn) || ! await tileMap.load(spawn)) {
+            console.error(`could not load: ${level}`);
+            return;
         }
-        this.tileMap = new TileMap(mapName);
-        await this.tileMap.load();
+
+        if (this.tileMap !== undefined) this.removeChild(this.tileMap);
+        this.tileMap = tileMap;
         this.addChild(this.tileMap);
     }
 

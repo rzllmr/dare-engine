@@ -9,7 +9,7 @@ layout: |
     # # # # # # # # # # # # # #
 
 key:
-  "@": player
+  "@": spawn
   " ": none
   ".": floor
   "#": wall

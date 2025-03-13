@@ -23,6 +23,8 @@ export class TileMap extends Container {
     public static readonly scale: number = 3.0;
     public static readonly tileDim: number = TileMap.scale * 16;
 
+    public static changeMap: (level: string, spawn: string) => Promise<void>;
+
     public player: Tile | undefined;
     private _highlight: Tile | undefined;
 
@@ -75,8 +77,23 @@ export class TileMap extends Container {
         return this.data.dimensions;
     }
 
-    public async load(): Promise<void> {
-        this.data = new MapData(Assets.get(this.label as string));
+    public static available(level: string, spawn?: string): boolean {
+        const levelYaml = Assets.get(level);
+        if (levelYaml == undefined) return false;
+
+        if (spawn != undefined) {
+            const levelData = new MapData(levelYaml);
+            const foundSpawn = Array.from(levelData.key.values()).some((value) => value.entity == spawn);
+            if (!foundSpawn) return false;
+        }
+
+        return true;
+    }
+
+    public async load(spawn: string): Promise<boolean> {
+        const levelYaml = Assets.get(this.label);
+        if (levelYaml == undefined) return false;
+        this.data = new MapData(levelYaml);
 
         const currentCoord = new Point(0, 0);
         for (let idx = 0; idx < this.data.layout.length; idx++) {
@@ -105,12 +122,7 @@ export class TileMap extends Container {
 
             if (tile.graphic.layer > 0) {
                 if (!tile.destroyed) {
-                    if (tile.kind === 'player') {
-                        this.player = tile;
-                    } else {
-                        this.objects.push(tile);
-                    }
-
+                    this.objects.push(tile);
                     const child = this.layers[tile.graphic.layer].addChild(tile.graphic.sprite);
                     child.zIndex = currentCoord.y;
                 }
@@ -128,14 +140,20 @@ export class TileMap extends Container {
         this._highlight = new Tile('frame', currentCoord);
         this.layers[1].addChild(this._highlight.graphic.sprite);
 
+        const spawnCoord = this.objects.find((object) => object.name == spawn)?.graphic.coord;
+        if (spawnCoord != undefined) {
+            this.player = new Tile('player', spawnCoord);
+            this.objects.push(this.player);
+            const child = this.layers[1].addChild(this.player.graphic.sprite);
+            child.zIndex = spawnCoord.y;
+
+            this.player.graphic.onMove = this.focusPos.bind(this);
+            await this.move(new Point(), this.player);
+        }
+
         this.afterLoad();
 
-        if (this.player === undefined) return;
-
-        this.player.graphic.onMove = this.focusPos.bind(this);
-        await this.move(new Point());
-
-        dialog.tellStory('intro', 'enter');
+        return true;
     }
 
     public surrounding(coord: Point): string[] {
