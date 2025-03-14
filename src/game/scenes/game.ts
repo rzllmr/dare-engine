@@ -41,7 +41,11 @@ export class GameScene extends Container implements IScene {
             return;
         }
 
-        if (this.tileMap !== undefined) this.removeChild(this.tileMap);
+        if (this.tileMap !== undefined) {
+            settings.set('start.level', level);
+            settings.set('start.spawn', spawn);
+            this.removeChild(this.tileMap);
+        }
         this.tileMap = tileMap;
         this.addChild(this.tileMap);
     }

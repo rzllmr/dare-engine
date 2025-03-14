@@ -135,6 +135,10 @@ export class Graphic extends SpecdComponent {
         this.save('coord', this.coord);
     }
 
+    public unsaveCoord(): void {
+        this.delete('coord');
+    }
+
     private loadSprite(image: string): Sprite {
         const texture = Graphic.loadTexture(image);
         texture.source.scaleMode = 'nearest';
