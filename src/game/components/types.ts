@@ -20,6 +20,10 @@ export class SpecdComponent extends Component {
         return storage.save(`${this.id}/${name}`, value);
     }
 
+    protected delete(name: string): void {
+        storage.delete(`${this.id}/${name}`);
+    }
+
     protected specs: ComponentSpecs;
     constructor(specs = new ComponentSpecs(), briefSpec = 'brief') {
         super();

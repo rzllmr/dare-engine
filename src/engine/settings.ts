@@ -1,4 +1,5 @@
 import { Assets } from "pixi.js";
+import { storage } from "./storage";
 
 type KnownSettings =
     'game.name' |
@@ -32,7 +33,14 @@ class Settings {
             }
             value = value.get(key);
         }
-        return value;
+        if (value instanceof Map) {
+            throw new Error(`setting is no leaf: ${setting}`);
+        }
+        return storage.load(setting, value);
+    }
+
+    public set(setting: KnownSettings, value: string): void {
+        storage.save(setting, value);
     }
 }
 export const settings = Settings.instance();

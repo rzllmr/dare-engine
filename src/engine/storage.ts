@@ -54,6 +54,12 @@ class Storage {
         return keys;
     }
     
+    public delete(key: string): void {
+        if (!this._available) return;
+        
+        this.storage.removeItem(key);
+    }
+
     public save(key: string, value: storageTypes): void {
         if (!this._available) return;
         
