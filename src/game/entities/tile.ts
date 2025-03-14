@@ -19,6 +19,7 @@ export class Tile extends Entity {
         super();
 
         this.id = `${Tile.map.label}/${name}[${coord.x},${coord.y}]`;
+        if (name == 'player') this.id = name;
 
         this.specs = EntitySpecs.get(name);
         this.specs.fillIn(details);
