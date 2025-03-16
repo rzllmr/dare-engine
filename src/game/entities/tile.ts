@@ -64,9 +64,10 @@ export class Tile extends Entity {
         return Tile.map.move(direction, this);
     }
 
-    private toBeDestroyed = false;
-    public markForDestruction(): void {
-        this.toBeDestroyed = true;
+    public destroyLater(): void {
+        Tile.map.afterMove(() => {
+            this.destroy();
+        });
     }
 
     public async leave(subject: Tile): Promise<void> {
@@ -75,7 +76,6 @@ export class Tile extends Entity {
                 await component.leave(subject);
             }
         }
-        if (this.toBeDestroyed) this.destroy();
     }
 
     public async act(subject: Tile): Promise<void> {
@@ -84,7 +84,6 @@ export class Tile extends Entity {
                 await component.act(subject);
             }
         }
-        if (this.toBeDestroyed) this.destroy();
     }
 
     public get graphic(): Graphic {

@@ -7,7 +7,7 @@ export class Fight extends Action {
     public override async act(subject: Tile): Promise<void> {
         log.tell(`You fight ${this.decapitalize(this.object.info)}`);
         const defeated = false;
-        if (defeated) this.object.markForDestruction();
+        if (defeated) this.object.destroyLater();
     }
 }
 

@@ -17,7 +17,7 @@ export class Port extends Action {
         subject.graphic.unsaveCoord();
 
         const target = this.where.split('.');
-        Tile.map.change(`level.${target[0]}`, target[1]);
+        Tile.map.changeLater(`level.${target[0]}`, target[1]);
     }
 
     public get where(): string | undefined {

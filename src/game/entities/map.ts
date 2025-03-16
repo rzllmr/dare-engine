@@ -25,10 +25,11 @@ export class TileMap extends Container {
 
     public static changeMap: (level: string, spawn: string) => Promise<void>;
 
-    public player: Tile | undefined;
+    private static player: Tile;
+
     private _highlight: Tile | undefined;
 
-    private readonly afterLoadCallbacks = new Array<() => void>();
+    private readonly _afterLoad = new Array<() => void>();
     private loaded = false;
 
     private readonly flatMaps = new Map<string, any[]>();
@@ -47,17 +48,22 @@ export class TileMap extends Container {
         Tile.map = this;
         TileMap.random = utils.randomGen(name);
 
+        if (TileMap.player == undefined) {
+            TileMap.player = new Tile('player', new Point());
+        }
+
         this.registerChanges();
     }
 
     private afterLoad(callback?: () => void): void {
         if (callback == undefined) {
-            this.afterLoadCallbacks.forEach((cb) => {cb()});
+            this._afterLoad.forEach((cb) => {cb()});
+            this._afterLoad.length = 0;
             this.loaded = true;
         } else if (this.loaded) {
             callback();
         } else {
-            this.afterLoadCallbacks.push(callback);
+            this._afterLoad.push(callback);
         }
     }
 
@@ -73,15 +79,18 @@ export class TileMap extends Container {
         return this.data.dimensions;
     }
 
-    public change(level: string, spawn: string): void {
-        if (!this.loaded) return;
-
-        if (!TileMap.available(level, spawn)) {
-            console.error(`cannot change to level: ${level} ${spawn}`);
-            return;
-        }
-        TileMap.changeMap(level, spawn);
-    }
+    public changeLater(level: string, spawn: string): void {
+        this.afterMove(() => {
+            if (!this.loaded) return;
+    
+            if (!TileMap.available(level, spawn)) {
+                console.error(`cannot change to level: ${level} ${spawn}`);
+                return;
+            }
+            TileMap.player.graphic.onMove = () => {};
+            TileMap.changeMap(level, spawn);
+        });
+    };
 
     public static available(level: string, spawn?: string): boolean {
         const levelYaml = Assets.get(level);
@@ -148,13 +157,13 @@ export class TileMap extends Container {
 
         const spawnCoord = this.objects.find((object) => object.name == spawn)?.graphic.coord;
         if (spawnCoord != undefined) {
-            this.player = new Tile('player', spawnCoord);
-            this.objects.push(this.player);
-            const child = this.layers[1].addChild(this.player.graphic.sprite);
+            TileMap.player.graphic.coord = spawnCoord;
+            this.objects.push(TileMap.player);
+            const child = this.layers[1].addChild(TileMap.player.graphic.sprite);
             child.zIndex = spawnCoord.y;
 
-            this.player.graphic.onMove = this.focusPos.bind(this);
-            await this.move(new Point(), this.player);
+            TileMap.player.graphic.onMove = this.focusPos.bind(this);
+            await this.move(new Point(), TileMap.player);
         }
 
         this.afterLoad();
@@ -232,7 +241,7 @@ export class TileMap extends Container {
         dialog.tell(tile.info, nextCoordPos.add(offset));
     }
 
-    public async move(direction: Point, actor = this.player): Promise<boolean> {
+    public async move(direction: Point, actor = TileMap.player): Promise<boolean> {
         if (actor === undefined) return false;
         if (actor.moving) return false;
 
@@ -255,8 +264,20 @@ export class TileMap extends Container {
         this.updateLights();
 
         actor.moving = false;
-                
+
+        this.afterMove();
+        
         return true;
+    }
+
+    private readonly _afterMove = new Array<() => void>();
+    public afterMove(callback?: () => void): void {
+        if (callback == undefined) {
+            this._afterMove.forEach((cb) => cb());
+            this._afterMove.length = 0;
+        } else {
+            this._afterMove.push(callback);
+        }
     }
 
     public focusPos(position: Point): void {
@@ -289,14 +310,14 @@ export class TileMap extends Container {
 
     private entity(coord: Point): Tile | undefined {
         let tile = this.object(coord);
-        if (tile === undefined && this.player !== undefined && this.player.graphic.coord.equals(coord))
-            tile = this.player;
+        if (tile === undefined && TileMap.player !== undefined && TileMap.player.graphic.coord.equals(coord))
+            tile = TileMap.player;
         if (tile === undefined) tile = this.tile(coord);
         return tile;
     }
 
     private updateVision(): void {
-        if (this.player === undefined) return;
+        if (TileMap.player === undefined) return;
 
         let visibleMap = this.visibleMap();
         if (properties.getBool('reveal-tiles')) {
@@ -304,7 +325,7 @@ export class TileMap extends Container {
         } else {
             if (!properties.getBool('map-tiles')) visibleMap = this.visibleMap(true);
             const unveiledRoom = unveilRoom(
-                this.player.graphic.coord,
+                TileMap.player.graphic.coord,
                 this.blockMap(),
                 this.dimensions,
                 Infinity
@@ -334,9 +355,9 @@ export class TileMap extends Container {
                 radius: light.radius
             };
         });
-        if (this.player != undefined) {
+        if (TileMap.player != undefined) {
             lightSources.push({
-                coord: this.player.graphic.coord,
+                coord: TileMap.player.graphic.coord,
                 radius: properties.getNumber('vision-distance')
             })
         }

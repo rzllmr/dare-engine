@@ -35,7 +35,7 @@ export class Pick extends Action {
                 this.save('items', this.items.map((item) => {return item.name;}))
             }
         }
-        if (this.items.length == 0 && this.destroyObject) this.object.markForDestruction();
+        if (this.items.length == 0 && this.destroyObject) this.object.destroyLater();
     }
 
     public container(): boolean {
