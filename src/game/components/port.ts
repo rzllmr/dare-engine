@@ -14,8 +14,6 @@ export class Port extends Action {
             return;
         }
 
-        subject.graphic.unsaveCoord();
-
         const target = this.where.split('.');
         Tile.map.changeLater(`level.${target[0]}`, target[1]);
     }

@@ -31,6 +31,8 @@ export class TileMap extends Container {
 
     private readonly _afterLoad = new Array<() => void>();
     private loaded = false;
+    private attached = false;
+    private spawnCoord?: Point;
 
     private readonly flatMaps = new Map<string, any[]>();
     
@@ -81,13 +83,12 @@ export class TileMap extends Container {
 
     public changeLater(level: string, spawn: string): void {
         this.afterMove(() => {
-            if (!this.loaded) return;
+            if (!this.attached) return;
     
             if (!TileMap.available(level, spawn)) {
                 console.error(`cannot change to level: ${level} ${spawn}`);
                 return;
             }
-            TileMap.player.graphic.onMove = () => {};
             TileMap.changeMap(level, spawn);
         });
     };
@@ -155,20 +156,34 @@ export class TileMap extends Container {
         this._highlight = new Tile('frame', currentCoord);
         this.layers[1].addChild(this._highlight.graphic.sprite);
 
-        const spawnCoord = this.objects.find((object) => object.name == spawn)?.graphic.coord;
-        if (spawnCoord != undefined) {
-            TileMap.player.graphic.coord = spawnCoord;
-            this.objects.push(TileMap.player);
-            const child = this.layers[1].addChild(TileMap.player.graphic.sprite);
-            child.zIndex = spawnCoord.y;
-
-            TileMap.player.graphic.onMove = this.focusPos.bind(this);
-            await this.move(new Point(), TileMap.player);
-        }
+        this.spawnCoord = this.objects.find((object) => object.name == spawn)?.graphic.coord;
+        if (this.spawnCoord != undefined) this.focusPos(TileMap.coordToPos(this.spawnCoord));
 
         this.afterLoad();
 
         return true;
+    }
+
+    public async attachPlayer(): Promise<void> {
+        if (this.spawnCoord == undefined) return;
+
+        if (TileMap.player.graphic.coord.equals(new Point(0, 0)))
+        TileMap.player.graphic.coord = this.spawnCoord;
+        this.objects.push(TileMap.player);
+        const child = this.layers[1].addChild(TileMap.player.graphic.sprite);
+        child.zIndex = this.spawnCoord.y;
+
+        TileMap.player.graphic.onMove = this.focusPos.bind(this);
+        await this.move(new Point(), TileMap.player);
+        this.attached = true;
+    }
+
+    public detachPlayer(): void {
+        const idx = this.objects.indexOf(TileMap.player);
+        this.objects.splice(idx, 1);
+        this.layers[1].removeChild(TileMap.player.graphic.sprite);
+        TileMap.player.graphic.onMove = () => {};
+        TileMap.player.graphic.coord = new Point(0, 0);
     }
 
     public surrounding(coord: Point): string[] {

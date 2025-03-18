@@ -41,6 +41,9 @@ export class GameScene extends Container implements IScene {
             return;
         }
 
+        if (this.tileMap != undefined) this.tileMap.detachPlayer();
+        await tileMap.attachPlayer();
+
         if (this.tileMap !== undefined) {
             settings.set('start.level', level);
             settings.set('start.spawn', spawn);
