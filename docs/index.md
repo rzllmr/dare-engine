@@ -50,14 +50,14 @@ layout: |
 
   ^   # # # #
   # # # . . # # # # # # # # # #
-  # @ . □ . * . . . . . . . . #
-  # . □ □ . # . . . . . . T . #
-  # # . . . # μ . . . . . . . #
-    # κ . # # . . . . . . . . #
+  # @ . □ . * . . . . . . . S #
+  # . □ □ . # . . . . . . . . #
+  # # . . . # . . τ # . . . . #
+    # κ . # # μ . . . . . . . #
     # # # # # # # # # # # # # #
 
 key:
-  "@": player
+  "@": spawn
   " ": none
   ".": floor
   "#": wall
@@ -65,8 +65,9 @@ key:
   "*": door (key?)
   "κ": mysterious chest (key)
   "□": crate
-  "μ": map
-  "T": sign
+  "τ": torch
+  "μ": chest (map)
+  "S": stairs-up (upper.stairs-down)
 ```
 
 It is composed of two sections: the **layout** defining where and the **key** describing what everything is.
@@ -77,7 +78,7 @@ The layout is a map of the level with characters representing different entities
 
 **Have any character in the upper left corner** of your map, because that defines the starting point of the map data for our clueless yaml parser. You can use any character besides whitespace, whether it is used or not. So if your level has something lingering in the upper left corner anyway, you already pass this requirement.
 
-**Separate all characters with one whitespace** to make the map appear more in the dimensions of the game and leave space for a little extra. Because later you can replace that whitespace you left with a special character to bind events to, that are triggered when moved to. But more on that in the key section.
+**Separate all characters with one whitespace** to make the map appear more in the dimensions of the game and leave space for a little extra. Because later you can replace that whitespace you left with a special character to bind events to, that are triggered when moved to. But that's not implemented yet.
 
 ### About the key
 
@@ -89,14 +90,16 @@ In the key you can specify what each character stands for and add some extra inf
 
 **The extras in parentheses depend on the elment** they are appended to. A chest for example has its content specified in a comma-list. And its required items marked with a question mark (key?) in that same list.
 
-
 ## Defining entities
 
 There are many options in defining entities, because this is where the game logic lies. So, let's look at a few examples:
 
 ```yaml
 chest:
-  sprite: "chest"
+  sprite:
+    idle: "chest"
+    variants:
+      openable: true
   info: "A simple chest."
   open:
     need: "*?"
@@ -131,11 +134,15 @@ The following list of components is only what is available now, but will be expa
 
 💼 **inventory** attaches an item container to the entity
 
+💡 **light** the surroundings of an entity
+
 🏃 **move** can allow another entity to move past
 
 🔓 **open** an entity to get through or access its content
 
 🧺 **pick** up an entity to add it to inventory or equipment
+
+🚪 **port** to another level when stepping on the entity
 
 🐏 **push** an entity around in the world to clear or block
 
@@ -169,7 +176,6 @@ Writing dialogs with possible branches and conditions is a topic on its own. And
 **Annotate a line with a speaker when they're changing** in the `#speaker: name` format shown above. That tells the in-game dialog to highlight the new speaker, so everybody can follow who's currently talking. It also helps to not get it mixed up yourself later.
 
 **Each line is a new dialog window** switched to when the player continues. That way you can control the pacing of the text yourself. A very important ingredient to the general pacing of the scene itself.
-
 
 ## Closing words
 

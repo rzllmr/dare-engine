@@ -37,6 +37,22 @@ entity:
   inventory: ~
 ```
 
+## Light
+
+The light component illuminates the tiles surrounding the entity.
+
+```yaml
+entity:
+  light: # radius
+    radius: 1
+```
+
+| specification | possible values | default value |
+|:-|:-|:-|
+| **radius** | positive integer | `1` |
+
+* _Radius of tiles to light in a circle around the entity._
+
 ## Move (default)
 
 The move component of an entity defines whether or not another entity can get past it.
@@ -75,6 +91,22 @@ entity:
 
 * _Whether this entity can be passed when open._
 
+## Port
+
+The port component moves the entity to a point in another level.
+
+```yaml
+entity:
+  port: # where
+    where: ""
+```
+
+| specification | possible values | default value |
+|:-|:-|:-|
+| **where** | `level.entity` format | empty string |
+
+* _The level and entity to port this to._
+  
 ## Pick
 
 The pick component allows an entity to be picked up and equipped.
