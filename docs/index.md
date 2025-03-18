@@ -38,8 +38,24 @@ The only thing we're interested in now is the _content/_ folder. Because we want
 
 📂 _levels/_ with neat representations of the game's levels in kind of ASCII art
 
+📄 _settings.yml_ listing the general specs of the game
+
 You can just go now and fiddle around with all the files as you like and see what it does. But if you stay I explain how all that really works in detail.
 
+## Setting up the settings
+
+The list of general settings is pretty brief for now. So we just take a quick look to go on with the more exciting stuff.
+
+```yaml
+game:
+  name: Dare
+
+start:
+  level: levels.demo
+  spawn: spawn
+```
+
+In the settings file you can change the name of the game and tell it where to start. More precisely at what point in which level. So the level has to exist of course as well as the entity to spawn to. And how to set up both you will see in the next section.
 
 ## Creating levels
 
