@@ -207,7 +207,7 @@ In case you can't because of some pesky bugs, please [report](https://github.com
 
 There is always so much more planned and this is just an excerpt:
 
-- [ ] Change the level through portals
+- [x] Change the level through portals
 - [ ] Make more use of the book
 - [ ] Extend dialogs with multiple choice
 - [ ] Let other creatures move around
