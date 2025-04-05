@@ -28,6 +28,7 @@ door:
 chest:
   sprite:
     idle: "chest"
+    hide-first: true
     variants:
       openable: true
   info: "A simple chest."
@@ -46,8 +47,10 @@ crate:
   push: ~
   
 sign:
-  sprite: "sign"
-  tell: "Awesome, you did it! 😊 This is the end of the game for now, until I find the time to add more..."
+  sprite:
+    idle: "sign"
+    hide-first: true
+  tell: "Awesome, you made it! 😊 This is the end of the game for now, until I find the time to add more..."
 
 spawn:
   move: true

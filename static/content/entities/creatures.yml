@@ -4,6 +4,8 @@ player:
     inventory: ~
 
 rat:
-    sprite: "rat"
+    sprite:
+        idle: "rat"
+        hide-ever: true
     info: "A ridiculously sized rat rummaging around."
     fight: ~

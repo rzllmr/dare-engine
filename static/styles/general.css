@@ -106,7 +106,7 @@ html, body {
     top: calc(3 * 20px);
     width: calc(3 * 180px);
     height: calc(3 * 231px);
-    background-image: url("../images/map/sheet_dark.m.png");
+    background-image: url("../images/map/sheet.m.png");
     padding: 42px 0px;
   }
   #pixi-content {

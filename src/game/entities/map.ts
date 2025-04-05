@@ -245,7 +245,7 @@ export class TileMap extends Container {
         const tile = this.entity(coord);
         if (tile === undefined || !tile.graphic.visible) {
             if (this._highlight.graphic.visible) {
-                this._highlight.graphic.hide();
+                this._highlight.graphic.show(false);
             }
             return;
         }
@@ -335,29 +335,31 @@ export class TileMap extends Container {
         if (TileMap.player === undefined) return;
 
         let visibleMap = this.visibleMap();
+
         if (properties.getBool('reveal-tiles')) {
             visibleMap.fill(true);
-        } else {
-            if (!properties.getBool('map-tiles')) visibleMap = this.visibleMap(true);
-            const unveiledRoom = unveilRoom(
-                TileMap.player.graphic.coord,
-                this.blockMap(),
-                this.dimensions,
-                Infinity
-            );
-            visibleMap.forEach((_, idx) => {
-                visibleMap[idx] ||= unveiledRoom[idx];
-            });
+        } else if (!properties.getBool('map-tiles')) {
+            visibleMap = this.visibleMap(true);
         }
+
+        const unveiledRoom = unveilRoom(
+            TileMap.player.graphic.coord,
+            this.blockMap(),
+            this.dimensions,
+            Infinity
+        );
+        visibleMap.forEach((_, idx) => {
+            visibleMap[idx] ||= unveiledRoom[idx];
+        });
+
         visibleMap.forEach((visible, idx) => {
             const coord = this.idxToCoord(idx);
-            if (visible) {
-                this.object(coord)?.graphic.show();
-                this.tile(coord)?.graphic.show();
-            } else {
-                this.object(coord)?.graphic.hide();
-                this.tile(coord)?.graphic.hide();
-            }
+            this.object(coord)?.graphic.show(visible);
+            this.tile(coord)?.graphic.show(visible);
+
+            const unveiled = unveiledRoom[idx];
+            this.object(coord)?.graphic.unveil(unveiled);
+            this.tile(coord)?.graphic.unveil(unveiled);    
         });
     }
     
@@ -384,7 +386,7 @@ export class TileMap extends Container {
         for (const source of this.lightSources()) {
             const light = computeFov(
                 source.coord,
-                this.blockMap(),
+                Array(this.blockMap.length).fill(false),
                 this.dimensions,
                 source.radius
             );

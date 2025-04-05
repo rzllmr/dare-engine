@@ -1,4 +1,4 @@
-import { ColorSource, Point, Sprite, Texture } from 'pixi.js';
+import { Assets, ColorSource, Point, Sprite, Texture } from 'pixi.js';
 import { ComponentSpecs, EntitySpecs } from 'engine/specs';
 import { TileMap } from 'game/entities/map';
 import { Tile } from 'game/entities/tile';
@@ -8,6 +8,7 @@ import { SpecdComponent } from './types';
 export class Graphic extends SpecdComponent {
     public onMove = (position: Point): void => {};
 
+    public sketch?: Sprite;
     public sprite!: Sprite;
     public image = '';
 
@@ -18,6 +19,8 @@ export class Graphic extends SpecdComponent {
     public override init(): void {
         const spriteName = this.load('image', this.idle + this.suffix());
         this.sprite = this.loadSprite(spriteName);
+        this.sketch = this.loadSketch(spriteName);
+        if (this.sketch) this.sprite.addChild(this.sketch);
         this.coord = this.load('coord', this.initialCoord);
     }
 
@@ -84,8 +87,22 @@ export class Graphic extends SpecdComponent {
         return suffix;
     }
 
-    public get hideInDark(): boolean {
-        return this.specs.get('hide-in-dark', false);
+    private _hideFirst?: boolean;
+    public get hideFirst(): boolean {
+        if (this._hideFirst == undefined) {
+            const specsValue = this.specs.get('hide-first', false);
+            this._hideFirst = this.load('hide-first', specsValue) as boolean;
+        }
+        return this._hideFirst;
+    }
+
+    public set hideFirst(value: boolean) {
+        this.save('hide-first', value);
+        this._hideFirst = value;
+    }
+
+    public get hideEver(): boolean {
+        return this.specs.get('hide-ever', false);
     }
 
     private levelToTint(value: number): ColorSource {
@@ -96,21 +113,58 @@ export class Graphic extends SpecdComponent {
         ];
     }
 
-    public show(): void {
-        this.sprite.visible = true;
+    private _unveiled = false;
+    public unveil(unveil = true): void {
+        this._unveiled = unveil;
+    }
+    
+    public show(show = true): void {
+        if (show) {
+            if (!this.hideFirst && !this.hideEver) {
+                if (this.sketch != undefined) this.sketch.alpha = 1.0;
+                this.sprite.visible = true;
+            } else {
+                this.sprite.visible = false;
+            }
+        } else {
+            this.sprite.visible = false;
+        }
     }
 
-    public hide(): void {
-        this.sprite.visible = false;
+    public light(level = 1.0): void {
+        if (!this._unveiled) return;
+
+        if (this.hideFirst && level > 0.0) {
+            this.hideFirst = false;
+            this.show();
+        }
+
+        if (this.sketch) this.sketch.alpha = this.lightGradient(1.0 - level);
+        else this.sprite.alpha = this.lightGradient(level);
     }
 
-    public light(level = 0.0): void {
-        if (this.hideInDark) this.sprite.visible = level > 0.0;
-        this.sprite.tint = this.levelToTint(level);
+    private lightGradient(value: number): number {
+        return Math.pow(value, 1);
+    }
+
+    private loadSketch(image: string): Sprite | undefined {
+        const sketchImage = image.replace(/(\.|$)/, '-sketch$1');
+        if (!Assets.cache.has(sketchImage)) return undefined;
+
+        const texture = Graphic.loadTexture(sketchImage);
+        texture.source.scaleMode = 'nearest';
+        const sprite = Sprite.from(texture);
+        const anchor = new Point(
+            sprite.anchor.x / sprite.width,
+            sprite.anchor.y / sprite.height
+        );
+        sprite.anchor.copyFrom(anchor);
+        // sprite.alpha = 0.0;
+        return sprite;
     }
 
     public get visible(): boolean {
-        return this.sprite.visible;
+        return this._unveiled;
     }
 
     public get coord(): Point {
@@ -150,10 +204,19 @@ export class Graphic extends SpecdComponent {
         return sprite;
     }
 
-    public changeSprite(image: string): void {
+    public changeSprite(image: string, save = true): void {
         this.sprite.texture = Graphic.loadTexture(image);
+        this.sprite.texture.source.scaleMode = 'nearest';
         this.image = image;
-        this.save('image', this.image);
+        if (save) this.save('image', this.image);
+
+        if (this.sketch) {
+            const sketch = this.loadSketch(image);
+            if (sketch) {
+                this.sketch.texture = sketch.texture;
+                this.sketch.texture.source.scaleMode = 'nearest';
+            }
+        }
     }
 
     private static readonly textures = new Map<string, Texture>();

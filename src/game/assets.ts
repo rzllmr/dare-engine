@@ -15,6 +15,7 @@ export const manifest: AssetsManifest = {
                 'settings': './content/settings.yml',
                 'sprites.beings': './images/world/beings.json',
                 'sprites.objects': './images/world/objects.json',
+                'sprites.sketches': './images/world/sketches.json',
                 'sprites.symbols': './images/world/symbols.json',
                 'sprites.tiles': './images/world/tiles.json',
                 'version': './version.txt'

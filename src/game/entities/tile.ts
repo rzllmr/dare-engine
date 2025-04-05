@@ -27,7 +27,11 @@ export class Tile extends Entity {
         this.specs.component('sprite')?.set('coord', coord);
 
         this.attachComponents();
-        if (name == 'player') this.graphic.show();
+        if (name == 'player') {
+            this.graphic.show();
+            this.graphic.unveil();
+            this.graphic.light();
+        }
     }
 
     private attachComponents(): void {
