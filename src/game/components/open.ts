@@ -27,7 +27,7 @@ export class Open extends Action {
             }
         }
         
-        const openSprite = this.object.image.replace(/c$/, 'o');
+        const openSprite = this.object.graphic.image.replace(/c$/, 'o');
         this.object.graphic.changeSprite(openSprite);
 
         if (this.pass) this.object.getComponent(Move).pass = true;
@@ -37,8 +37,8 @@ export class Open extends Action {
     }
 
     public override async leave(subject: Tile): Promise<void> {
-        if (this.object.image.endsWith('o')) {
-            const openSprite = this.object.image.replace(/o$/, 'c');
+        if (this.object.graphic.image.endsWith('o')) {
+            const openSprite = this.object.graphic.image.replace(/o$/, 'c');
             this.object.graphic.changeSprite(openSprite);
         }
     }

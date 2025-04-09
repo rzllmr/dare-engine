@@ -1,4 +1,4 @@
-import { Assets, ColorSource, Point, Sprite, Texture } from 'pixi.js';
+import { Assets, ColorSource, Container, Point, Sprite, Texture } from 'pixi.js';
 import { ComponentSpecs, EntitySpecs } from 'engine/specs';
 import { TileMap } from 'game/entities/map';
 import { Tile } from 'game/entities/tile';
@@ -8,20 +8,34 @@ import { SpecdComponent } from './types';
 export class Graphic extends SpecdComponent {
     public onMove = (position: Point): void => {};
 
-    public sketch?: Sprite;
-    public sprite!: Sprite;
-    public image = '';
+    private _container!: Container;
+    private _sketch?: Sprite;
+    private _sprite!: Sprite;
+    private _image?: string;
 
     constructor(specs: ComponentSpecs) {
         super(specs, 'idle');
     }
 
     public override init(): void {
-        const spriteName = this.load('image', this.idle + this.suffix());
-        this.sprite = this.loadSprite(spriteName);
-        this.sketch = this.loadSketch(spriteName);
-        if (this.sketch) this.sprite.addChild(this.sketch);
+        this._container = new Container();
+        this._sketch = this.loadSketch(this.image);
+        if (this._sketch) this._container.addChild(this._sketch);
+        this._sprite = this.loadSprite(this.image);
+        this._container.addChild(this._sprite);
         this.coord = this.load('coord', this.initialCoord);
+    }
+
+    public get image(): string {
+        if (this._image == undefined) {
+            this._image = this.load('image', this.idle + this.suffix());
+        }
+        return this._image as string;
+    }
+
+    public set image(image: string) {
+        this.save('image', image);
+        this._image = image;        
     }
 
     public get idle(): string {
@@ -42,6 +56,10 @@ export class Graphic extends SpecdComponent {
 
     public get layer(): 0 | 1 {
         return this.specs.get('ground', false) ? 0 : 1;
+    }
+
+    public get sprite(): Container {
+        return this._container;
     }
 
     public static getLayer(name: string): 0 | 1 {
@@ -105,29 +123,25 @@ export class Graphic extends SpecdComponent {
         return this.specs.get('hide-ever', false);
     }
 
-    private levelToTint(value: number): ColorSource {
-        return [
-            value * (1 - 0.4) + 0.4, // red
-            value * (1 - 0.4) + 0.4, // green
-            value * (1 - 0.5) + 0.5  // blue
-        ];
-    }
-
     private _unveiled = false;
     public unveil(unveil = true): void {
+        this._sprite.visible = unveil;
         this._unveiled = unveil;
     }
     
+    public get visible(): boolean {
+        return this._unveiled;
+    }
+
     public show(show = true): void {
         if (show) {
-            if (!this.hideFirst && !this.hideEver) {
-                if (this.sketch != undefined) this.sketch.alpha = 1.0;
-                this.sprite.visible = true;
+            if (!this.hideFirst) {
+                this._container.visible = true;
             } else {
-                this.sprite.visible = false;
+                this._container.visible = false;
             }
         } else {
-            this.sprite.visible = false;
+            this._container.visible = false;
         }
     }
 
@@ -137,86 +151,74 @@ export class Graphic extends SpecdComponent {
         if (this.hideFirst && level > 0.0) {
             this.hideFirst = false;
             this.show();
+        } else if (this.hideEver && level == 0.0) {
+            this.hideFirst = true;
+            this.show(false);
         }
 
-        if (this.sketch) this.sketch.alpha = this.lightGradient(1.0 - level);
-        else this.sprite.alpha = this.lightGradient(level);
+        this._sprite.alpha = this.lightGradient(level);
     }
 
     private lightGradient(value: number): number {
         return Math.pow(value, 1);
     }
 
-    private loadSketch(image: string): Sprite | undefined {
-        const sketchImage = image.replace(/(\.|$)/, '-sketch$1');
-        if (!Assets.cache.has(sketchImage)) return undefined;
-
-        const texture = Graphic.loadTexture(sketchImage);
-        texture.source.scaleMode = 'nearest';
-        const sprite = Sprite.from(texture);
-        const anchor = new Point(
-            sprite.anchor.x / sprite.width,
-            sprite.anchor.y / sprite.height
-        );
-        sprite.anchor.copyFrom(anchor);
-        // sprite.alpha = 0.0;
-        return sprite;
-    }
-
-    public get visible(): boolean {
-        return this._unveiled;
-    }
-
     public get coord(): Point {
-        return TileMap.posToCoord(this.sprite.position);
+        return TileMap.posToCoord(this._container.position);
     }
 
     public set coord(value: Point) {
-        this.sprite.position.copyFrom(TileMap.coordToPos(value));
-        this.onMove(this.sprite.position);
+        this._container.position.copyFrom(TileMap.coordToPos(value));
+        this.onMove(this._container.position);
     }
 
     public get position(): Point {
-        return this.sprite.position.clonePoint();
+        return this._container.position.clonePoint();
     }
 
     public set position(value: Point) {
-        this.sprite.position.copyFrom(value);
-        this.onMove(this.sprite.position);
+        this._container.position.copyFrom(value);
+        this.onMove(this._container.position);
     }
 
     public afterMove(): void {
         this.save('coord', this.coord);
     }
 
+    private sketchImage(image: string): string {
+        return image.replace(/(\.|$)/, '-sketch$1');
+    }
+
+    private loadSketch(image: string): Sprite | undefined {
+        const sketchImage = this.sketchImage(image);
+        if (!Assets.cache.has(sketchImage)) return undefined;
+        return this.createSprite(sketchImage);
+    }
+
     private loadSprite(image: string): Sprite {
+        const sprite = this.createSprite(image);
+        sprite.alpha = 0.0;
+        return sprite;
+    }
+
+    private createSprite(image: string): Sprite {
         const texture = Graphic.loadTexture(image);
-        texture.source.scaleMode = 'nearest';
         const sprite = Sprite.from(texture);
-        this.image = image;
         const anchor = new Point(
             sprite.anchor.x / sprite.width,
             sprite.anchor.y / sprite.height
         );
         sprite.anchor.copyFrom(anchor);
-        sprite.visible = false;
         sprite.scale.set(TileMap.scale);
         return sprite;
     }
 
-    public changeSprite(image: string, save = true): void {
-        this.sprite.texture = Graphic.loadTexture(image);
-        this.sprite.texture.source.scaleMode = 'nearest';
-        this.image = image;
-        if (save) this.save('image', this.image);
-
-        if (this.sketch) {
-            const sketch = this.loadSketch(image);
-            if (sketch) {
-                this.sketch.texture = sketch.texture;
-                this.sketch.texture.source.scaleMode = 'nearest';
-            }
+    public changeSprite(image: string): void {
+        this._sprite.texture = Graphic.loadTexture(image);        
+        if (this._sketch) {
+            this._sketch.texture = Graphic.loadTexture(this.sketchImage(image));
         }
+        this.image = image;
     }
 
     private static readonly textures = new Map<string, Texture>();
@@ -224,6 +226,7 @@ export class Graphic extends SpecdComponent {
         let texture = Graphic.textures.get(image);
         if (texture === undefined) {
             texture = Texture.from(image);
+            texture.source.scaleMode = 'nearest';
             Graphic.textures.set(image, texture);
         }
         return texture;

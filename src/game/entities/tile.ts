@@ -98,10 +98,6 @@ export class Tile extends Entity {
         return this.specs.name;
     }
 
-    public get image(): string {
-        return this.graphic.image;
-    }
-
     public get kind(): string {
         return this.name;
     }
