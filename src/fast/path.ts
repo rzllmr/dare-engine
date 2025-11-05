@@ -2,11 +2,18 @@
 
 import { Point } from 'pixi.js';
 
-export default function computePath(
+export { computePath_Native as computePath };
+
+function computePath_Native(
     start: Point,
     end: Point,
-    isBlocking: (tile: Point) => boolean,
+    blocking: boolean[],
+    boundaries: Point
 ): Point[] {
+    const toIdx = (coord: Point): number => {
+        return coord.x + coord.y * boundaries.x;
+    }
+
     const startNode = new Node(start);
     const endNode = new Node(end);
 
@@ -28,13 +35,14 @@ export default function computePath(
         openList.splice(currentIdx, 1);
         closedList.push(currentNode);
 
-        if (currentNode === endNode) {
+        if (currentNode.equals(endNode)) {
             const path: Point[] = [];
             let current: Node | undefined = currentNode;
             while (current !== undefined) {
                 path.push(current.position);
                 current = current.parent;
             }
+            path.push(start);
             return path.reverse();
         }
 
@@ -42,7 +50,7 @@ export default function computePath(
         const neighbors: Point[] = [new Point(0, -1), new Point(0, 1), new Point(-1, 0), new Point(1, 0)];
         for (const newPosition of neighbors) {
             const nodePosition = new Point(currentNode.position.x + newPosition.x, currentNode.position.y + newPosition.y);
-            if (isBlocking(nodePosition)) continue;
+            if (blocking[toIdx(nodePosition)]) continue;
 
             children.push(new Node(nodePosition, currentNode));
         }
