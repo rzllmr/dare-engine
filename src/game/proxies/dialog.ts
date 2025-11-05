@@ -1,5 +1,7 @@
 import { Story } from 'inkjs';
 import { Assets, Point } from 'pixi.js';
+import { Tween, Easing } from '@tweenjs/tween.js';
+import { Animation } from 'engine/animation';
 import { storage } from 'engine/storage';
 import { bookButton } from './button';
 import { dpad } from './dpad';
@@ -17,6 +19,7 @@ class DialogProxy {
     private readonly dialogText: HTMLDivElement;
     private story: Story | null;
     private readonly lines: string[];
+    private animation?: Animation;
 
     private constructor() {
         this.dialogNode = document.querySelector('#dialog') as HTMLDivElement;
@@ -28,7 +31,10 @@ class DialogProxy {
     }
 
     private continue(): void {
-        if (this.story?.canContinue === true) {
+        if (this.animation?.running() === true) {
+            this.animation?.skip();
+            this.animation = undefined;
+        } else if (this.story?.canContinue === true) {
             const line = this.story.Continue() ?? '';
             this.tellLine(line);
         } else if (this.lines.length > 0) {
@@ -57,8 +63,19 @@ class DialogProxy {
 
     private tellLine(line?: string): void {
         if (line === undefined) return;
-        this.dialogText.innerHTML = line;
+        this.dialogText.innerHTML = '';
+        this.typewriter(line);
         this.show();
+    }
+
+    private typewriter(line: string): void {
+        line = this.wordWrapToLineBreaks(line, this.dialogText).replaceAll('<br>', '|');
+        const tween = new Tween({idx: 0}).to({idx: line.length}).easing(Easing.Linear.In).duration(50 * line.length);
+        tween.onUpdate((current) => {
+            this.dialogText.innerHTML = line.substring(0, Math.floor(current.idx)).replaceAll('|', '<br>');
+        });
+        this.animation = new Animation(tween);
+        this.animation.run();
     }
 
     private show(show = true): void {
@@ -73,6 +90,38 @@ class DialogProxy {
 
     public text(): string | null {
         return this.dialogText.textContent;
+    }
+
+    private wordWrapToLineBreaks(text: string, box: HTMLDivElement): string {
+        const testNode = document.createElement('div');
+        testNode.style.visibility = 'hidden';
+        testNode.style.position = 'absolute';
+        testNode.style.top = '0';
+        testNode.style.font = window.getComputedStyle(box).font;
+
+        const viewNode = document.getElementById('view');
+        viewNode?.appendChild(testNode);
+
+        let processedText = '';
+        let currentLine = '';
+        for (const word of text.split(' ')) {
+            const testLine = currentLine + (currentLine === '' ? '' : ' ') + word;
+            testNode.innerHTML = testLine;
+            if (testNode.clientWidth > box.clientWidth) {
+                if (processedText !== '') processedText += '<br>';
+                processedText += currentLine;
+                currentLine = word;
+            } else {
+                currentLine = testLine;
+            }
+        }
+        if (currentLine !== '') {
+            if (processedText !== '') processedText += '<br>';
+            processedText += currentLine;
+        }
+        viewNode?.removeChild(testNode);
+
+        return processedText;
     }
 }
 export const dialog = DialogProxy.instance();
