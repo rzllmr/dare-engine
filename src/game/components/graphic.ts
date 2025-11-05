@@ -1,4 +1,6 @@
-import { Assets, ColorSource, Container, Point, Sprite, Texture } from 'pixi.js';
+import { Assets, Container, Point, Sprite, Texture } from 'pixi.js';
+import { Tween, Easing } from '@tweenjs/tween.js';
+import { Animation } from 'engine/animation';
 import { ComponentSpecs, EntitySpecs } from 'engine/specs';
 import { TileMap } from 'game/entities/map';
 import { Tile } from 'game/entities/tile';
@@ -156,11 +158,17 @@ export class Graphic extends SpecdComponent {
             this.show(false);
         }
 
-        this._sprite.alpha = this.lightGradient(level);
+        this.changeSpriteAlpha(this._sprite.alpha, this.lightGradient(level));
     }
 
     private lightGradient(value: number): number {
         return Math.pow(value, 1);
+    }
+
+    private changeSpriteAlpha(start: number, end: number): void {
+        const tween = new Tween({level: start}).to({level: end}).duration(200).easing(Easing.Linear.In);
+        tween.onUpdate((current) => { this._sprite.alpha = current.level; });
+        new Animation(tween).run();
     }
 
     public get coord(): Point {
