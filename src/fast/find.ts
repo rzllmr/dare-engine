@@ -4,7 +4,7 @@
 import { Point } from 'pixi.js';
 import { find_next, point_struct } from 'fast/wasm/pkg/fast_functions';
 
-export { findNext_Wasm as findNext };
+export { findNext_Native as findNext };
 
 function findNext_Wasm(origin: Point, ground: boolean[], boundaries: Point, maxDistance: number): number {
     const index = find_next(

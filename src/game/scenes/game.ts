@@ -5,7 +5,7 @@ import { utils } from 'engine/utils';
 import { Move } from 'game/components/move';
 import { TileMap } from 'game/entities/map';
 import { book } from 'game/proxies/book';
-import init_wasm from "fast/wasm/pkg/fast_functions";
+import init_wasm from 'fast/wasm/pkg/fast_functions';
 
 export class GameScene extends Container implements IScene {
     public gameName: string;
@@ -62,9 +62,6 @@ export class GameScene extends Container implements IScene {
         if (button.startsWith('Arrow')) {
             const direction = button.replace('Arrow', '');
             this.tileMap.move(Move.direction(direction));
-        } else if (button.endsWith('Swipe')) {
-            const direction = button.replace('Swipe', '');
-            book.changeTab(direction);
         }
     }
 

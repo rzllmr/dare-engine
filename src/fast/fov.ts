@@ -10,7 +10,7 @@
 import { Point } from 'pixi.js';
 import { compute_fov, point_struct } from 'fast/wasm/pkg/fast_functions';
 
-export { computeFov_Wasm as computeFov };
+export { computeFov_Native as computeFov };
 
 function computeFov_Wasm(origin: Point, blocking: boolean[], boundaries: Point, maxDistance: number): number[] {
     const visible = compute_fov(
@@ -36,12 +36,18 @@ function computeFov_Native(
     visibles[toIdx(origin)] = 1.0;
 
     for (const transform of quadrants(origin)) {
+        const inside = (coord: Point): boolean => {
+            coord = transform(coord);
+            return insideBoundaries(coord, boundaries) && insideCircle(coord, origin, maxDistance);
+        }
         const isWall = (coord?: Point): boolean => {
             if (coord == undefined) return false;
+            if (!inside(coord)) return true;
             return blocking[toIdx(transform(coord))];
         }
         const isFloor = (coord?: Point): boolean => {
             if (coord == undefined) return false;
+            if (!inside(coord)) return false;
             return !blocking[toIdx(transform(coord))];
         }
         const reveal = (coord: Point): void => {

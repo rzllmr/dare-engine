@@ -4,7 +4,7 @@
 import { Point } from 'pixi.js';
 import { unveil_room, point_struct } from 'fast/wasm/pkg/fast_functions';
 
-export { unveilRoom_Wasm as unveilRoom };
+export { unveilRoom_Native as unveilRoom };
 
 function unveilRoom_Wasm(origin: Point, blocking: boolean[], boundaries: Point, maxDistance: number): boolean[] {
     const unveiled = unveil_room(
