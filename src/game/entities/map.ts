@@ -10,7 +10,7 @@ import { MapData } from './mapdata';
 import { Tile } from './tile';
 
 export type PropertyNames = 'vision-distance' | 'map-tiles' | 'reveal-tiles';
-properties.register('vision-distance', 1, 'radius around player where tiles are revealed'); // only high number to prevent infinite recursion
+properties.register('vision-distance', 2, 'radius around player where tiles are revealed'); // only high number to prevent infinite recursion
 properties.register('map-tiles', false, 'revealed tiles stay visible on map');
 properties.register('reveal-tiles', false, 'all tiles are revealed on map');
 
@@ -73,6 +73,7 @@ export class TileMap extends Container {
         properties.onChange('reveal-tiles', (revealTiles: boolean) => {
             this.afterLoad(() => {
                 this.updateVision();
+                this.updateLights();
             });
         });
     }
@@ -168,13 +169,13 @@ export class TileMap extends Container {
         if (this.spawnCoord == undefined) return;
 
         if (TileMap.player.graphic.coord.equals(new Point(0, 0)))
-        TileMap.player.graphic.coord = this.spawnCoord;
+            TileMap.player.graphic.coord = this.spawnCoord;
         this.objects.push(TileMap.player);
         const child = this.layers[1].addChild(TileMap.player.graphic.sprite);
         child.zIndex = this.spawnCoord.y;
 
         TileMap.player.graphic.onMove = this.focusPos.bind(this);
-        await this.move(new Point(), TileMap.player);
+        await this.move(new Point(0, 0), TileMap.player);
         this.attached = true;
     }
 
@@ -272,11 +273,13 @@ export class TileMap extends Container {
 
         actor.moving = true;
         
+        if (actor == TileMap.player && target.pass || direction.equals(new Point(0,0))) {
+            this.updateVision(target.graphic.coord);
+            this.updateLights(target.graphic.coord);
+        }
         await target?.act(actor);
         await origin?.leave(actor);
         // this.updateOthers();
-        this.updateVision();
-        this.updateLights();
 
         actor.moving = false;
 
@@ -331,11 +334,10 @@ export class TileMap extends Container {
         return tile;
     }
 
-    private updateVision(): void {
+    private updateVision(origin: Point = TileMap.player.graphic.coord): void {
         if (TileMap.player === undefined) return;
 
         let visibleMap = this.visibleMap();
-
         if (properties.getBool('reveal-tiles')) {
             visibleMap.fill(true);
         } else if (!properties.getBool('map-tiles')) {
@@ -343,7 +345,7 @@ export class TileMap extends Container {
         }
 
         const unveiledRoom = unveilRoom(
-            TileMap.player.graphic.coord,
+            origin,
             this.blockMap(),
             this.dimensions,
             Infinity
@@ -363,7 +365,7 @@ export class TileMap extends Container {
         });
     }
     
-    private lightSources(): LightSource[] {
+    private lightSources(target: Point): LightSource[] {
         const lightObjects = this.objects.filter((object) => object.hasComponent(Light) && object.graphic.visible);
         const lightSources = lightObjects.map((object) => {
             const light = object.getComponent(Light);
@@ -374,16 +376,16 @@ export class TileMap extends Container {
         });
         if (TileMap.player != undefined) {
             lightSources.push({
-                coord: TileMap.player.graphic.coord,
+                coord: target,
                 radius: properties.getNumber('vision-distance')
             })
         }
         return lightSources;
     }
 
-    private updateLights(): void {
+    private updateLights(target: Point = TileMap.player.graphic.coord): void {
         const lightMap = this.lightMap(true);
-        for (const source of this.lightSources()) {
+        for (const source of this.lightSources(target)) {
             const light = computeFov(
                 source.coord,
                 Array(this.blockMap.length).fill(false),

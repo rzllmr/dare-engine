@@ -2,7 +2,7 @@ import { Point } from 'pixi.js';
 import { Entity } from 'engine/entity';
 import { EntitySpecs } from 'engine/specs';
 import { storage, storageTypes } from 'engine/storage';
-import { Graphic, Info } from 'game/components';
+import { Graphic, Info, Move } from 'game/components';
 import { createComponent } from 'game/components/registry';
 import { Action } from 'game/components/types';
 import { TileMap } from './map';
@@ -88,6 +88,11 @@ export class Tile extends Entity {
                 await component.act(subject);
             }
         }
+    }
+
+    public get pass(): boolean {
+        const move = this.getComponent(Move);
+        return move.pass;
     }
 
     public get graphic(): Graphic {
