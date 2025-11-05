@@ -13,24 +13,36 @@ export class Animation {
     }
 
     private readonly tween: Tween;
+    private startTime!: number;
 
     constructor(tween: Tween) {
         this.tween = tween;
     }
 
     public run(): Promise<void> {
+        this.startTime = Animation.ticker.lastTime;
         return new Promise((resolve) => {
-            const updateCb = (ticker: Ticker): void => {
+            const updateTween = (ticker: Ticker): void => {
                 this.tween.update(ticker.lastTime);
             }
-            const completeCb = (): void => {
-                Animation.ticker.remove(updateCb);
+            const resolveAnimation = (): void => {
+                Animation.ticker.remove(updateTween);
                 resolve();
             }
-            Animation.ticker.add(updateCb);
-            this.tween.onComplete(completeCb);
+            Animation.ticker.add(updateTween);
+            this.tween.onComplete(resolveAnimation);
+            this.tween.onStop(resolveAnimation);
             this.tween.start();
         });
+    }
+
+    public skip(): void {
+        this.tween.update(this.startTime + this.tween.getDuration() + 1000);
+        this.tween.stop();
+    }
+
+    public running(): boolean {
+        return this.tween.isPlaying();
     }
 
     public static fade(element: HTMLElement, duration: number): Animation {
