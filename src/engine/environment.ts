@@ -49,6 +49,10 @@ class Environment {
         });
     }
 
+    public get portrait(): boolean {
+        return window.innerHeight > window.innerWidth;
+    }
+
     public screenToView(x: number, y: number): Point {
         return new Point(
             Math.round((x - this.viewTransform.offset.x) / this.viewTransform.scale),

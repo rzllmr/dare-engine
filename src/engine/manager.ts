@@ -40,7 +40,7 @@ class Manager {
     }
 
     public async changeScene(newScene: IScene): Promise<void> {
-        if (!env.mobile) return;
+        if (!env.portrait) return;
 
         await newScene.load();
         if (this.currentScene !== undefined) {
