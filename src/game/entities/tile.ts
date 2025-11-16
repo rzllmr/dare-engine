@@ -10,8 +10,6 @@ import { TileMap } from './map';
 export class Tile extends Entity {
     public static map: TileMap;
 
-    public moving = false;
-
     private readonly specs: EntitySpecs;
     public readonly id: string;
 

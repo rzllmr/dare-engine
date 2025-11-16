@@ -18,6 +18,7 @@ export class TileMap extends Container {
     private data!: MapData;
     private readonly tiles = new Array<Tile>();
     private readonly objects = new Array<Tile>();
+    private readonly actors = new Array<Tile>();
     private readonly layers = new Array<Container>(2);
 
     public static readonly scale: number = 3.0;
@@ -45,6 +46,7 @@ export class TileMap extends Container {
 
         this.layers[0] = this.addChild(new Container()); // for tiles
         this.layers[1] = this.addChild(new Container()); // for objects
+        this.layers[2] = this.addChild(new Container()); // for overlays
         this.layers[1].sortableChildren = true;
 
         Tile.map = this;
@@ -140,6 +142,7 @@ export class TileMap extends Container {
             if (tile.graphic.layer > 0) {
                 if (!tile.destroyed) {
                     this.objects.push(tile);
+                    if (tile.move.isMover) this.actors.push(tile);
                     const child = this.layers[tile.graphic.layer].addChild(tile.graphic.sprite);
                     child.zIndex = currentCoord.y;
                 }
@@ -171,6 +174,7 @@ export class TileMap extends Container {
         if (TileMap.player.graphic.coord.equals(new Point(0, 0)))
             TileMap.player.graphic.coord = this.spawnCoord;
         this.objects.push(TileMap.player);
+        this.actors.unshift(TileMap.player);
         const child = this.layers[1].addChild(TileMap.player.graphic.sprite);
         child.zIndex = this.spawnCoord.y;
 
@@ -257,17 +261,30 @@ export class TileMap extends Container {
         dialog.tell(tile.info, nextCoordPos.add(offset));
     }
 
+    public async moveControlled(direction: Point): Promise<void> {
+        for (const actor of this.actors) {
+            if (actor.move.control) {
+                actor.move.setNextStep(direction);
+            }
+        }
+    }
+
+    public async advance(): Promise<void> {
+        for (const actor of this.actors) {
+            const direction = actor.move.nextStep();
+            if (direction == undefined) continue;
+            await this.move(direction, actor);
+        }
+    }
+
     public async move(direction: Point, actor = TileMap.player): Promise<boolean> {
         if (actor === undefined) return false;
-        if (actor.moving) return false;
 
         const origin = this.entity(actor.graphic.coord);
         if (origin === undefined) return false;
 
         const target = this.entity(actor.graphic.coord.add(direction));
         if (target === undefined) return false;
-
-        actor.moving = true;
         
         if (actor == TileMap.player && target.move.pass || direction.equals(new Point(0,0))) {
             this.updateVision(target.graphic.coord);
@@ -275,9 +292,6 @@ export class TileMap extends Container {
         }
         await target?.act(actor);
         await origin?.leave(actor);
-        // this.updateOthers();
-
-        actor.moving = false;
 
         this.afterMove();
         
@@ -315,7 +329,7 @@ export class TileMap extends Container {
         return this.tiles.at(coord.x + coord.y * this.dimensions.x);
     }
 
-    private object(coord: Point): Tile | undefined {
+    public object(coord: Point): Tile | undefined {
         for (const object of this.objects.values()) {
             if (object.graphic.coord.equals(coord)) return object;
         }

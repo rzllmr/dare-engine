@@ -2,6 +2,8 @@ player:
     sprite: "player"
     info: "That's you!"
     inventory: ~
+    move:
+        control: true
 
 rat:
     sprite:
@@ -9,3 +11,5 @@ rat:
         hide-ever: true
     info: "A ridiculously sized rat rummaging around."
     fight: ~
+    move:
+        patrol: "vertical"

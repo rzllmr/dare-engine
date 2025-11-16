@@ -27,6 +27,47 @@ export class Move extends Action {
         this.save('pass', value);
     }
 
+    public get control(): boolean {
+        return this.specs.get('control', false);
+    }
+
+    public get patrol(): string {
+        return this.specs.get('patrol', '');
+    }
+
+    public get isMover(): boolean {
+        return this.control || this.patrol !== '';
+    }
+
+    private _nextStep?: Point;
+    public setNextStep(step: Point | undefined): void {
+        this._nextStep = step;
+    }
+
+    public nextStep(): Point | undefined {
+        if (this.control) {
+            const nextStep = this._nextStep;
+            this._nextStep = undefined;
+            return nextStep;
+        } else if (this.patrol !== '') {
+            if (this._nextStep == undefined) {
+                if (this.patrol === 'vertical') {
+                    this._nextStep = new Point(0, 1);
+                } else if (this.patrol === 'horizontal') {
+                    this._nextStep = new Point(1, 0);
+                } else {
+                    return undefined
+                }
+            }
+            const obstacle = Tile.map.object(this.object.graphic.coord.add(this._nextStep));
+            if (obstacle != undefined && !obstacle.move.pass) {
+                this._nextStep = this._nextStep.multiply(new Point(-1, -1));
+            }
+            return this._nextStep;
+        }
+        return undefined;
+    }
+
     public override async act(subject: Tile): Promise<void> {
         const subjectPos = subject.getComponent(Graphic).position;
         const objectPos =  this.object.getComponent(Graphic).position;
