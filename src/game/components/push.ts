@@ -7,7 +7,7 @@ export class Push extends Action {
         if (subject.name !== 'player') return;
 
         const direction = this.object.graphic.coord.subtract(subject.graphic.coord);
-        await this.object.move(direction);
+        await Tile.map.move(direction, this.object);
     }
 }
 

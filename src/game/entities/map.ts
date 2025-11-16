@@ -261,19 +261,15 @@ export class TileMap extends Container {
         if (actor === undefined) return false;
         if (actor.moving) return false;
 
-        const originCoord = actor.graphic.coord;
-        let origin = this.object(originCoord);
-        if (origin === undefined) origin = this.tile(originCoord);
+        const origin = this.entity(actor.graphic.coord);
         if (origin === undefined) return false;
 
-        const targetCoord = actor.graphic.coord.add(direction);
-        let target = this.object(targetCoord);
-        if (target === undefined) target = this.tile(targetCoord);
+        const target = this.entity(actor.graphic.coord.add(direction));
         if (target === undefined) return false;
 
         actor.moving = true;
         
-        if (actor == TileMap.player && target.pass || direction.equals(new Point(0,0))) {
+        if (actor == TileMap.player && target.move.pass || direction.equals(new Point(0,0))) {
             this.updateVision(target.graphic.coord);
             this.updateLights(target.graphic.coord);
         }

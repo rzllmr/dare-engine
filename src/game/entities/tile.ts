@@ -64,10 +64,6 @@ export class Tile extends Entity {
         return this.load('destroyed', false);
     }
 
-    public move(direction: Point): Promise<boolean> {
-        return Tile.map.move(direction, this);
-    }
-
     public destroyLater(): void {
         Tile.map.afterMove(() => {
             this.destroy();
@@ -90,9 +86,8 @@ export class Tile extends Entity {
         }
     }
 
-    public get pass(): boolean {
-        const move = this.getComponent(Move);
-        return move.pass;
+    public get move(): Move {
+        return this.getComponent(Move);
     }
 
     public get graphic(): Graphic {
