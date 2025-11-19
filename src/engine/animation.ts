@@ -51,4 +51,8 @@ export class Animation {
         });
         return new Animation(tween);
     }
+     
+    public static stepEasing(steps: number): (k: number) => number {
+        return (k: number) => Math.floor(k * steps) / steps;
+    }
 }

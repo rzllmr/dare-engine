@@ -69,10 +69,13 @@ class DialogProxy {
     }
 
     private typewriter(line: string): void {
+        const letterPause = 50; // milliseconds per letter
         line = this.wordWrapToLineBreaks(line, this.dialogText).replaceAll('<br>', '|');
-        const tween = new Tween({idx: 0}).to({idx: line.length}).easing(Easing.Linear.In).duration(50 * line.length);
+        const tween = new Tween({idx: 0}).to({idx: line.length})
+            .easing(Animation.stepEasing(line.length))
+            .duration(letterPause * line.length);
         tween.onUpdate((current) => {
-            this.dialogText.innerHTML = line.substring(0, Math.floor(current.idx)).replaceAll('|', '<br>');
+            this.dialogText.innerHTML = line.substring(0, current.idx).replaceAll('|', '<br>');
         });
         this.animation = new Animation(tween);
         this.animation.run();
