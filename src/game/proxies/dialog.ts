@@ -30,7 +30,7 @@ class DialogProxy {
         this.lines = [];
     }
 
-    private continue(): void {
+    public continue(): void {
         if (this.animation?.running() === true) {
             this.animation?.skip();
             this.animation = undefined;
@@ -84,7 +84,7 @@ class DialogProxy {
         this.dialogNode.style.visibility = show ? 'visible' : 'hidden';
     }
 
-    private get showing(): boolean {
+    public get showing(): boolean {
         return this.dialogNode.style.visibility == 'visible';
     }
 

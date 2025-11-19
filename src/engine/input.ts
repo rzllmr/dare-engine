@@ -1,9 +1,15 @@
 import { Point } from 'pixi.js';
 import { book } from 'game/proxies/book';
 import { bookButton } from 'game/proxies/button';
+import { dialog } from 'game/proxies/dialog';
 import { dpad } from 'game/proxies/dpad';
 import { env } from './environment';
 import { IScene } from './manager';
+
+interface Keybinding {
+    check: () => boolean;
+    [key: string]: (key: string) => void;
+}
 
 class Input {
     private static _instance: Input;
@@ -26,8 +32,8 @@ class Input {
             this.registerTouch();
         } else {
             this.registerMouse();
-            this.registerKeyboard();
         }
+        this.registerKeyboard();
     }
 
     public attach(scene: IScene): void {
@@ -49,8 +55,53 @@ class Input {
     }
 
     private registerKeyboard(): void {
+        const keybindings: Record<string, Keybinding> = {
+            'book': {
+                'check': () => { return book.visible; },
+                'ArrowLeft': () => { book.changeTab('Left'); },
+                'ArrowRight': () => { book.changeTab('Right'); },
+                'b': () => {
+                    book.show(false);
+                    dpad.block(false);
+                }
+            },
+            'dialog': {
+                'check': () => { return dialog.showing; },
+                ' ': () => { dialog.continue(); },
+            },
+            'default': {
+                'check': () => { return true; },
+                'b': () => {
+                    book.show(true);
+                    dpad.block(true);
+                },
+                'default': (key) => { this.scene?.input(this.mousePos, key); }
+            }
+        };
+        const pressedKeys = new Map<string, NodeJS.Timeout>();
+
         document.body.addEventListener('keydown', (event: KeyboardEvent) => {
-            this.scene?.input(this.mousePos, event.key);
+            if (event.repeat) return;
+
+            let binding: ((key: string) => void) | undefined;
+            for (const mode of Object.values(keybindings)) {
+                if (mode.check()) {
+                    binding = mode[event.key];
+                    if (binding === undefined) binding = mode['default'];
+                    break;
+                }
+            }
+            if (binding === undefined) return;
+
+            binding(event.key);
+            pressedKeys.set(event.key, setInterval(() => {
+                binding(event.key);
+            }, 300));
+        });
+        document.body.addEventListener('keyup', (event: KeyboardEvent) => {
+            const interval = pressedKeys.get(event.key);
+            if (interval !== undefined) clearInterval(interval);
+            pressedKeys.delete(event.key);
         });
     }
 

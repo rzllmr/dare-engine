@@ -63,6 +63,8 @@ export class GameScene extends Container implements IScene {
             const direction = button.replace('Arrow', '');
             this.tileMap.moveControlled(Move.direction(direction));
             this.tileMap.advance();
+        } else if (button === ' ') {
+            this.tileMap.advance();
         }
     }
 
