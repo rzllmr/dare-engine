@@ -1,4 +1,5 @@
-import { env } from "engine/environment";
+import { input } from "engine/input";
+import { dpad } from "./dpad";
 import { Page } from "./page";
 
 class BookProxy {
@@ -35,13 +36,33 @@ class BookProxy {
         this.markers.set('items', this.bookNode.querySelector('#marker-3'));
         this.markers.set('options', this.bookNode.querySelector('#marker-4'));
 
-        this.markers.forEach((value, key) => {
-            const eventType = env.mobile ? 'touchstart' : 'click';
-            value?.addEventListener(eventType, (event) => { this.changeTab(key) });
-        });
+        this.registerInput();
 
         // select default page
         this.changeTab(this.activeTab);
+    }
+
+    private registerInput(): void {
+        this.markers.forEach((marker, tabName) => {
+            input.onHit(marker as HTMLDivElement, () => {
+                this.changeTab(tabName);
+            });
+        });
+
+        input.onSwipe(this.bookNode, (button: string) => {
+            const direction = button.replace('Swipe', '');
+            this.changeTab(direction);
+        });
+
+        input.onKeys('book', {
+            'check': () => { return this.visible; },
+            'ArrowLeft': () => { this.changeTab('Left'); },
+            'ArrowRight': () => { this.changeTab('Right'); },
+            'b': () => {
+                this.show(false);
+                dpad.block(false);
+            }
+        })
     }
 
     public async load(): Promise<void> {
@@ -59,10 +80,6 @@ class BookProxy {
 
     public get visible(): boolean {
         return this._visible;
-    }
-
-    public get element(): HTMLDivElement {
-        return this.bookNode;
     }
 
     private flip(direction = 0, idx = -2): void {

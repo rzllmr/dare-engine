@@ -1,10 +1,8 @@
 import { Point } from 'pixi.js';
-import { book } from 'game/proxies/book';
-import { bookButton } from 'game/proxies/button';
-import { dialog } from 'game/proxies/dialog';
-import { dpad } from 'game/proxies/dpad';
 import { env } from './environment';
-import { IScene } from './manager';
+
+export type KeyMode = 'dialog' | 'book' | 'map';
+const keyModes: KeyMode[] = ['dialog', 'book', 'map'];
 
 interface Keybinding {
     check: () => boolean;
@@ -20,74 +18,28 @@ class Input {
         return Input._instance;
     }
 
-    private scene: IScene | null = null;
-    private mousePos = new Point(0, 0);
-    private touchPos = new Point(0, 0);
-
     private constructor() {
-    }
-
-    public register(): void {
-        if (env.mobile) {
-            this.registerTouch();
-        } else {
-            this.registerMouse();
-        }
         this.registerKeyboard();
     }
 
-    public attach(scene: IScene): void {
-        this.scene = scene;
-    }
-
-    private registerMouse(): void {
-        const pixiContent = document.querySelector('#pixi-content') as HTMLDivElement;
-        
-        pixiContent.addEventListener('mousemove', (event: MouseEvent) => {
-            this.mousePos = env.screenToView(event.pageX, event.pageY);
-            this.scene?.input(this.mousePos);
-        });
-
-        const mouseButton = ['LeftClick', 'MiddleClick', 'RightClick'];
-        pixiContent.addEventListener('mousedown', (event: MouseEvent) => {
-            this.scene?.input(this.mousePos, mouseButton[event.button]);
-        });
+    private keybindings: Record<string, Keybinding> = {};
+    public onKeys(mode: KeyMode, keybindings: Keybinding): void {
+        this.keybindings[mode] = keybindings;
     }
 
     private registerKeyboard(): void {
-        const keybindings: Record<string, Keybinding> = {
-            'book': {
-                'check': () => { return book.visible; },
-                'ArrowLeft': () => { book.changeTab('Left'); },
-                'ArrowRight': () => { book.changeTab('Right'); },
-                'b': () => {
-                    book.show(false);
-                    dpad.block(false);
-                }
-            },
-            'dialog': {
-                'check': () => { return dialog.showing; },
-                ' ': () => { dialog.continue(); },
-            },
-            'default': {
-                'check': () => { return true; },
-                'b': () => {
-                    book.show(true);
-                    dpad.block(true);
-                },
-                'default': (key) => { this.scene?.input(this.mousePos, key); }
-            }
-        };
         const pressedKeys = new Map<string, NodeJS.Timeout>();
 
         document.body.addEventListener('keydown', (event: KeyboardEvent) => {
             if (event.repeat) return;
 
             let binding: ((key: string) => void) | undefined;
-            for (const mode of Object.values(keybindings)) {
-                if (mode.check()) {
-                    binding = mode[event.key];
-                    if (binding === undefined) binding = mode['default'];
+            for (const mode of keyModes) {
+                const bindings = this.keybindings[mode];
+                if (bindings === undefined) continue;
+                if (bindings.check()) {
+                    binding = bindings[event.key];
+                    if (binding === undefined) binding = bindings['default'];
                     break;
                 }
             }
@@ -98,6 +50,7 @@ class Input {
                 binding(event.key);
             }, 300));
         });
+        
         document.body.addEventListener('keyup', (event: KeyboardEvent) => {
             const interval = pressedKeys.get(event.key);
             if (interval !== undefined) clearInterval(interval);
@@ -105,35 +58,58 @@ class Input {
         });
     }
 
-    private registerTouch(): void {
-        const pixiContent = document.querySelector('#pixi-content') as HTMLDivElement;
-        pixiContent.addEventListener('touchstart', (event: TouchEvent) => {
-            const firstTouch = event.touches[0];
-            this.touchPos = env.screenToView(firstTouch.pageX, firstTouch.pageY);
-            this.scene?.input(this.touchPos);
-        });
+    public sendKey(key: string): void {
+        document.body.dispatchEvent(new KeyboardEvent('keydown', { key: key }));
+        document.body.dispatchEvent(new KeyboardEvent('keyup', { key: key }));
+    }
 
-        dpad.register((direction: string) => {
-            this.scene?.input(new Point(), `Arrow${direction}`);
+    public onMouse(element: HTMLElement, callback: (button: string, position: Point) => void, kind: 'mousedown' | 'mousemove' | 'mouseup'): void {
+        element.addEventListener(kind, (event: MouseEvent) => {
+            const position = env.screenToView(event.pageX, event.pageY);
+            const mouseButton = ['LeftClick', 'MiddleClick', 'RightClick'];
+            callback(mouseButton[event.button], position);
         });
-
-        bookButton.register(() => {
-            book.show(!book.visible);
-            dpad.block(book.visible);
-        });
-
-        this.swipeOn(book.element, (key: string) => {
-            const direction = key.replace('Swipe', '');
-            book.changeTab(direction);
+    }
+    
+    public onTouch(element: HTMLElement, callback: (button: string, position: Point) => void, kind: 'touchstart' | 'touchmove' | 'touchend'): void {
+        element.addEventListener(kind, (event: TouchEvent) => {
+            const firstTouch = event.changedTouches[0];
+            const position = env.screenToView(firstTouch.pageX, firstTouch.pageY);
+            callback('LeftClick', position);
         });
     }
 
-    private swipeOn(element: HTMLElement, swipe: (key: string) => void): void {
+    public onHit(element: HTMLElement, callback: (button: string, position: Point) => void): void {
+        if (env.mobile) {
+            this.onTouch(element, callback, 'touchstart');
+        } else {
+            this.onMouse(element, callback, 'mousedown');
+        }
+    }
+
+    public onRelease(element: HTMLElement, callback: (button: string, position: Point) => void): void {
+        if (env.mobile) {
+            this.onTouch(element, callback, 'touchend');
+        } else {
+            this.onMouse(element, callback, 'mouseup');
+        }
+    }
+
+    public onDrag(element: HTMLElement, callback: (button: string, position: Point) => void): void {
+        if (env.mobile) {
+            this.onTouch(element, callback, 'touchstart');
+            this.onTouch(element, callback, 'touchmove');
+        } else {
+            // this.onMouse(element, callback, 'mousedown');
+            // this.onMouse(element, callback, 'mousemove');
+        }
+    }
+
+    public onSwipe(element: HTMLElement, swipe: (button: string) => void): void {
         let touchPos = new Point();
         element.addEventListener('touchstart', (event: TouchEvent) => {
-            const firstTouch = event.touches[0];
+            const firstTouch = event.changedTouches[0];
             touchPos = env.screenToView(firstTouch.pageX, firstTouch.pageY);
-            this.scene?.input(this.touchPos);
         })
         element.addEventListener('touchend', (event: TouchEvent) => {
             const firstTouch = event.changedTouches[0];

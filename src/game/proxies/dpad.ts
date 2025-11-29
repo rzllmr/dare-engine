@@ -1,5 +1,6 @@
 import { Point } from 'pixi.js';
 import { env } from 'engine/environment';
+import { input } from 'engine/input';
 
 class Dpad {
     private static _instance: Dpad;
@@ -16,6 +17,9 @@ class Dpad {
     private readonly deadZone: number;
     private readonly stepInterval: number;
 
+    private moveLoop?: NodeJS.Timeout;
+    private lastDirection = 'Middle';
+
     constructor() {
         this.dPad = document.querySelector('#dpad') as HTMLDivElement;
         this.dPadMiddle = new Point(
@@ -24,11 +28,18 @@ class Dpad {
         );
         this.deadZone = 25;
         this.stepInterval = 300;
+
+        this.registerInput();
+    }
+
+    private registerInput(): void {
+        input.onDrag(this.dPad, (_, position: Point) => { this.moveDPad(position) });
+        input.onRelease(this.dPad, () => { this.dropDPad() });
     }
 
     public block(block = true):void {
         if (block) {
-            this.dPad.dispatchEvent(new Event('touchend'));
+            this.dropDPad();
             this.blocked = true;
             this.dPad.className = `dpad-inactive`;
         } else {
@@ -37,53 +48,45 @@ class Dpad {
         }
     }
 
-    public register(move: (direction: string) => void): void {
-        let moveLoop : NodeJS.Timeout;
-        let lastDirection = 'Middle';
+    private moveDPad(position: Point): void {
+        if (this.blocked) return;
         
-        const moveDPad = (event: TouchEvent): void => {
-            const firstTouch = event.touches[0];
-            if (firstTouch === undefined) return;
-            if (this.blocked) return;
-            
-            const touchPos = env.screenToView(firstTouch.pageX, firstTouch.pageY);
-            const offset = touchPos.subtract(this.dPadMiddle);
-            
-            let direction = '';
-            if (Math.abs(offset.x) < this.deadZone && Math.abs(offset.y) < this.deadZone
-            || Math.abs(offset.x) < this.deadZone && ['Right', 'Left'].includes(lastDirection)
-            || Math.abs(offset.y) < this.deadZone && ['Up', 'Down'].includes(lastDirection)) {
-                direction = 'Middle';
-            } else if (Math.abs(offset.x) > Math.abs(offset.y)) {
-                direction = offset.x > 0 ? 'Right' : 'Left';
-            } else {
-                direction = offset.y > 0 ? 'Down' : 'Up';
-            }
-            
-            if (direction === lastDirection || lastDirection !== 'Middle' && direction !== 'Middle') return;
-            lastDirection = direction;
-            
-            this.dPad.className = `dpad-${direction.toLowerCase()}`;
-            clearInterval(moveLoop);
-            if (direction !== 'Middle') {
-                move(direction);
-                moveLoop = setInterval(() => {
-                    move(direction);
-                }, this.stepInterval);
-            }
-        };
+        const move = (direction: string): void => {
+            input.sendKey('Arrow' + direction);
+        }
+        
+        const offset = position.subtract(this.dPadMiddle);
+        let direction = '';
 
-        const dropDPad = (event: TouchEvent): void => {
-            if (this.blocked) return;
-            const direction = 'Middle';
-            lastDirection = direction;
-            this.dPad.className = `dpad-${direction.toLowerCase()}`;
-            clearInterval(moveLoop);
-        };
+        if (Math.abs(offset.x) < this.deadZone && Math.abs(offset.y) < this.deadZone
+        || Math.abs(offset.x) < this.deadZone && ['Right', 'Left'].includes(this.lastDirection)
+        || Math.abs(offset.y) < this.deadZone && ['Up', 'Down'].includes(this.lastDirection)) {
+            direction = 'Middle';
+        } else if (Math.abs(offset.x) > Math.abs(offset.y)) {
+            direction = offset.x > 0 ? 'Right' : 'Left';
+        } else {
+            direction = offset.y > 0 ? 'Down' : 'Up';
+        }
         
-        this.dPad.addEventListener('touchstart', moveDPad);
-        this.dPad.addEventListener('touchmove', moveDPad);
-        this.dPad.addEventListener('touchend', dropDPad);
-    }    
+        if (direction === this.lastDirection || this.lastDirection !== 'Middle' && direction !== 'Middle') return;
+        this.lastDirection = direction;
+        
+        this.dPad.className = `dpad-${direction.toLowerCase()}`;
+        clearInterval(this.moveLoop);
+        if (direction !== 'Middle') {
+            move(direction);
+            this.moveLoop = setInterval(() => {
+                move(direction);
+            }, this.stepInterval);
+        }
+    };
+
+    private dropDPad(): void {
+        if (this.blocked) return;
+        const direction = 'Middle';
+        this.lastDirection = direction;
+        this.dPad.className = `dpad-${direction.toLowerCase()}`;
+        clearInterval(this.moveLoop);
+    };
 }
 export const dpad = Dpad.instance();

@@ -1,10 +1,12 @@
 import { Container, Point } from 'pixi.js';
+import { input } from 'engine/input';
 import { IScene } from 'engine/manager';
 import { settings } from 'engine/settings';
 import { utils } from 'engine/utils';
 import { Move } from 'game/components/move';
 import { TileMap } from 'game/entities/map';
 import { book } from 'game/proxies/book';
+import { dpad } from 'game/proxies/dpad';
 import init_wasm from 'fast/wasm/pkg/fast_functions';
 
 export class GameScene extends Container implements IScene {
@@ -25,6 +27,30 @@ export class GameScene extends Container implements IScene {
 
         const canvas = document.querySelector('#pixi-canvas') as HTMLCanvasElement;
         this.offset = utils.elementOffset(canvas);
+
+        this.registerInput(canvas);
+    }
+
+    private registerInput(canvas: HTMLCanvasElement): void {
+        input.onHit(canvas, (_, position: Point) => {
+            this.tileMap.highlight(position, this.offset);
+        });
+        input.onKeys('map', {
+            'check': () => { return true; },
+            'b': () => {
+                book.show(true);
+                dpad.block(true);
+            },
+            ' ': () => {
+                this.tileMap.advance();
+            },
+            'default': (key) => {
+                if (!key?.startsWith('Arrow')) return;
+                const direction = key.replace('Arrow', '');
+                this.tileMap.moveControlled(Move.direction(direction));
+                this.tileMap.advance();
+            }
+        });
     }
 
     public async load(): Promise<void> {
@@ -53,20 +79,7 @@ export class GameScene extends Container implements IScene {
         this.addChild(this.tileMap);
     }
 
-    public input(position: Point, button?: string): void {
-        if (button === undefined) {
-            this.tileMap.highlight(position, this.offset);
-            return;
-        }
-
-        if (button.startsWith('Arrow')) {
-            const direction = button.replace('Arrow', '');
-            this.tileMap.moveControlled(Move.direction(direction));
-            this.tileMap.advance();
-        } else if (button === ' ') {
-            this.tileMap.advance();
-        }
-    }
+    public input(position: Point, button?: string): void {}
 
     public update(lastTime: number): void {}
 }

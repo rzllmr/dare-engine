@@ -2,6 +2,7 @@ import { Story } from 'inkjs';
 import { Assets, Point } from 'pixi.js';
 import { Tween, Easing } from '@tweenjs/tween.js';
 import { Animation } from 'engine/animation';
+import { input } from 'engine/input';
 import { storage } from 'engine/storage';
 import { bookButton } from './button';
 import { dpad } from './dpad';
@@ -25,9 +26,18 @@ class DialogProxy {
         this.dialogNode = document.querySelector('#dialog') as HTMLDivElement;
         this.dialogText = document.querySelector('#dialog-text') as HTMLDivElement;
 
-        this.dialogNode.addEventListener('touchstart', this.continue.bind(this));
         this.story = null;
         this.lines = [];
+
+        this.registerInput();
+    }
+
+    private registerInput(): void {
+        input.onHit(this.dialogNode, this.continue.bind(this));
+        input.onKeys('dialog', {
+            'check': () => { return this.showing; },
+            ' ': () => { this.continue(); },
+        });
     }
 
     public continue(): void {

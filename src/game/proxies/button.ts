@@ -1,15 +1,17 @@
-import { env } from "engine/environment";
+import { input } from "engine/input";
+import { book } from "./book";
+import { dpad } from "./dpad";
 
 export class ButtonProxy {
     private readonly buttonNode: HTMLButtonElement;
 
-    constructor(selector: string, max = Infinity) {
+    constructor(selector: string, effect: () => void) {
         this.buttonNode = document.querySelector(selector) as HTMLButtonElement;
+        this.registerInput(effect);
     }
 
-    public register(press: () => void): void {
-        const eventType = env.mobile ? 'touchend' : 'click';
-        this.buttonNode.addEventListener(eventType, press);
+    private registerInput(effect: () => void): void {
+        input.onRelease(this.buttonNode, effect);
     }
 
     public disable(disable = true): void {
@@ -17,4 +19,7 @@ export class ButtonProxy {
     }
 }
 
-export const bookButton = new ButtonProxy('#book-button');
+export const bookButton = new ButtonProxy('#book-button', () => {
+    book.show(!book.visible);
+    dpad.block(book.visible);
+});

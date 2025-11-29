@@ -2,7 +2,6 @@ import { Application, Container, Point, Ticker } from 'pixi.js';
 import 'pixi.js/math-extras';
 import 'extensions/point';
 import { env } from './environment';
-import { input } from './input';
 
 class Manager {
     private static _instance: Manager;
@@ -33,8 +32,6 @@ class Manager {
             .then(() => {
                 this.app.ticker.maxFPS = 30;
                 this.app.ticker.add(this.update);
-
-                input.register();
                 env.register();
             });
     }
@@ -49,7 +46,6 @@ class Manager {
         }
         this.currentScene = newScene;
         this.app.stage.addChild(this.currentScene);
-        input.attach(this.currentScene);
     }
 
     private update(ticker: Ticker): void {
