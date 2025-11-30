@@ -100,8 +100,10 @@ class Input {
             this.onTouch(element, callback, 'touchstart');
             this.onTouch(element, callback, 'touchmove');
         } else {
-            // this.onMouse(element, callback, 'mousedown');
-            // this.onMouse(element, callback, 'mousemove');
+            this.onMouse(element, callback, 'mousedown');
+            this.onMouse(element, (button:string, position: Point) => {
+                if (button !== undefined) callback(button, position);
+            }, 'mousemove');
         }
     }
 
