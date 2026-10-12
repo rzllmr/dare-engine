@@ -4,8 +4,10 @@ import { utils } from 'engine/utils';
 import { unveilRoom } from 'fast/fill';
 import { findNext } from 'fast/find';
 import { computeFov } from 'fast/fov';
-import { Graphic, Light, LightSource, Port } from 'game/components';
+import { computePath } from 'fast/path';
+import { Graphic, Light, LightSource } from 'game/components';
 import { dialog } from 'game/proxies/dialog';
+import { debugUI } from './debugui';
 import { MapData } from './mapdata';
 import { Tile } from './tile';
 
@@ -239,6 +241,10 @@ export class TileMap extends Container {
         return coord.multiplyScalar(TileMap.tileDim);
     }
 
+    public static halfTile(): Point {
+        return new Point(TileMap.tileDim / 2, TileMap.tileDim / 2);
+    }
+
     public highlight(position: Point, offset: Point): void {
         position = position.subtract(offset).add(this.pivot);
         if (this._highlight === undefined) return;
@@ -255,7 +261,22 @@ export class TileMap extends Container {
             return;
         }
 
-        if (!this._highlight.graphic.visible) this._highlight.graphic.show();
+        if (!this._highlight.graphic.visible) {
+            this._highlight.graphic.show();
+        }
+
+        let path = computePath(
+            TileMap.player.graphic.coord,
+            coord,
+            this.blockMap(),
+            this.dimensions
+        );
+        path = path.map((p) => TileMap.coordToPos(p).add(TileMap.halfTile()));
+        const line = debugUI.drawPath(path);
+        if (line) {
+            this.layers[2].removeChildren();
+            this.layers[2].addChild(line);
+        }
 
         const nextCoordPos = TileMap.coordToPos(new Point(coord.x + 1, coord.y));
         dialog.tell(tile.info, nextCoordPos.add(offset));

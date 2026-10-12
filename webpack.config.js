@@ -28,6 +28,7 @@ module.exports = (env, argv) => {
             },
             port: 1234, host: '0.0.0.0',
             watchFiles: ['static/**/*'],
+            allowedHosts: 'all',
         },
 
         // Web games are bigger than pages, disable the warnings that our game is too big.

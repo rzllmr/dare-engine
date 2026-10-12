@@ -45,6 +45,7 @@ export default tseslint.config(
 
         rules: {
             "object-shorthand": "off",
+            '@typescript-eslint/array-type': 'array-simple',
             "@typescript-eslint/consistent-type-definitions": "off",
             "@typescript-eslint/no-unused-vars": "off",
             "@typescript-eslint/no-explicit-any": "off",
@@ -52,7 +53,7 @@ export default tseslint.config(
             "@typescript-eslint/no-empty-function": "off",
             "@typescript-eslint/no-inferrable-types": "off",
             "n/no-missing-import": "off",
-            "n/no-unsupported-features/node-builtins": ["error", { "allowExperimental": true }]
+            "n/no-unsupported-features/node-builtins": ["error", { "allowExperimental": true }],
         },
 
         "settings": {
